@@ -422,7 +422,7 @@ export const SplashScreen: React.FC = () => {
             </h1>
             <div className="splash-accent-line w-24 h-[1px] bg-gradient-to-r from-transparent via-[#C29845] to-transparent my-3" />
             <div className="splash-date text-[#D2AC5E] text-xs sm:text-sm tracking-[0.35em] uppercase font-medium">
-              DECEMBER 28, 2026
+              OCTOBER 10, 2026
             </div>
           </div>
         )}

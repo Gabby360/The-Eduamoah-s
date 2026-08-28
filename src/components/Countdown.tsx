@@ -81,8 +81,8 @@ const UnitCard: React.FC<UnitCardProps> = ({
 };
 
 export const Countdown: React.FC = () => {
-  // Wedding Target Date: DECEMBER 28, 2026
-  const targetDate = useRef(new Date('2026-12-28T14:00:00'));
+  // Wedding Target Date: OCTOBER 10, 2026
+  const targetDate = useRef(new Date('2026-10-10T14:00:00'));
 
   const [realTime, setRealTime] = useState<TimeLeft>(() => getTimeRemaining(targetDate.current));
   const [displayed, setDisplayed] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -257,7 +257,7 @@ export const Countdown: React.FC = () => {
             hasRevealed ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          DECEMBER 28, 2026 • ACCRA, GHANA
+          OCTOBER 10, 2026 • ACCRA, GHANA
         </div>
 
       </div>
