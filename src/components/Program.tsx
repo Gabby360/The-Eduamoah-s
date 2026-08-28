@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Eye, Download, Sparkles } from 'lucide-react';
+import React from 'react';
+import { Download, Sparkles } from 'lucide-react';
 
 interface ProgramEvent {
   title: string;
@@ -24,31 +24,11 @@ const PROGRAM_EVENTS: ProgramEvent[] = [
 ];
 
 export const Program: React.FC = () => {
-  const [visible, setVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) { setVisible(true); return; }
-
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.12 }
-    );
-    if (sectionRef.current) obs.observe(sectionRef.current);
-    return () => obs.disconnect();
-  }, []);
-
   const programPdfUrl = '/The-Eduamoahs-Wedding-Program.pdf';
 
   return (
     <section id="program" className="py-24 bg-[#0B0907] relative overflow-hidden">
-      <div className="max-w-5xl mx-auto px-6 md:px-12" ref={sectionRef}>
+      <div className="max-w-5xl mx-auto px-6 md:px-12">
         
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -111,24 +91,12 @@ export const Program: React.FC = () => {
             ))}
           </div>
 
-          {/* Action Buttons: VIEW PROGRAM & DOWNLOAD PROGRAM */}
-          <div className="pt-10 mt-10 border-t border-[#C29845]/20 flex flex-col sm:flex-row items-center justify-center gap-4">
-            {/* View Program — opens PDF in browser viewer tab */}
-            <a
-              href={programPdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-8 py-3.5 bg-[#C29845] hover:bg-[#D2AC5E] text-[#0B0907] font-semibold text-xs tracking-[0.25em] uppercase transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02]"
-            >
-              <Eye size={16} />
-              <span>VIEW PROGRAM</span>
-            </a>
-
-            {/* Download Program — downloads PDF directly to device */}
+          {/* Action Button: DOWNLOAD PROGRAM */}
+          <div className="pt-10 mt-10 border-t border-[#C29845]/20 flex items-center justify-center">
             <a
               href={programPdfUrl}
               download="The-Eduamoahs-Wedding-Program.pdf"
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-8 py-3.5 border border-[#C29845]/60 hover:border-[#C29845] bg-[#0B0907]/80 hover:bg-[#C29845]/20 text-[#FBF7EF] hover:text-[#D2AC5E] font-medium text-xs tracking-[0.25em] uppercase transition-all duration-300 shadow-lg"
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-10 py-3.5 bg-[#C29845] hover:bg-[#D2AC5E] text-[#0B0907] font-semibold text-xs tracking-[0.25em] uppercase transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02]"
             >
               <Download size={16} />
               <span>DOWNLOAD PROGRAM</span>
