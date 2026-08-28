@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { weddingDetails } from '../mocks/weddingData';
 import { X, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 
 export const Gallery: React.FC = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const [swept, setSwept] = useState<boolean[]>(
+    Array(weddingDetails.gallery.images.length).fill(false)
+  );
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const openLightbox = (index: number) => setSelectedImageIndex(index);
   const closeLightbox = () => setSelectedImageIndex(null);
@@ -19,8 +23,63 @@ export const Gallery: React.FC = () => {
       setSelectedImageIndex((selectedImageIndex + 1) % weddingDetails.gallery.images.length);
   };
 
+  // Trigger Gold Sweep shimmer animation on scroll (WITHOUT hiding photos)
+  useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const observers: IntersectionObserver[] = [];
+    cardRefs.current.forEach((el, idx) => {
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && !swept[idx]) {
+            setTimeout(() => {
+              setSwept(prev => { const n = [...prev]; n[idx] = true; return n; });
+            }, Math.min(idx % 6, 6) * 150);
+            obs.disconnect();
+          }
+        },
+        { threshold: 0.15 }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+
+    return () => observers.forEach(o => o.disconnect());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <section id="gallery" className="py-24 bg-[#0B0907] relative overflow-hidden">
+      {/* Gold Sweep Shimmer CSS */}
+      <style>{`
+        @keyframes goldSweep {
+          0%   { transform: translateX(-120%) skewX(-15deg); opacity: 0; }
+          25%  { opacity: 0.45; }
+          75%  { opacity: 0.25; }
+          100% { transform: translateX(220%) skewX(-15deg); opacity: 0; }
+        }
+        .gallery-sweep::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: linear-gradient(
+            105deg,
+            transparent 30%,
+            rgba(194,152,69,0.22) 50%,
+            rgba(210,172,94,0.12) 58%,
+            transparent 70%
+          );
+          animation: goldSweep 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+          z-index: 2;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .gallery-sweep::after { animation: none; }
+        }
+      `}</style>
+
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Header */}
         <div className="text-center mb-16">
@@ -33,13 +92,16 @@ export const Gallery: React.FC = () => {
           <div className="w-20 h-[1px] bg-gradient-to-r from-transparent via-[#C29845] to-transparent mx-auto" />
         </div>
 
-        {/* Gallery Grid */}
+        {/* Gallery Grid — Photos are 100% visible immediately, Gold Sweep animates on top */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {weddingDetails.gallery.images.map((img, idx) => (
             <div
               key={idx}
+              ref={el => (cardRefs.current[idx] = el)}
               onClick={() => openLightbox(idx)}
-              className="group relative cursor-pointer overflow-hidden border border-[#C29845]/20 bg-[#141110] aspect-[4/5] shadow-xl transition-all duration-500 hover:border-[#C29845]/60"
+              className={`group relative cursor-pointer overflow-hidden border border-[#C29845]/20 bg-[#141110] aspect-[4/5] shadow-xl transition-all duration-500 hover:border-[#C29845]/60 ${
+                swept[idx] ? 'gallery-sweep' : ''
+              }`}
             >
               <img
                 src={img.url}
