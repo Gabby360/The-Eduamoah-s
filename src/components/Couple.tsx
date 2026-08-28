@@ -1,7 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { weddingDetails } from '../mocks/weddingData';
 
 export const Couple: React.FC = () => {
+  const [visible, setVisible] = useState([false, false]);
+  const refs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) { setVisible([true, true]); return; }
+
+    const observers: IntersectionObserver[] = [];
+    refs.current.forEach((el, idx) => {
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => {
+              setVisible(prev => { const n = [...prev]; n[idx] = true; return n; });
+            }, idx * 400); // 400ms slow stagger between Bride & Groom
+            obs.disconnect();
+          }
+        },
+        { threshold: 0.15 }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+    return () => observers.forEach(o => o.disconnect());
+  }, []);
+
   return (
     <section id="couple" className="py-24 bg-[#141110] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -20,12 +47,22 @@ export const Couple: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
 
           {/* Bride Card */}
-          <div className="group relative bg-[#0B0907] p-4 border border-[#C29845]/30 shadow-2xl transition-all duration-500 hover:border-[#C29845]/60">
+          <div
+            ref={el => (refs.current[0] = el)}
+            className="group relative bg-[#0B0907] p-4 border border-[#C29845]/30 shadow-2xl transition-all duration-700 hover:border-[#C29845]/60"
+            style={{
+              opacity: visible[0] ? 1 : 0,
+              transform: visible[0] ? 'translateY(0) scale(1)' : 'translateY(24px) scale(1.05)',
+              filter: visible[0] ? 'blur(0px)' : 'blur(4px)',
+              transition: 'opacity 2.6s cubic-bezier(0.16, 1, 0.3, 1), transform 2.6s cubic-bezier(0.16, 1, 0.3, 1), filter 2.2s ease-out',
+              willChange: visible[0] ? 'auto' : 'opacity, transform',
+            }}
+          >
             <div className="relative overflow-hidden aspect-[3/4] mb-6">
               <img
                 src={weddingDetails.couple.brideImage}
                 alt={weddingDetails.couple.brideName}
-                className="w-full h-full object-cover object-[50%_15%] transition-transform duration-700 group-hover:scale-105 filter brightness-95"
+                className="w-full h-full object-cover object-[50%_15%] transition-transform duration-1000 ease-out group-hover:scale-105 filter brightness-95"
               />
               {/* Corner Frame Highlights */}
               <div className="absolute top-2 left-2 w-6 h-6 border-t border-l border-[#C29845]" />
@@ -46,12 +83,22 @@ export const Couple: React.FC = () => {
           </div>
 
           {/* Groom Card */}
-          <div className="group relative bg-[#0B0907] p-4 border border-[#C29845]/30 shadow-2xl transition-all duration-500 hover:border-[#C29845]/60">
+          <div
+            ref={el => (refs.current[1] = el)}
+            className="group relative bg-[#0B0907] p-4 border border-[#C29845]/30 shadow-2xl transition-all duration-700 hover:border-[#C29845]/60"
+            style={{
+              opacity: visible[1] ? 1 : 0,
+              transform: visible[1] ? 'translateY(0) scale(1)' : 'translateY(24px) scale(1.05)',
+              filter: visible[1] ? 'blur(0px)' : 'blur(4px)',
+              transition: 'opacity 2.6s cubic-bezier(0.16, 1, 0.3, 1), transform 2.6s cubic-bezier(0.16, 1, 0.3, 1), filter 2.2s ease-out',
+              willChange: visible[1] ? 'auto' : 'opacity, transform',
+            }}
+          >
             <div className="relative overflow-hidden aspect-[3/4] mb-6">
               <img
                 src={weddingDetails.couple.groomImage}
                 alt={weddingDetails.couple.groomName}
-                className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 filter brightness-95"
+                className="w-full h-full object-cover object-top transition-transform duration-1000 ease-out group-hover:scale-105 filter brightness-95"
               />
               {/* Corner Frame Highlights */}
               <div className="absolute top-2 left-2 w-6 h-6 border-t border-l border-[#C29845]" />
