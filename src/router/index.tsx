@@ -11,10 +11,12 @@ import { RSVP } from '../components/RSVP';
 import { Blessings } from '../components/Blessings';
 import { Location } from '../components/Location';
 import { Footer } from '../components/Footer';
+import { SplashScreen } from '../components/SplashScreen';
 
 const HomePage: React.FC = () => {
   return (
     <main className="bg-[#0B0907] min-h-screen text-[#FBF7EF] selection:bg-[#C29845] selection:text-[#0B0907]">
+      <SplashScreen />
       <Navbar />
       <Hero />
       <Story />
