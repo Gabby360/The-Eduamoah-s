@@ -2,85 +2,36 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { weddingDetails } from '../mocks/weddingData';
 import { X, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 
-/* ─── animation hook: scroll reveal + stagger ─── */
+/* ─── scroll reveal with stagger — no parallax ─── */
 function useGalleryReveal(count: number) {
   const [visible, setVisible] = useState<boolean[]>(Array(count).fill(false));
   const refs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) {
-      setVisible(Array(count).fill(true));
-      return;
-    }
+    if (prefersReduced) { setVisible(Array(count).fill(true)); return; }
 
     const observers: IntersectionObserver[] = [];
-
     refs.current.forEach((el, idx) => {
       if (!el) return;
       const obs = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
-            // stagger: 100ms per item
             setTimeout(() => {
-              setVisible(prev => {
-                const next = [...prev];
-                next[idx] = true;
-                return next;
-              });
-            }, idx * 110);
+              setVisible(prev => { const n = [...prev]; n[idx] = true; return n; });
+            }, Math.min(idx, 5) * 110); // cap stagger at 5 items deep
             obs.disconnect();
           }
         },
-        { threshold: 0.12 }
+        { threshold: 0.1 }
       );
       obs.observe(el);
       observers.push(obs);
     });
-
     return () => observers.forEach(o => o.disconnect());
   }, [count]);
 
   return { visible, refs };
-}
-
-/* ─── parallax hook ─── */
-function useParallax() {
-  const elRefs = useRef<(HTMLImageElement | null)[]>([]);
-  const frameRef = useRef<number>(0);
-  const prefersReduced = useRef(
-    typeof window !== 'undefined'
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false
-  );
-
-  useEffect(() => {
-    if (prefersReduced.current) return;
-
-    const onScroll = () => {
-      cancelAnimationFrame(frameRef.current);
-      frameRef.current = requestAnimationFrame(() => {
-        elRefs.current.forEach(img => {
-          if (!img) return;
-          const rect = img.closest('[data-gallery-item]')?.getBoundingClientRect();
-          if (!rect) return;
-          const windowH = window.innerHeight;
-          const center = rect.top + rect.height / 2 - windowH / 2;
-          // max ±14px shift
-          const shift = Math.max(-14, Math.min(14, (center / windowH) * 28));
-          img.style.transform = `scale(1) translateY(${shift}px)`;
-        });
-      });
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(frameRef.current);
-    };
-  }, []);
-
-  return elRefs;
 }
 
 export const Gallery: React.FC = () => {
@@ -94,66 +45,41 @@ export const Gallery: React.FC = () => {
 
   const prevImage = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (selectedImageIndex !== null) {
-      setSelectedImageIndex(
-        (selectedImageIndex - 1 + weddingDetails.gallery.images.length) %
-          weddingDetails.gallery.images.length
-      );
-    }
+    if (selectedImageIndex !== null)
+      setSelectedImageIndex((selectedImageIndex - 1 + weddingDetails.gallery.images.length) % weddingDetails.gallery.images.length);
   };
-
   const nextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (selectedImageIndex !== null) {
-      setSelectedImageIndex(
-        (selectedImageIndex + 1) % weddingDetails.gallery.images.length
-      );
-    }
+    if (selectedImageIndex !== null)
+      setSelectedImageIndex((selectedImageIndex + 1) % weddingDetails.gallery.images.length);
   };
 
   const count = weddingDetails.gallery.images.length;
   const { visible, refs } = useGalleryReveal(count);
-  const imgRefs = useParallax();
 
-  // trigger gold sweep once per image when it becomes visible
+  // trigger gold sweep once per image after reveal settles
   useEffect(() => {
     visible.forEach((isVisible, idx) => {
       if (isVisible && !swept[idx]) {
-        // small delay so sweep starts after the reveal settles
         setTimeout(() => {
-          setSwept(prev => {
-            const next = [...prev];
-            next[idx] = true;
-            return next;
-          });
-        }, 600);
+          setSwept(prev => { const n = [...prev]; n[idx] = true; return n; });
+        }, 500);
       }
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
-  const setRef = useCallback(
-    (el: HTMLDivElement | null, idx: number) => {
-      refs.current[idx] = el;
-    },
-    [refs]
-  );
-
-  const setImgRef = useCallback(
-    (el: HTMLImageElement | null, idx: number) => {
-      imgRefs.current[idx] = el;
-    },
-    [imgRefs]
-  );
+  const setRef = useCallback((el: HTMLDivElement | null, idx: number) => {
+    refs.current[idx] = el;
+  }, [refs]);
 
   return (
     <section id="gallery" className="py-24 bg-[#0B0907] relative overflow-hidden">
-      {/* ── gold sweep keyframe ── */}
       <style>{`
         @keyframes goldSweep {
           0%   { transform: translateX(-120%) skewX(-15deg); opacity: 0; }
-          20%  { opacity: 0.55; }
-          80%  { opacity: 0.35; }
+          20%  { opacity: 0.5; }
+          80%  { opacity: 0.3; }
           100% { transform: translateX(220%) skewX(-15deg); opacity: 0; }
         }
         .gallery-sweep::after {
@@ -164,8 +90,8 @@ export const Gallery: React.FC = () => {
           background: linear-gradient(
             105deg,
             transparent 30%,
-            rgba(194,152,69,0.18) 50%,
-            rgba(210,172,94,0.10) 58%,
+            rgba(194,152,69,0.16) 50%,
+            rgba(210,172,94,0.09) 58%,
             transparent 70%
           );
           animation: goldSweep 1.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
@@ -177,7 +103,6 @@ export const Gallery: React.FC = () => {
       `}</style>
 
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-
         {/* Header — untouched */}
         <div className="text-center mb-16">
           <span className="text-[#C29845] text-xs font-medium tracking-[0.3em] uppercase block mb-3">
@@ -189,7 +114,7 @@ export const Gallery: React.FC = () => {
           <div className="w-20 h-[1px] bg-gradient-to-r from-transparent via-[#C29845] to-transparent mx-auto" />
         </div>
 
-        {/* Gallery Grid — same structure, same classes */}
+        {/* Gallery Grid — same structure */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {weddingDetails.gallery.images.map((img, idx) => (
             <div
@@ -201,87 +126,55 @@ export const Gallery: React.FC = () => {
                 swept[idx] ? 'gallery-sweep' : ''
               }`}
               style={{
-                /* scroll reveal */
                 opacity: visible[idx] ? 1 : 0,
-                transform: visible[idx]
-                  ? 'translateY(0) scale(1)'
-                  : 'translateY(18px) scale(1.07)',
-                filter: visible[idx] ? 'blur(0px)' : 'blur(3px)',
+                transform: visible[idx] ? 'translateY(0) scale(1)' : 'translateY(18px) scale(1.06)',
+                filter: visible[idx] ? 'blur(0px)' : 'blur(2px)',
                 transition: visible[idx]
-                  ? 'opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.7s ease-out'
+                  ? 'opacity 0.85s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.85s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.65s ease-out'
                   : 'none',
+                willChange: visible[idx] ? 'auto' : 'opacity, transform',
               }}
             >
               <img
-                ref={el => setImgRef(el, idx)}
                 src={img.url}
                 alt={img.title}
-                /* existing classes preserved exactly */
+                loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05] filter brightness-90 group-hover:brightness-100"
-                style={{ willChange: 'transform' }}
               />
 
-              {/* Dark Gradient Overlay — untouched */}
+              {/* Dark Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                 <span className="text-[#C29845] text-[10px] tracking-[0.25em] uppercase block font-semibold mb-1">
                   {img.category}
                 </span>
-                <h4 className="font-heading text-xl text-[#FBF7EF] font-normal mb-2">
-                  {img.title}
-                </h4>
+                <h4 className="font-heading text-xl text-[#FBF7EF] font-normal mb-2">{img.title}</h4>
                 <div className="flex items-center text-[#D2AC5E] text-xs tracking-wider">
                   <Maximize2 size={14} className="mr-1.5" /> Click to view
                 </div>
               </div>
 
-              {/* Corner Frame Highlights — untouched */}
+              {/* Corner Frame Highlights */}
               <div className="absolute top-2 left-2 w-4 h-4 border-t border-l border-[#C29845]/0 group-hover:border-[#C29845] transition-all duration-300" />
               <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-[#C29845]/0 group-hover:border-[#C29845] transition-all duration-300" />
             </div>
           ))}
         </div>
-
       </div>
 
-      {/* Lightbox Modal — untouched */}
+      {/* Lightbox Modal */}
       {selectedImageIndex !== null && (
-        <div
-          onClick={closeLightbox}
-          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 animate-fade-in"
-        >
-          <button
-            onClick={closeLightbox}
-            className="absolute top-6 right-6 text-[#BFAC90] hover:text-[#C29845] p-2 transition-colors z-50 focus:outline-none"
-            aria-label="Close Lightbox"
-          >
+        <div onClick={closeLightbox} className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 animate-fade-in">
+          <button onClick={closeLightbox} className="absolute top-6 right-6 text-[#BFAC90] hover:text-[#C29845] p-2 transition-colors z-50 focus:outline-none" aria-label="Close Lightbox">
             <X size={32} />
           </button>
-
-          <button
-            onClick={prevImage}
-            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-[#BFAC90] hover:text-[#C29845] p-3 rounded-full bg-black/40 hover:bg-black/80 border border-[#C29845]/30 transition-all z-50"
-            aria-label="Previous Image"
-          >
+          <button onClick={prevImage} className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-[#BFAC90] hover:text-[#C29845] p-3 rounded-full bg-black/40 hover:bg-black/80 border border-[#C29845]/30 transition-all z-50" aria-label="Previous Image">
             <ChevronLeft size={28} />
           </button>
-
-          <button
-            onClick={nextImage}
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-[#BFAC90] hover:text-[#C29845] p-3 rounded-full bg-black/40 hover:bg-black/80 border border-[#C29845]/30 transition-all z-50"
-            aria-label="Next Image"
-          >
+          <button onClick={nextImage} className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-[#BFAC90] hover:text-[#C29845] p-3 rounded-full bg-black/40 hover:bg-black/80 border border-[#C29845]/30 transition-all z-50" aria-label="Next Image">
             <ChevronRight size={28} />
           </button>
-
-          <div
-            onClick={e => e.stopPropagation()}
-            className="max-w-4xl max-h-[85vh] relative flex flex-col items-center border border-[#C29845]/40 bg-[#141110] p-2"
-          >
-            <img
-              src={weddingDetails.gallery.images[selectedImageIndex].url}
-              alt={weddingDetails.gallery.images[selectedImageIndex].title}
-              className="max-w-full max-h-[75vh] object-contain"
-            />
+          <div onClick={e => e.stopPropagation()} className="max-w-4xl max-h-[85vh] relative flex flex-col items-center border border-[#C29845]/40 bg-[#141110] p-2">
+            <img src={weddingDetails.gallery.images[selectedImageIndex].url} alt={weddingDetails.gallery.images[selectedImageIndex].title} className="max-w-full max-h-[75vh] object-contain" />
             <div className="py-4 px-6 text-center w-full bg-[#0B0907]">
               <span className="text-[#C29845] text-xs tracking-[0.25em] uppercase font-medium block">
                 {weddingDetails.gallery.images[selectedImageIndex].category}
