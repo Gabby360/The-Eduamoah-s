@@ -65,16 +65,7 @@ export const Program: React.FC = () => {
         </div>
 
         {/* Program Preview Card Container */}
-        <div
-          className="relative bg-[#141110] border border-[#C29845]/30 p-6 md:p-12 shadow-2xl transition-all duration-700 hover:border-[#C29845]/60"
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0) scale(1)' : 'translateY(24px) scale(1.04)',
-            filter: visible ? 'blur(0px)' : 'blur(4px)',
-            transition: 'opacity 2.6s cubic-bezier(0.16, 1, 0.3, 1), transform 2.6s cubic-bezier(0.16, 1, 0.3, 1), filter 2.2s ease-out',
-            willChange: visible ? 'auto' : 'opacity, transform',
-          }}
-        >
+        <div className="relative bg-[#141110] border border-[#C29845]/30 p-6 md:p-12 shadow-2xl transition-all duration-500 hover:border-[#C29845]/60">
           {/* Gold Frame Corner Accents */}
           <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-[#C29845]/70" />
           <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-[#C29845]/70" />
