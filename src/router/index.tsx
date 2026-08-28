@@ -5,6 +5,7 @@ import { Hero } from '../components/Hero';
 import { Story } from '../components/Story';
 import { Couple } from '../components/Couple';
 import { WeddingSchedule } from '../components/WeddingSchedule';
+import { Program } from '../components/Program';
 import { Countdown } from '../components/Countdown';
 import { Gallery } from '../components/Gallery';
 import { RSVP } from '../components/RSVP';
@@ -22,6 +23,7 @@ const HomePage: React.FC = () => {
       <Story />
       <Couple />
       <WeddingSchedule />
+      <Program />
       <Countdown />
       <Gallery />
       <RSVP />
