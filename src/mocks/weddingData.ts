@@ -19,7 +19,7 @@ export const weddingDetails = {
     storyImage: '/story-custom.jpg',
     brideImage: '/bride-custom.jpg',
     groomImage: '/groom-custom.jpg',
-    footerImage: 'https://public.readdy.ai/ai/img_res/effa0eb9afdac048b15ea176a341404b.jpg',
+    footerImage: '/gallery-15.jpg',
   },
   wedding: {
     date: 'October 10, 2026',
