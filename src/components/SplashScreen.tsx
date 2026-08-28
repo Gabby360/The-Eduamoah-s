@@ -105,186 +105,199 @@ export const SplashScreen: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
 
+  // 1. MASTER TIMING & FAILSAFE EFFECT
   useEffect(() => {
-    // Prevent scrolling while splash screen is active
+    // Ensure we start at top of page
+    window.scrollTo(0, 0);
+
+    // Lock scrolling while splash is active
     document.body.style.overflow = 'hidden';
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
-      const timer = setTimeout(() => {
-        setFadingOut(true);
-        setTimeout(() => {
-          setIsComplete(true);
-          document.body.style.overflow = '';
-        }, 600);
-      }, 1500);
-      return () => clearTimeout(timer);
+      setFadingOut(true);
+      const rTimer = setTimeout(() => {
+        setIsComplete(true);
+        document.body.style.overflow = '';
+      }, 600);
+      return () => clearTimeout(rTimer);
     }
 
-    // Canvas animation setup
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        const resize = () => {
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-        };
-        resize();
-        window.addEventListener('resize', resize, { passive: true });
-
-        const isMobile = window.innerWidth < 768;
-        const PARTICLE_N = isMobile ? 12 : 24;
-
-        const particles: Particle[] = Array.from({ length: PARTICLE_N }, () => ({
-          x: rand(0, window.innerWidth),
-          y: rand(0, window.innerHeight),
-          r: rand(0.8, 2.0),
-          vx: rand(-0.08, 0.08),
-          vy: rand(-0.14, -0.04),
-          alpha: rand(0.05, 0.25),
-          dir: Math.random() > 0.5 ? 1 : -1,
-          speed: rand(0.0015, 0.004),
-        }));
-
-        const startTime = performance.now();
-        const totalButterflies = isMobile ? 6 : 10;
-        const depths: BDepth[] = isMobile
-          ? ['fg', 'mid', 'mid', 'mid', 'bg', 'bg']
-          : ['fg', 'fg', 'mid', 'mid', 'mid', 'mid', 'bg', 'bg', 'bg', 'bg'];
-
-        const butterflies: SplashButterfly[] = Array.from({ length: totalButterflies }, (_, i) => {
-          const depth = depths[i];
-          const pathFn = ZONES[i % ZONES.length];
-          const p = pathFn();
-          const size = depth === 'fg' ? rand(24, 34) : depth === 'mid' ? rand(14, 22) : rand(10, 14);
-          const alpha = depth === 'fg' ? rand(0.60, 0.80) : depth === 'mid' ? rand(0.35, 0.58) : rand(0.18, 0.35);
-
-          return {
-            ...p, cx: p.startX, cy: p.startY,
-            wingPhase: rand(0, Math.PI * 2),
-            wingSpd: rand(2.2, 3.8),
-            glideTimer: 0, glideDur: rand(500, 1500), isGliding: false,
-            wobble: rand(0, Math.PI * 2), wobbleSpd: rand(0.012, 0.028),
-            wobbleAmp: rand(0.012, 0.026),
-            curveSign: Math.random() > 0.5 ? 1 : -1,
-            size, alpha, depth,
-            elapsed: 0, duration: rand(10000, 16000),
-            visible: false, revealAt: startTime + rand(2500 + i * 200, 3200 + i * 350),
-          };
-        });
-
-        let lastFrame = 0;
-        const FRAME_INTERVAL = 1000 / 32;
-
-        const tick = (now: number) => {
-          rafRef.current = requestAnimationFrame(tick);
-          if (now - lastFrame < FRAME_INTERVAL) return;
-          lastFrame = now;
-
-          const W = canvas.width;
-          const H = canvas.height;
-          const dt = 16;
-          const elapsedSec = (now - startTime) / 1000;
-
-          ctx.clearRect(0, 0, W, H);
-
-          // Particles start fading in from Scene 2 (0.6s)
-          if (elapsedSec > 0.6) {
-            const globalParticleAlpha = Math.min((elapsedSec - 0.6) / 0.8, 1);
-            particles.forEach(p => {
-              p.x += p.vx; p.y += p.vy;
-              p.alpha += p.dir * p.speed;
-              if (p.alpha > 0.26 || p.alpha < 0.04) p.dir *= -1;
-              if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-              if (p.y < 0) { p.y = H; p.x = rand(0, W); }
-              ctx.beginPath();
-              ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-              ctx.fillStyle = `rgba(194,152,69,${(p.alpha * globalParticleAlpha).toFixed(3)})`;
-              ctx.fill();
-            });
-          }
-
-          // Butterflies start appearing in Scene 6 (around 2.8s - 3.0s)
-          butterflies.forEach(b => {
-            if (!b.visible) {
-              if (now > b.revealAt) b.visible = true;
-              return;
-            }
-
-            b.elapsed += dt;
-            b.glideTimer += dt;
-            if (b.glideTimer > b.glideDur) {
-              b.isGliding = !b.isGliding;
-              b.glideDur = b.isGliding ? rand(300, 800) : rand(700, 2000);
-              b.glideTimer = 0;
-            }
-            if (!b.isGliding) b.wingPhase += b.wingSpd * (dt / 1000);
-
-            b.wobble += b.wobbleSpd;
-
-            const t = Math.min(b.elapsed / b.duration, 1);
-            const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-
-            const px = b.startX + (b.endX - b.startX) * ease;
-            const py = b.startY + (b.endY - b.startY) * ease;
-            const perpX = -(b.endY - b.startY);
-            const perpY = (b.endX - b.startX);
-            const wamt = (Math.sin(b.wobble) * 0.6 + Math.sin(b.wobble * 0.4 + 1.2) * 0.4) * b.wobbleAmp * b.curveSign;
-
-            b.cx = px + perpX * wamt;
-            b.cy = py + perpY * wamt;
-
-            const dx = (b.endX + perpX * wamt * 0.15) - b.cx;
-            const dy = (b.endY + perpY * wamt * 0.15) - b.cy;
-            const heading = Math.atan2(dy * H, dx * W);
-
-            const fade = Math.min(t * 5, 1) * Math.min((1 - t) * 5, 1);
-
-            drawButterfly(ctx, b.cx * W, b.cy * H, b.size, b.wingPhase, b.alpha * fade, heading, b.depth);
-
-            if (t >= 1) {
-              const pathFn = ZONES[randInt(0, ZONES.length - 1)];
-              const p2 = pathFn();
-              Object.assign(b, {
-                ...p2, cx: p2.startX, cy: p2.startY,
-                elapsed: 0, visible: false,
-                revealAt: now + rand(2000, 6000),
-                duration: rand(10000, 16000),
-                wingPhase: rand(0, Math.PI * 2),
-                wobble: rand(0, Math.PI * 2),
-              });
-            }
-          });
-        };
-
-        rafRef.current = requestAnimationFrame(tick);
-
-        return () => {
-          cancelAnimationFrame(rafRef.current);
-          window.removeEventListener('resize', resize);
-        };
-      }
-    }
-
-    // Timeline execution
-    // 4.0s: start fading out
+    // 4.0s: Begin smooth dissolve/fade-out
     const fadeTimer = setTimeout(() => {
       setFadingOut(true);
     }, 4000);
 
-    // 5.0s: unmount completely
+    // 5.0s: Unmount completely & restore normal page behavior
     const completeTimer = setTimeout(() => {
       setIsComplete(true);
       document.body.style.overflow = '';
+      window.scrollTo(0, 0);
     }, 5000);
+
+    // 6.0s: ABSOLUTE FAILSAFE (Guarantees splash can NEVER get stuck)
+    const failsafeTimer = setTimeout(() => {
+      setFadingOut(true);
+      setIsComplete(true);
+      document.body.style.overflow = '';
+    }, 6000);
 
     return () => {
       clearTimeout(fadeTimer);
       clearTimeout(completeTimer);
+      clearTimeout(failsafeTimer);
       document.body.style.overflow = '';
     };
   }, []);
+
+  // 2. CANVAS ANIMATION EFFECT (INDEPENDENT)
+  useEffect(() => {
+    if (isComplete) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize, { passive: true });
+
+    const isMobile = window.innerWidth < 768;
+    const PARTICLE_N = isMobile ? 12 : 24;
+
+    const particles: Particle[] = Array.from({ length: PARTICLE_N }, () => ({
+      x: rand(0, window.innerWidth),
+      y: rand(0, window.innerHeight),
+      r: rand(0.8, 2.0),
+      vx: rand(-0.08, 0.08),
+      vy: rand(-0.14, -0.04),
+      alpha: rand(0.05, 0.25),
+      dir: Math.random() > 0.5 ? 1 : -1,
+      speed: rand(0.0015, 0.004),
+    }));
+
+    const startTime = performance.now();
+    const totalButterflies = isMobile ? 6 : 10;
+    const depths: BDepth[] = isMobile
+      ? ['fg', 'mid', 'mid', 'mid', 'bg', 'bg']
+      : ['fg', 'fg', 'mid', 'mid', 'mid', 'mid', 'bg', 'bg', 'bg', 'bg'];
+
+    const butterflies: SplashButterfly[] = Array.from({ length: totalButterflies }, (_, i) => {
+      const depth = depths[i];
+      const pathFn = ZONES[i % ZONES.length];
+      const p = pathFn();
+      const size = depth === 'fg' ? rand(24, 34) : depth === 'mid' ? rand(14, 22) : rand(10, 14);
+      const alpha = depth === 'fg' ? rand(0.60, 0.80) : depth === 'mid' ? rand(0.35, 0.58) : rand(0.18, 0.35);
+
+      return {
+        ...p, cx: p.startX, cy: p.startY,
+        wingPhase: rand(0, Math.PI * 2),
+        wingSpd: rand(2.2, 3.8),
+        glideTimer: 0, glideDur: rand(500, 1500), isGliding: false,
+        wobble: rand(0, Math.PI * 2), wobbleSpd: rand(0.012, 0.028),
+        wobbleAmp: rand(0.012, 0.026),
+        curveSign: Math.random() > 0.5 ? 1 : -1,
+        size, alpha, depth,
+        elapsed: 0, duration: rand(10000, 16000),
+        visible: false, revealAt: startTime + rand(2500 + i * 200, 3200 + i * 350),
+      };
+    });
+
+    let lastFrame = 0;
+    const FRAME_INTERVAL = 1000 / 32;
+
+    const tick = (now: number) => {
+      rafRef.current = requestAnimationFrame(tick);
+      if (now - lastFrame < FRAME_INTERVAL) return;
+      lastFrame = now;
+
+      const W = canvas.width;
+      const H = canvas.height;
+      const dt = 16;
+      const elapsedSec = (now - startTime) / 1000;
+
+      ctx.clearRect(0, 0, W, H);
+
+      // Particles start fading in from Scene 2 (0.6s)
+      if (elapsedSec > 0.6) {
+        const globalParticleAlpha = Math.min((elapsedSec - 0.6) / 0.8, 1);
+        particles.forEach(p => {
+          p.x += p.vx; p.y += p.vy;
+          p.alpha += p.dir * p.speed;
+          if (p.alpha > 0.26 || p.alpha < 0.04) p.dir *= -1;
+          if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+          if (p.y < 0) { p.y = H; p.x = rand(0, W); }
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(194,152,69,${(p.alpha * globalParticleAlpha).toFixed(3)})`;
+          ctx.fill();
+        });
+      }
+
+      // Butterflies start appearing in Scene 6 (around 2.8s - 3.0s)
+      butterflies.forEach(b => {
+        if (!b.visible) {
+          if (now > b.revealAt) b.visible = true;
+          return;
+        }
+
+        b.elapsed += dt;
+        b.glideTimer += dt;
+        if (b.glideTimer > b.glideDur) {
+          b.isGliding = !b.isGliding;
+          b.glideDur = b.isGliding ? rand(300, 800) : rand(700, 2000);
+          b.glideTimer = 0;
+        }
+        if (!b.isGliding) b.wingPhase += b.wingSpd * (dt / 1000);
+
+        b.wobble += b.wobbleSpd;
+
+        const t = Math.min(b.elapsed / b.duration, 1);
+        const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+
+        const px = b.startX + (b.endX - b.startX) * ease;
+        const py = b.startY + (b.endY - b.startY) * ease;
+        const perpX = -(b.endY - b.startY);
+        const perpY = (b.endX - b.startX);
+        const wamt = (Math.sin(b.wobble) * 0.6 + Math.sin(b.wobble * 0.4 + 1.2) * 0.4) * b.wobbleAmp * b.curveSign;
+
+        b.cx = px + perpX * wamt;
+        b.cy = py + perpY * wamt;
+
+        const dx = (b.endX + perpX * wamt * 0.15) - b.cx;
+        const dy = (b.endY + perpY * wamt * 0.15) - b.cy;
+        const heading = Math.atan2(dy * H, dx * W);
+
+        const fade = Math.min(t * 5, 1) * Math.min((1 - t) * 5, 1);
+
+        drawButterfly(ctx, b.cx * W, b.cy * H, b.size, b.wingPhase, b.alpha * fade, heading, b.depth);
+
+        if (t >= 1) {
+          const pathFn = ZONES[randInt(0, ZONES.length - 1)];
+          const p2 = pathFn();
+          Object.assign(b, {
+            ...p2, cx: p2.startX, cy: p2.startY,
+            elapsed: 0, visible: false,
+            revealAt: now + rand(2000, 6000),
+            duration: rand(10000, 16000),
+            wingPhase: rand(0, Math.PI * 2),
+            wobble: rand(0, Math.PI * 2),
+          });
+        }
+      });
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener('resize', resize);
+    };
+  }, [isComplete]);
 
   if (isComplete) return null;
 
@@ -358,7 +371,7 @@ export const SplashScreen: React.FC = () => {
         .splash-script-2 {
           animation: splashScriptFade2 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2.1s both;
         }
-        .splash-[#C29845]-accent {
+        .splash-accent-line {
           animation: lineDrawH 0.7s ease-out 2.3s both;
           transform-origin: center;
         }
@@ -423,7 +436,7 @@ export const SplashScreen: React.FC = () => {
           </div>
 
           {/* Gold Accent Divider */}
-          <div className="splash-[#C29845]-accent w-20 h-[1px] bg-gradient-to-r from-transparent via-[#C29845] to-transparent my-4" />
+          <div className="splash-accent-line w-20 h-[1px] bg-gradient-to-r from-transparent via-[#C29845] to-transparent my-4" />
 
           {/* Scene 5: Main Title */}
           <h1 className="splash-title font-heading text-2xl sm:text-4xl md:text-5xl tracking-[0.08em] text-[#FBF7EF] font-normal uppercase mb-3 text-shadow-hero whitespace-nowrap">
