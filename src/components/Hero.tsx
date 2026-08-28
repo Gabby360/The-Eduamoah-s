@@ -43,17 +43,20 @@ function newPath() {
 }
 
 function mkButterflies(mobile: boolean, now: number): Butterfly[] {
-  const total = mobile ? 7 : 12;
-  // depth distribution: 3 fg, 5 mid, 4 bg (mobile: 2/3/2)
+  const total = mobile ? 6 : 10;
+  // depth distribution: 3 fg, 5 mid, 4 bg (mobile: 2/2/2)
   const depths: BDepth[] = mobile
-    ? ['fg','fg','mid','mid','mid','bg','bg']
+    ? ['fg','fg','mid','mid','bg','bg']
     : ['fg','fg','fg','mid','mid','mid','mid','mid','bg','bg','bg','bg'];
 
   return Array.from({ length: total }, (_, i) => {
     const depth = depths[i];
     const p = newPath();
-    const size = depth === 'fg' ? rand(26,38) : depth === 'mid' ? rand(14,22) : rand(8,14);
-    const alpha = depth === 'fg' ? rand(0.65,0.85) : depth === 'mid' ? rand(0.38,0.62) : rand(0.18,0.40);
+    // Reduced by ~45-50% for delicate, subtle, romantic aesthetic
+    const size = mobile
+      ? (depth === 'fg' ? rand(11,15) : depth === 'mid' ? rand(6,10) : rand(4,7))
+      : (depth === 'fg' ? rand(14,20) : depth === 'mid' ? rand(8,12) : rand(5,8));
+    const alpha = depth === 'fg' ? rand(0.60,0.80) : depth === 'mid' ? rand(0.35,0.58) : rand(0.18,0.38);
     const dur   = depth === 'fg' ? rand(11000,18000) : depth === 'mid' ? rand(14000,22000) : rand(17000,26000);
     const delay = rand(i * 800, i * 800 + rand(1500, 5000));
     return {
