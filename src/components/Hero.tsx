@@ -9,78 +9,131 @@ const randInt = (min: number, max: number) => Math.floor(rand(min, max + 1));
 
 interface Particle { x: number; y: number; r: number; vx: number; vy: number; alpha: number; dir: number; speed: number; }
 interface Petal    { x: number; y: number; size: number; rot: number; rotSpd: number; vx: number; vy: number; alpha: number; startAt: number; active: boolean; }
+type BDepth = 'fg' | 'mid' | 'bg';
 interface Butterfly {
   startX: number; startY: number; endX: number; endY: number;
   cx: number; cy: number;
   wingPhase: number; wingSpd: number;
-  wobble: number; wobbleSpd: number;
-  size: number; alpha: number;
+  glideTimer: number; glideDur: number; isGliding: boolean;
+  wobble: number; wobbleSpd: number; wobbleAmp: number;
+  curveSign: number; // +1 or -1 for S-curve variation
+  size: number; alpha: number; depth: BDepth;
   elapsed: number; duration: number;
   visible: boolean; revealAt: number;
 }
 
-function safePath(i: number) {
-  const paths = [
-    { startX: rand(0.02,0.12), startY: rand(0.72,0.92), endX: rand(0.08,0.28), endY: rand(0.10,0.35) },
-    { startX: rand(0.78,0.96), startY: rand(0.68,0.90), endX: rand(0.65,0.88), endY: rand(0.08,0.30) },
-    { startX: rand(0.02,0.18), startY: rand(0.08,0.25), endX: rand(0.30,0.44), endY: rand(0.55,0.72) },
-  ];
-  return paths[i % paths.length];
+/* 12 edge/corner zones avoiding central text safe-zone (x:30-70%, y:20-80%) */
+const ZONES = [
+  () => ({ startX: rand(0.01,0.10), startY: rand(0.75,0.95), endX: rand(0.05,0.22), endY: rand(0.08,0.28) }), // left-bottom → upper-left
+  () => ({ startX: rand(0.80,0.97), startY: rand(0.72,0.93), endX: rand(0.68,0.88), endY: rand(0.06,0.26) }), // right-bottom → upper-right
+  () => ({ startX: rand(0.01,0.10), startY: rand(0.05,0.22), endX: rand(0.18,0.30), endY: rand(0.65,0.85) }), // upper-left → lower-mid
+  () => ({ startX: rand(0.82,0.98), startY: rand(0.05,0.20), endX: rand(0.70,0.85), endY: rand(0.68,0.88) }), // upper-right → lower-right
+  () => ({ startX: rand(0.15,0.30), startY: rand(0.88,0.98), endX: rand(0.70,0.88), endY: rand(0.80,0.96) }), // lower-left → lower-right (stays low)
+  () => ({ startX: rand(0.02,0.14), startY: rand(0.40,0.60), endX: rand(0.20,0.30), endY: rand(0.12,0.28) }), // mid-left → upper
+  () => ({ startX: rand(0.86,0.98), startY: rand(0.38,0.58), endX: rand(0.70,0.82), endY: rand(0.10,0.26) }), // mid-right → upper
+  () => ({ startX: rand(0.22,0.30), startY: rand(0.03,0.14), endX: rand(0.04,0.16), endY: rand(0.50,0.70) }), // upper-left area → mid-left
+  () => ({ startX: rand(0.70,0.80), startY: rand(0.03,0.14), endX: rand(0.84,0.97), endY: rand(0.48,0.68) }), // upper-right area → mid-right
+  () => ({ startX: rand(0.04,0.18), startY: rand(0.62,0.78), endX: rand(0.22,0.30), endY: rand(0.82,0.95) }), // left-mid → lower-left
+  () => ({ startX: rand(0.72,0.88), startY: rand(0.60,0.76), endX: rand(0.80,0.96), endY: rand(0.80,0.94) }), // right-mid → lower-right
+  () => ({ startX: rand(0.40,0.58), startY: rand(0.91,0.99), endX: rand(0.10,0.25), endY: rand(0.72,0.88) }), // bottom-center → lower-left
+];
+
+function newPath() {
+  return ZONES[randInt(0, ZONES.length - 1)]();
 }
 
 function mkButterflies(mobile: boolean, now: number): Butterfly[] {
-  return Array.from({ length: mobile ? 2 : 3 }, (_, i) => {
-    const p = safePath(i);
-    return { ...p, cx: p.startX, cy: p.startY,
-      wingPhase: rand(0, Math.PI * 2), wingSpd: rand(2.4, 3.8),
-      wobble: 0, wobbleSpd: rand(0.018, 0.028),
-      size: i === 2 ? rand(10,14) : rand(15,21),
-      alpha: i === 2 ? rand(0.22,0.40) : rand(0.42,0.65),
-      elapsed: 0, duration: rand(18000, 27000),
-      visible: false, revealAt: now + rand(i * 2000, i * 2000 + 3500),
+  const total = mobile ? 7 : 12;
+  // depth distribution: 3 fg, 5 mid, 4 bg (mobile: 2/3/2)
+  const depths: BDepth[] = mobile
+    ? ['fg','fg','mid','mid','mid','bg','bg']
+    : ['fg','fg','fg','mid','mid','mid','mid','mid','bg','bg','bg','bg'];
+
+  return Array.from({ length: total }, (_, i) => {
+    const depth = depths[i];
+    const p = newPath();
+    const size = depth === 'fg' ? rand(26,38) : depth === 'mid' ? rand(14,22) : rand(8,14);
+    const alpha = depth === 'fg' ? rand(0.65,0.85) : depth === 'mid' ? rand(0.38,0.62) : rand(0.18,0.40);
+    const dur   = depth === 'fg' ? rand(11000,18000) : depth === 'mid' ? rand(14000,22000) : rand(17000,26000);
+    const delay = rand(i * 800, i * 800 + rand(1500, 5000));
+    return {
+      ...p, cx: p.startX, cy: p.startY,
+      wingPhase: rand(0, Math.PI * 2),
+      wingSpd: rand(2.2, 4.0),
+      glideTimer: 0, glideDur: rand(600, 1800), isGliding: false,
+      wobble: rand(0, Math.PI * 2), wobbleSpd: rand(0.012, 0.030),
+      wobbleAmp: rand(0.012, 0.030),
+      curveSign: Math.random() > 0.5 ? 1 : -1,
+      size, alpha, depth,
+      elapsed: 0, duration: dur,
+      visible: false, revealAt: now + delay,
     };
   });
 }
 
-/* Draw butterfly — NO ctx.filter (expensive). Use alpha for depth instead. */
-function drawButterfly(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, wingPhase: number, alpha: number, heading: number) {
+/* Draw butterfly — dark silhouette with warm gold highlights, no ctx.filter */
+function drawButterfly(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number, size: number,
+  wingPhase: number, alpha: number,
+  heading: number, depth: BDepth
+) {
   ctx.save();
   ctx.globalAlpha = alpha;
   ctx.translate(x, y);
   ctx.rotate(heading - Math.PI / 2);
-  const f = Math.abs(Math.sin(wingPhase)); // wing fold 0–1
+
+  const f = Math.abs(Math.sin(wingPhase)); // 0 = closed, 1 = open
   const w = size;
 
-  ctx.strokeStyle = 'rgba(120,80,20,0.25)';
-  ctx.lineWidth = 0.5;
+  // Dark silhouette base — warm dark brown, not bright gold
+  const bodyDark   = 'rgba(28,16,6,0.82)';
+  const wingMain   = depth === 'bg' ? 'rgba(38,22,8,0.65)' : 'rgba(42,24,8,0.72)';
+  const wingAccent = depth === 'fg' ? 'rgba(160,110,40,0.40)' : 'rgba(120,75,25,0.28)';
+  const wingStroke = 'rgba(90,55,15,0.20)';
 
-  // upper wings
-  ctx.fillStyle = `rgba(194,152,69,0.52)`;
+  ctx.lineWidth = size < 14 ? 0.3 : 0.6;
+
+  // ── upper wings ──
+  ctx.strokeStyle = wingStroke;
+  ctx.fillStyle = wingMain;
   ctx.beginPath(); ctx.moveTo(0,0);
-  ctx.bezierCurveTo(-w*f,-w*0.5,-w*1.05*f,-w*0.18,-w*0.85*f,w*0.28);
-  ctx.bezierCurveTo(-w*0.38*f,w*0.18,0,w*0.08,0,0);
+  ctx.bezierCurveTo(-w*f,-w*0.52,-w*1.08*f,-w*0.20,-w*0.88*f,w*0.26);
+  ctx.bezierCurveTo(-w*0.40*f,w*0.16,0,w*0.06,0,0);
   ctx.fill(); ctx.stroke();
 
   ctx.beginPath(); ctx.moveTo(0,0);
-  ctx.bezierCurveTo(w*f,-w*0.5,w*1.05*f,-w*0.18,w*0.85*f,w*0.28);
-  ctx.bezierCurveTo(w*0.38*f,w*0.18,0,w*0.08,0,0);
+  ctx.bezierCurveTo(w*f,-w*0.52,w*1.08*f,-w*0.20,w*0.88*f,w*0.26);
+  ctx.bezierCurveTo(w*0.40*f,w*0.16,0,w*0.06,0,0);
   ctx.fill(); ctx.stroke();
 
-  // lower wings
-  ctx.fillStyle = 'rgba(180,128,48,0.36)';
+  // warm gold vein highlight on upper wing (fg/mid only)
+  if (depth !== 'bg') {
+    ctx.globalAlpha = alpha * 0.45;
+    ctx.strokeStyle = wingAccent;
+    ctx.lineWidth = size < 18 ? 0.4 : 0.7;
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.bezierCurveTo(-w*f*0.5,-w*0.25,-w*0.6*f,-w*0.08,-w*0.55*f,w*0.14); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.bezierCurveTo(w*f*0.5,-w*0.25,w*0.6*f,-w*0.08,w*0.55*f,w*0.14); ctx.stroke();
+    ctx.globalAlpha = alpha;
+  }
+
+  // ── lower wings ──
+  ctx.strokeStyle = wingStroke;
+  ctx.fillStyle = wingMain;
+  ctx.lineWidth = size < 14 ? 0.3 : 0.5;
   ctx.beginPath(); ctx.moveTo(0,0);
-  ctx.bezierCurveTo(-w*0.65*f,w*0.28,-w*0.80*f,w*0.70,-w*0.28*f,w*0.75);
-  ctx.bezierCurveTo(-w*0.09*f,w*0.52,0,w*0.28,0,0);
+  ctx.bezierCurveTo(-w*0.68*f,w*0.26,-w*0.82*f,w*0.68,-w*0.30*f,w*0.72);
+  ctx.bezierCurveTo(-w*0.10*f,w*0.50,0,w*0.26,0,0);
   ctx.fill(); ctx.stroke();
 
   ctx.beginPath(); ctx.moveTo(0,0);
-  ctx.bezierCurveTo(w*0.65*f,w*0.28,w*0.80*f,w*0.70,w*0.28*f,w*0.75);
-  ctx.bezierCurveTo(w*0.09*f,w*0.52,0,w*0.28,0,0);
+  ctx.bezierCurveTo(w*0.68*f,w*0.26,w*0.82*f,w*0.68,w*0.30*f,w*0.72);
+  ctx.bezierCurveTo(w*0.10*f,w*0.50,0,w*0.26,0,0);
   ctx.fill(); ctx.stroke();
 
-  // body
-  ctx.fillStyle = 'rgba(70,42,8,0.62)';
-  ctx.beginPath(); ctx.ellipse(0,w*0.18,w*0.065,w*0.42,0,0,Math.PI*2);
+  // ── body ──
+  ctx.fillStyle = bodyDark;
+  ctx.beginPath(); ctx.ellipse(0,w*0.16,w*0.060,w*0.40,0,0,Math.PI*2);
   ctx.fill();
   ctx.restore();
 }
@@ -210,36 +263,57 @@ export const Hero: React.FC = () => {
         if (!b.visible) { if (ts > b.revealAt) b.visible = true; return; }
 
         b.elapsed += dt;
-        b.wingPhase += b.wingSpd * (dt / 1000);
-        b.wobble    += b.wobbleSpd;
+
+        // Wing flutter with occasional glide pause
+        b.glideTimer += dt;
+        if (b.glideTimer > b.glideDur) {
+          b.isGliding = !b.isGliding;
+          b.glideDur = b.isGliding ? rand(300, 900) : rand(800, 2200);
+          b.glideTimer = 0;
+        }
+        if (!b.isGliding) b.wingPhase += b.wingSpd * (dt / 1000);
+
+        b.wobble += b.wobbleSpd;
 
         const t    = Math.min(b.elapsed / b.duration, 1);
+        // Ease in-out for smooth start/end
         const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
 
+        // Primary lerp path
         const px = b.startX + (b.endX - b.startX) * ease;
         const py = b.startY + (b.endY - b.startY) * ease;
+
+        // Perpendicular S-curve offset — makes path feel natural, not straight
         const perpX = -(b.endY - b.startY);
         const perpY =  (b.endX - b.startX);
-        const wamt  = Math.sin(b.wobble) * 0.022;
+        // Double sine for organic S-curve
+        const wamt = (Math.sin(b.wobble) * 0.6 + Math.sin(b.wobble * 0.4 + 1.2) * 0.4) * b.wobbleAmp * b.curveSign;
 
         b.cx = px + perpX * wamt;
         b.cy = py + perpY * wamt;
 
-        const dx = b.endX - b.cx, dy = b.endY - b.cy;
+        // Heading follows actual movement direction
+        const dx = (b.endX + perpX * wamt * 0.15) - b.cx;
+        const dy = (b.endY + perpY * wamt * 0.15) - b.cy;
         const heading = Math.atan2(dy * H, dx * W);
 
-        const fade = Math.min(t * 5, 1) * Math.min((1-t) * 5, 1);
+        // Fade in at start, fade out at end
+        const fade = Math.min(t * 6, 1) * Math.min((1-t) * 6, 1);
 
-        drawButterfly(ctx, b.cx * W, b.cy * H, b.size, b.wingPhase, b.alpha * fade, heading);
+        drawButterfly(ctx, b.cx * W, b.cy * H, b.size, b.wingPhase, b.alpha * fade, heading, b.depth);
 
         if (t >= 1) {
-          const p2 = safePath(randInt(0, 2));
-          Object.assign(b, { ...p2, cx: p2.startX, cy: p2.startY,
+          const p2 = newPath();
+          const newDur = b.depth === 'fg' ? rand(10000,18000) : b.depth === 'mid' ? rand(13000,22000) : rand(16000,26000);
+          Object.assign(b, {
+            ...p2, cx: p2.startX, cy: p2.startY,
             elapsed: 0, visible: false,
-            revealAt: ts + rand(6000, 15000),
-            duration: rand(18000, 27000),
+            revealAt: ts + rand(4000, 14000),
+            duration: newDur,
             wingPhase: rand(0, Math.PI * 2),
-            wobble: 0,
+            wobble: rand(0, Math.PI * 2),
+            glideTimer: 0, glideDur: rand(600,1800), isGliding: false,
+            curveSign: Math.random() > 0.5 ? 1 : -1,
           });
         }
       });
