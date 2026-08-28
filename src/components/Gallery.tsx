@@ -23,7 +23,7 @@ export const Gallery: React.FC = () => {
       setSelectedImageIndex((selectedImageIndex + 1) % weddingDetails.gallery.images.length);
   };
 
-  // Trigger Gold Sweep shimmer animation on scroll (WITHOUT hiding photos)
+  // Trigger Gold Sweep shimmer animation on scroll (as a secondary light effect)
   useEffect(() => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) return;
@@ -50,10 +50,57 @@ export const Gallery: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Return specific Ken Burns animation class based on image index
+  const getKenBurnsClass = (idx: number) => {
+    const classes = [
+      'animate-kb-zoom-in',
+      'animate-kb-pan-left',
+      'animate-kb-zoom-out',
+      'animate-kb-pan-right',
+    ];
+    return classes[idx % classes.length];
+  };
+
   return (
     <section id="gallery" className="py-24 bg-[#0B0907] relative overflow-hidden">
-      {/* Gold Sweep Shimmer CSS */}
+      {/* Slow Ken Burns Photo Movement & Gold Sweep CSS */}
       <style>{`
+        /* Continuous Slow Ken Burns Photo Animations (6-8.5s loops) */
+        @keyframes kbZoomIn {
+          0%   { transform: scale(1.00) translate(0%, 0%); }
+          50%  { transform: scale(1.08) translate(-1.2%, -1%); }
+          100% { transform: scale(1.00) translate(0%, 0%); }
+        }
+        @keyframes kbPanLeft {
+          0%   { transform: scale(1.07) translate(1.5%, 0.5%); }
+          50%  { transform: scale(1.02) translate(-1.5%, -1%); }
+          100% { transform: scale(1.07) translate(1.5%, 0.5%); }
+        }
+        @keyframes kbZoomOut {
+          0%   { transform: scale(1.09) translate(-0.5%, 1.2%); }
+          50%  { transform: scale(1.01) translate(1%, -0.5%); }
+          100% { transform: scale(1.09) translate(-0.5%, 1.2%); }
+        }
+        @keyframes kbPanRight {
+          0%   { transform: scale(1.03) translate(-1.5%, -0.5%); }
+          50%  { transform: scale(1.08) translate(1.2%, 1%); }
+          100% { transform: scale(1.03) translate(-1.5%, -0.5%); }
+        }
+
+        .animate-kb-zoom-in {
+          animation: kbZoomIn 7.5s ease-in-out infinite;
+        }
+        .animate-kb-pan-left {
+          animation: kbPanLeft 8.5s ease-in-out infinite;
+        }
+        .animate-kb-zoom-out {
+          animation: kbZoomOut 7.0s ease-in-out infinite;
+        }
+        .animate-kb-pan-right {
+          animation: kbPanRight 8.0s ease-in-out infinite;
+        }
+
+        /* Secondary Gold Light Sweep Shimmer */
         @keyframes goldSweep {
           0%   { transform: translateX(-120%) skewX(-15deg); opacity: 0; }
           25%  { opacity: 0.45; }
@@ -75,8 +122,13 @@ export const Gallery: React.FC = () => {
           animation: goldSweep 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
           z-index: 2;
         }
+
         @media (prefers-reduced-motion: reduce) {
-          .gallery-sweep::after { animation: none; }
+          .animate-kb-zoom-in, .animate-kb-pan-left,
+          .animate-kb-zoom-out, .animate-kb-pan-right,
+          .gallery-sweep::after {
+            animation: none !important;
+          }
         }
       `}</style>
 
@@ -92,7 +144,7 @@ export const Gallery: React.FC = () => {
           <div className="w-20 h-[1px] bg-gradient-to-r from-transparent via-[#C29845] to-transparent mx-auto" />
         </div>
 
-        {/* Gallery Grid — Photos are 100% visible immediately, Gold Sweep animates on top */}
+        {/* Gallery Grid — Photos are 100% visible immediately with continuous Ken Burns movement */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {weddingDetails.gallery.images.map((img, idx) => (
             <div
@@ -103,15 +155,21 @@ export const Gallery: React.FC = () => {
                 swept[idx] ? 'gallery-sweep' : ''
               }`}
             >
+              {/* Actual Photograph with Staggered Continuous Ken Burns Animation */}
               <img
                 src={img.url}
                 alt={img.title}
                 loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05] filter brightness-90 group-hover:brightness-100"
+                className={`w-full h-full object-cover filter brightness-90 group-hover:brightness-100 transition-all duration-700 ${getKenBurnsClass(
+                  idx
+                )}`}
+                style={{
+                  animationDelay: `${(idx * 0.6) % 2.4}s`,
+                }}
               />
 
               {/* Dark Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 z-10">
                 <span className="text-[#C29845] text-[10px] tracking-[0.25em] uppercase block font-semibold mb-1">
                   {img.category}
                 </span>
@@ -122,8 +180,8 @@ export const Gallery: React.FC = () => {
               </div>
 
               {/* Corner Frame Highlights */}
-              <div className="absolute top-2 left-2 w-4 h-4 border-t border-l border-[#C29845]/0 group-hover:border-[#C29845] transition-all duration-300" />
-              <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-[#C29845]/0 group-hover:border-[#C29845] transition-all duration-300" />
+              <div className="absolute top-2 left-2 w-4 h-4 border-t border-l border-[#C29845]/0 group-hover:border-[#C29845] transition-all duration-300 z-10" />
+              <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-[#C29845]/0 group-hover:border-[#C29845] transition-all duration-300 z-10" />
             </div>
           ))}
         </div>
