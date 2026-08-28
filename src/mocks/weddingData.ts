@@ -69,9 +69,29 @@ export const weddingDetails = {
   gallery: {
     images: [
       {
+        url: '/gallery-13.jpg',
+        title: 'Close Embrace',
+        category: 'Romance'
+      },
+      {
+        url: '/gallery-10.jpg',
+        title: 'Staircase Kiss',
+        category: 'Romance'
+      },
+      {
         url: '/gallery-1.jpg',
         title: 'Promise & Ring',
         category: 'Details'
+      },
+      {
+        url: '/hero-custom.jpg',
+        title: 'Forehead Kiss',
+        category: 'Romance'
+      },
+      {
+        url: '/gallery-12.jpg',
+        title: 'Back to Back',
+        category: 'Portrait'
       },
       {
         url: '/gallery-2.jpg',
@@ -84,6 +104,11 @@ export const weddingDetails = {
         category: 'Portrait'
       },
       {
+        url: '/gallery-14.jpg',
+        title: 'Matching Energy',
+        category: 'Portrait'
+      },
+      {
         url: '/gallery-4.jpg',
         title: 'Forever Together',
         category: 'Monochrome'
@@ -92,11 +117,6 @@ export const weddingDetails = {
         url: '/gallery-5.jpg',
         title: 'Playful Moments',
         category: 'Celebration'
-      },
-      {
-        url: '/hero-custom.jpg',
-        title: 'Forehead Kiss',
-        category: 'Romance'
       },
       {
         url: '/gallery-6.jpg',
@@ -112,6 +132,16 @@ export const weddingDetails = {
         url: '/gallery-8.jpg',
         title: 'Hold My Hand',
         category: 'Details'
+      },
+      {
+        url: '/gallery-11.jpg',
+        title: 'Framed in Love',
+        category: 'Creative'
+      },
+      {
+        url: '/gallery-15.jpg',
+        title: 'Just the Two of Us',
+        category: 'Romance'
       }
     ]
   },
