@@ -120,9 +120,9 @@ export const Program: React.FC = () => {
             ))}
           </div>
 
-          {/* Action Buttons: VIEW PROGRAM & DOWNLOAD PDF */}
+          {/* Action Buttons: VIEW PROGRAM & DOWNLOAD PROGRAM */}
           <div className="pt-10 mt-10 border-t border-[#C29845]/20 flex flex-col sm:flex-row items-center justify-center gap-4">
-            {/* View Program */}
+            {/* View Program — opens PDF in browser viewer tab */}
             <a
               href={programPdfUrl}
               target="_blank"
@@ -133,14 +133,14 @@ export const Program: React.FC = () => {
               <span>VIEW PROGRAM</span>
             </a>
 
-            {/* Download PDF */}
+            {/* Download Program — downloads PDF directly to device */}
             <a
               href={programPdfUrl}
               download="The-Eduamoahs-Wedding-Program.pdf"
               className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-8 py-3.5 border border-[#C29845]/60 hover:border-[#C29845] bg-[#0B0907]/80 hover:bg-[#C29845]/20 text-[#FBF7EF] hover:text-[#D2AC5E] font-medium text-xs tracking-[0.25em] uppercase transition-all duration-300 shadow-lg"
             >
               <Download size={16} />
-              <span>DOWNLOAD PDF</span>
+              <span>DOWNLOAD PROGRAM</span>
             </a>
           </div>
 
