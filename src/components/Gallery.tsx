@@ -1,13 +1,45 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { weddingDetails } from '../mocks/weddingData';
 import { X, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
+
+/* ─── Gallery-Specific Staggered Scroll Reveal Hook ─── */
+function useGalleryReveal(count: number) {
+  const [visible, setVisible] = useState<boolean[]>(Array(count).fill(false));
+  const refs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) { setVisible(Array(count).fill(true)); return; }
+
+    const observers: IntersectionObserver[] = [];
+    refs.current.forEach((el, idx) => {
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            // 150ms stagger per image up to 6 in a row
+            setTimeout(() => {
+              setVisible(prev => { const n = [...prev]; n[idx] = true; return n; });
+            }, Math.min(idx % 6, 6) * 150);
+            obs.disconnect();
+          }
+        },
+        { threshold: 0.1 }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+    return () => observers.forEach(o => o.disconnect());
+  }, [count]);
+
+  return { visible, refs };
+}
 
 export const Gallery: React.FC = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [swept, setSwept] = useState<boolean[]>(
     Array(weddingDetails.gallery.images.length).fill(false)
   );
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const openLightbox = (index: number) => setSelectedImageIndex(index);
   const closeLightbox = () => setSelectedImageIndex(null);
@@ -23,32 +55,24 @@ export const Gallery: React.FC = () => {
       setSelectedImageIndex((selectedImageIndex + 1) % weddingDetails.gallery.images.length);
   };
 
-  // Trigger Gold Sweep shimmer animation on scroll (as a secondary light effect)
+  const count = weddingDetails.gallery.images.length;
+  const { visible, refs } = useGalleryReveal(count);
+
+  // Trigger Gold Sweep shimmer once per image after initial reveal
   useEffect(() => {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) return;
-
-    const observers: IntersectionObserver[] = [];
-    cardRefs.current.forEach((el, idx) => {
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting && !swept[idx]) {
-            setTimeout(() => {
-              setSwept(prev => { const n = [...prev]; n[idx] = true; return n; });
-            }, Math.min(idx % 6, 6) * 150);
-            obs.disconnect();
-          }
-        },
-        { threshold: 0.15 }
-      );
-      obs.observe(el);
-      observers.push(obs);
+    visible.forEach((isVisible, idx) => {
+      if (isVisible && !swept[idx]) {
+        setTimeout(() => {
+          setSwept(prev => { const n = [...prev]; n[idx] = true; return n; });
+        }, 600);
+      }
     });
-
-    return () => observers.forEach(o => o.disconnect());
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [visible]);
+
+  const setRef = useCallback((el: HTMLDivElement | null, idx: number) => {
+    refs.current[idx] = el;
+  }, [refs]);
 
   // Return specific Ken Burns animation class based on image index
   const getKenBurnsClass = (idx: number) => {
@@ -63,7 +87,7 @@ export const Gallery: React.FC = () => {
 
   return (
     <section id="gallery" className="py-24 bg-[#0B0907] relative overflow-hidden">
-      {/* Slow Ken Burns Photo Movement & Gold Sweep CSS */}
+      {/* Gallery Fade-in Reveal + Slow Ken Burns Movement + Gold Sweep CSS */}
       <style>{`
         /* Continuous Slow Ken Burns Photo Animations (6-8.5s loops) */
         @keyframes kbZoomIn {
@@ -144,16 +168,24 @@ export const Gallery: React.FC = () => {
           <div className="w-20 h-[1px] bg-gradient-to-r from-transparent via-[#C29845] to-transparent mx-auto" />
         </div>
 
-        {/* Gallery Grid — Photos are 100% visible immediately with continuous Ken Burns movement */}
+        {/* Gallery Grid — Staggered Fade-In Reveal + Continuous Ken Burns Movement */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {weddingDetails.gallery.images.map((img, idx) => (
             <div
               key={idx}
-              ref={el => (cardRefs.current[idx] = el)}
+              ref={el => setRef(el, idx)}
               onClick={() => openLightbox(idx)}
               className={`group relative cursor-pointer overflow-hidden border border-[#C29845]/20 bg-[#141110] aspect-[4/5] shadow-xl transition-all duration-500 hover:border-[#C29845]/60 ${
                 swept[idx] ? 'gallery-sweep' : ''
               }`}
+              style={{
+                opacity: visible[idx] ? 1 : 0,
+                transform: visible[idx] ? 'translateY(0)' : 'translateY(15px)',
+                transition: visible[idx]
+                  ? 'opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), transform 1.0s cubic-bezier(0.16, 1, 0.3, 1)'
+                  : 'none',
+                willChange: visible[idx] ? 'auto' : 'opacity, transform',
+              }}
             >
               {/* Actual Photograph with Staggered Continuous Ken Burns Animation */}
               <img
