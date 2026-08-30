@@ -41,23 +41,23 @@ export const SplashScreen: React.FC = () => {
       return () => clearTimeout(rTimer);
     }
 
-    // 10.0s: Transition from 10-second quiet breathing heartbeat into Heart Reveal Portal
+    // 3.0s: Transition from 3-second quiet breathing heartbeat into Heart Reveal Portal
     const tExpand = setTimeout(() => {
       setPhase('expanding');
-    }, 10000);
+    }, 3000);
 
-    // 12.0s: Complete reveal & unlock main website page
+    // 4.8s: Complete reveal & unlock main website page
     const tComplete = setTimeout(() => {
       setPhase('complete');
       document.body.style.overflow = '';
       window.scrollTo(0, 0);
-    }, 12000);
+    }, 4800);
 
-    // Hard Failsafe at 13.5s
+    // Hard Failsafe at 6.0s
     const tFailsafe = setTimeout(() => {
       setPhase('complete');
       document.body.style.overflow = '';
-    }, 13500);
+    }, 6000);
 
     return () => {
       clearTimeout(tExpand);
@@ -256,28 +256,37 @@ export const SplashScreen: React.FC = () => {
         {phase === 'breathing' && (
           <div className="relative z-[10] flex flex-col items-center justify-center pointer-events-none">
             <div className="animate-symbol-breath flex items-center justify-center p-3">
-              {/* Elegant 3D Luminous Vector Gold Heart Icon (18px) */}
+              {/* Elegant 3D Luminous Vector Gold Heart Icon with Outer Gold Outline Ring */}
               <svg
-                width="18"
-                height="18"
-                viewBox="0 0 32 32"
+                width="24"
+                height="24"
+                viewBox="0 0 36 36"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4 sm:w-5 sm:h-5 text-[#f1c65a] drop-shadow-[0_0_12px_rgba(241,198,90,0.85)]"
+                className="w-5 h-5 sm:w-6 sm:h-6 text-[#f1c65a] drop-shadow-[0_0_16px_rgba(241,198,90,0.9)]"
               >
                 <defs>
-                  <linearGradient id="tinyHeartGrad" x1="0" y1="0" x2="32" y2="32">
+                  <linearGradient id="tinyHeartGrad" x1="0" y1="0" x2="36" y2="36">
                     <stop offset="0%" stopColor="#FFF3D1" />
                     <stop offset="35%" stopColor="#F1C65A" />
                     <stop offset="80%" stopColor="#E2B324" />
                     <stop offset="100%" stopColor="#B88D18" />
                   </linearGradient>
                 </defs>
+                {/* Outer Delicate Gold Accent Outline Ring */}
                 <path
-                  d="M16 5.5C13.5 1.5 7.5 1.5 4.5 5C1.5 8.5 2 13.5 6 17.5L16 27.5L26 17.5C30 13.5 30.5 8.5 27.5 5C24.5 1.5 18.5 1.5 16 5.5Z"
+                  d="M18 4.2C15.2 -0.2 8.4 -0.2 5.0 3.8C1.6 7.8 2.2 13.5 6.7 18.0L18 29.3L29.3 18.0C33.8 13.5 34.4 7.8 31.0 3.8C27.6 -0.2 20.8 -0.2 18 4.2Z"
+                  fill="none"
+                  stroke="#F1C65A"
+                  strokeWidth="1.2"
+                  strokeOpacity="0.85"
+                />
+                {/* Main Heart with Crisp Gold Border Line */}
+                <path
+                  d="M18 6.5C15.5 2.5 9.5 2.5 6.5 6C3.5 9.5 4 14.5 8 18.5L18 28.5L28 18.5C32 14.5 32.5 9.5 29.5 6C26.5 2.5 20.5 2.5 18 6.5Z"
                   fill="url(#tinyHeartGrad)"
                   stroke="#FFF8E1"
-                  strokeWidth="0.8"
+                  strokeWidth="1.4"
                 />
               </svg>
             </div>
