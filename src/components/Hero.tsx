@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { weddingDetails } from '../mocks/weddingData';
 
 /* ─────────────────────────────────────────────
@@ -62,48 +62,6 @@ export const Hero: React.FC = () => {
   const rafRef = useRef<number>(0);
   const activeRef = useRef(false);
   const lastFrame = useRef(0);
-
-  // Typewriter Continuous Loop State for "BECOMING THE EDUAMOAH'S"
-  const FULL_TEXT = "BECOMING THE EDUAMOAH'S";
-  const [typedText, setTypedText] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    const prefersReduced = typeof window !== 'undefined'
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false;
-
-    if (prefersReduced) {
-      setTypedText(FULL_TEXT);
-      return;
-    }
-
-    let timer: NodeJS.Timeout;
-
-    if (!isDeleting && typedText.length < FULL_TEXT.length) {
-      // Type next character (~120ms)
-      timer = setTimeout(() => {
-        setTypedText(FULL_TEXT.slice(0, typedText.length + 1));
-      }, 120);
-    } else if (!isDeleting && typedText.length === FULL_TEXT.length) {
-      // Completed phrase pause (~2.8s)
-      timer = setTimeout(() => {
-        setIsDeleting(true);
-      }, 2800);
-    } else if (isDeleting && typedText.length > 0) {
-      // Delete previous character (~70ms)
-      timer = setTimeout(() => {
-        setTypedText(FULL_TEXT.slice(0, typedText.length - 1));
-      }, 70);
-    } else if (isDeleting && typedText.length === 0) {
-      // Pause blank before restarting typing loop (~0.8s)
-      timer = setTimeout(() => {
-        setIsDeleting(false);
-      }, 800);
-    }
-
-    return () => clearTimeout(timer);
-  }, [typedText, isDeleting]);
 
   const dataRef = useRef<{
     particles: AmbientParticle[];
@@ -361,12 +319,12 @@ export const Hero: React.FC = () => {
         <img
           src={weddingDetails.couple.heroImage}
           alt={weddingDetails.couple.coupleName}
-          className="hero-ken-burns w-full h-full object-cover object-[50%_22%] sm:object-[50%_18%] md:object-[50%_16%] lg:object-[50%_14%] xl:object-[50%_12%] 2xl:object-[50%_10%]"
+          className="hero-ken-burns w-full h-full object-cover object-[50%_25%] sm:object-[50%_28%] md:object-[50%_32%] lg:object-[50%_35%] xl:object-[50%_38%]"
         />
         {/* Top subtle shade for navbar legibility */}
         <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#0a1713]/80 via-[#0a1713]/40 to-transparent pointer-events-none" />
-        {/* Bottom Dark Gradient Overlay (Bottom ~45% only) */}
-        <div className="absolute bottom-0 inset-x-0 h-[45%] md:h-[42%] bg-gradient-to-t from-[#0a1713] via-[#0a1713]/85 via-[#0a1713]/25 to-transparent pointer-events-none" />
+        {/* Bottom Dark Gradient Overlay */}
+        <div className="absolute bottom-0 inset-x-0 h-[50%] bg-gradient-to-t from-[#0a1713] via-[#0a1713]/80 via-[#0a1713]/30 to-transparent pointer-events-none" />
       </div>
 
       {/* Canvas — particles, glowing dust/embers, petals */}
@@ -376,34 +334,20 @@ export const Hero: React.FC = () => {
         aria-hidden="true"
       />
 
-      {/* Hero Text Content — Positioned toward bottom inside the dark gradient */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-12 sm:pb-16 flex flex-col items-center justify-end min-h-screen">
-        
-        {/* Continuous Typewriter Container - Layout Stable */}
-        <div className="min-h-[100px] sm:min-h-[130px] md:min-h-[160px] flex items-center justify-center mb-2 w-full">
-          <div className="flex items-center justify-center flex-wrap text-center">
-            {/* Script "Becoming" Calligraphy */}
-            <span className="font-script text-3xl sm:text-5xl md:text-6xl lg:text-7xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-normal tracking-wide drop-shadow-md mr-3 sm:mr-5 leading-none">
-              {typedText.slice(0, Math.min(typedText.length, 8))}
-            </span>
+      {/* Hero Text Content — Positioned toward bottom over the dark gradient */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-16 flex flex-col items-center justify-end min-h-screen">
+        {/* Static Script "Becoming" Calligraphy — Refined font size */}
+        <span className="hero-becoming font-script text-3xl sm:text-4xl md:text-5xl lg:text-6xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-1 z-10 font-normal tracking-wide drop-shadow-md leading-none">
+          Becoming
+        </span>
 
-            {/* Heading "THE EDUAMOAH'S" */}
-            {typedText.length > 8 && (
-              <h1 className="font-heading text-2xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl tracking-[0.06em] md:tracking-[0.1em] text-[#FBF7EF] font-normal uppercase text-shadow-hero inline-block leading-none">
-                {typedText.slice(8)}
-              </h1>
-            )}
+        {/* Static Heading for "THE EDUAMOAH'S" — Reduced font size */}
+        <h1 className="hero-title font-heading text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl tracking-[0.06em] md:tracking-[0.1em] text-[#FBF7EF] font-normal uppercase text-shadow-hero mb-4 leading-none">
+          {weddingDetails.couple.coupleName}
+        </h1>
 
-            {/* Subtle Thin Gold Blinking Cursor */}
-            <span className="inline-block w-[2px] sm:w-[3px] h-[0.7em] bg-[#f1c65a] ml-1.5 align-middle animate-pulse shadow-[0_0_10px_rgba(241,198,90,0.9)]" />
-          </div>
-        </div>
-
-        {/* Drawn by Light Golden Divider */}
         <div className="hero-line-bottom w-40 sm:w-56 md:w-64 h-[2px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent my-4 mx-auto rounded-full shadow-[0_0_10px_rgba(241,198,90,0.8)]" />
-
-        {/* Subtitle */}
-        <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light mb-4 text-shadow-hero">
+        <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light mb-6 text-shadow-hero">
           {weddingDetails.hero.tagline}
         </p>
       </div>
