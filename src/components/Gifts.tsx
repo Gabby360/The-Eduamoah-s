@@ -180,7 +180,7 @@ export const Gifts: React.FC = () => {
         </div>
 
         {/* Footer Reference Note */}
-        <div className="text-center bg-[#11221c]/60 p-6 border border-[#f1c65a]/20">
+        <div className="text-center">
           <p className="text-[#DACFB8] text-sm italic font-light">
             Please use <span className="text-[#f1c65a] font-normal font-mono">&ldquo;Wedding Gift&rdquo;</span> as the reference for all transfers.
           </p>
