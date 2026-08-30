@@ -87,8 +87,15 @@ const ChapterBlock: React.FC<{ chapter: typeof CHAPTERS[0]; index: number }> = (
 
         {/* Bride's Perspective */}
         <div className="p-7 md:p-10 bg-[#11221c] border-b md:border-b-0 md:border-r border-[#f1c65a]/15 relative">
-          {/* Header row */}
-          <div className="flex items-center gap-3 mb-6">
+          {/* Header row with Avatar Profile */}
+          <div className="flex items-center gap-3.5 mb-6">
+            <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-[#f1c65a]/60 shadow-lg shadow-[#f1c65a]/10 shrink-0">
+              <img
+                src={weddingDetails.couple.brideImage}
+                alt={weddingDetails.couple.brideName}
+                className="w-full h-full object-cover object-[50%_15%]"
+              />
+            </div>
             <div className="flex-1">
               <div className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-[11px] font-semibold tracking-[0.2em] uppercase">
                 Christabell's Perspective
@@ -106,8 +113,15 @@ const ChapterBlock: React.FC<{ chapter: typeof CHAPTERS[0]; index: number }> = (
 
         {/* Groom's Perspective */}
         <div className="p-7 md:p-10 bg-[#0d1c15] relative">
-          {/* Header row */}
-          <div className="flex items-center gap-3 mb-6">
+          {/* Header row with Avatar Profile */}
+          <div className="flex items-center gap-3.5 mb-6">
+            <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-[#f1c65a]/60 shadow-lg shadow-[#f1c65a]/10 shrink-0">
+              <img
+                src={weddingDetails.couple.groomImage}
+                alt={weddingDetails.couple.groomName}
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
             <div className="flex-1">
               <div className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-[11px] font-semibold tracking-[0.2em] uppercase">
                 George's Perspective
