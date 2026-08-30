@@ -4,7 +4,6 @@ import { weddingDetails } from '../mocks/weddingData';
 const CHAPTERS = [
   {
     title: 'How We Met',
-    date: 'December 30, 2021 • Pentecost Convention Center',
     bride: {
       paragraphs: [
         "Graham and I met on the 30th of December, 2021, at PCC, while we were preparing for the PENSA Ghana Conference 2022. He was the Accommodation Head, and I was part of the Food Committee.",
@@ -20,7 +19,6 @@ const CHAPTERS = [
   },
   {
     title: 'The Attraction',
-    date: 'PENSA Ghana Conference, January 2022 & Beyond',
     bride: {
       paragraphs: [
         "My journey with Graham wasn't love at first sight. After that first day, we kept crossing paths at the conference. Slowly, we began greeting each other more often and sharing small moments. What started as a casual acquaintance grew into a deep friendship — good friends, then best friends, then accountability partners, prayer partners, and finally lovers.",
@@ -36,7 +34,6 @@ const CHAPTERS = [
   },
   {
     title: 'How We Knew We Were For Each Other',
-    date: 'The Moment Everything Became Clear',
     bride: {
       paragraphs: [
         "I had my personal conviction, and I completely knew he was the one when I realized that I easily do me when I am around him — how he cares so much about me and my future.",
@@ -83,7 +80,6 @@ const ChapterBlock: React.FC<{ chapter: typeof CHAPTERS[0]; index: number }> = (
         <h3 className="font-heading text-2xl md:text-3xl text-[#FBF7EF] uppercase tracking-[0.12em] font-normal mb-2">
           {chapter.title}
         </h3>
-        <p className="text-[10px] tracking-[0.3em] text-[#A69272] uppercase font-mono">{chapter.date}</p>
       </div>
 
       {/* Dual Perspective — Side by Side */}
@@ -147,11 +143,7 @@ export const Story: React.FC = () => {
           <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em] mb-4">
             How We Found Each Other
           </h2>
-          <p className="font-heading italic text-base md:text-xl text-[#DACFB8] font-light max-w-xl mx-auto">
-            Two people. Two perspectives. One God-written love story.
-          </p>
         </div>
-
 
         {/* Chapter Blocks */}
         <div className="space-y-14">
@@ -165,11 +157,8 @@ export const Story: React.FC = () => {
           <p className="font-heading italic text-[#DACFB8] text-base md:text-lg font-light max-w-lg mx-auto mb-6 leading-relaxed">
             &ldquo;From accountability partners at PCC to forever partners in life &mdash; every step was guided by God.&rdquo;
           </p>
-          <div className="font-script text-4xl md:text-5xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-3">
+          <div className="font-script text-4xl md:text-5xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent">
             Nadia &amp; Graham
-          </div>
-          <div className="text-[10px] tracking-[0.4em] uppercase text-[#A69272] font-mono">
-            PCC, December 2021 &mdash; Accra, October 10, 2026
           </div>
         </div>
 

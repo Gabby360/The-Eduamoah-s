@@ -38,9 +38,6 @@ export const Program: React.FC = () => {
           <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em] mb-4">
             The Celebration
           </h2>
-          <p className="font-heading italic text-base md:text-xl text-[#DACFB8] font-light max-w-xl mx-auto mb-6">
-            Every beautiful moment, thoughtfully planned.
-          </p>
           <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mx-auto" />
         </div>
 

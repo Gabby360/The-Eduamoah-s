@@ -30,13 +30,8 @@ export const Footer: React.FC = () => {
         <div className="w-28 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mx-auto mb-10" />
 
         {/* Couple Script Monogram */}
-        <div className="font-script text-4xl sm:text-5xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-4 drop-shadow-md">
+        <div className="font-script text-4xl sm:text-5xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-10 drop-shadow-md">
           {weddingDetails.couple.brideName} & {weddingDetails.couple.groomName}
-        </div>
-
-        {/* Date & Location */}
-        <div className="text-xs sm:text-sm tracking-[0.3em] text-[#DACFB8] uppercase font-medium mb-12">
-          {weddingDetails.wedding.date} • {weddingDetails.wedding.address}
         </div>
 
         {/* Scroll Back To Top Button */}

@@ -36,9 +36,6 @@ export const RSVP: React.FC = () => {
           <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em] mb-4">
             Will You Celebrate With Us?
           </h2>
-          <p className="text-[#A69272] text-sm tracking-widest uppercase">
-            Please respond by November 28, 2026
-          </p>
           <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mx-auto mt-4" />
         </div>
 
