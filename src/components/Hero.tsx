@@ -264,24 +264,11 @@ export const Hero: React.FC = () => {
         .hero-title       {                            animation: heroFadeUp 1.1s cubic-bezier(.25,.46,.45,.94) 1.5s both; }
         .hero-line-bottom { transform-origin: center; animation: lineGrow   1.1s cubic-bezier(.25,.46,.45,.94) 1.9s both; }
         .hero-tagline     {                            animation: heroFadeIn 1.2s ease-out                     2.3s both; }
-        /* Continuous Marquee Scrolling Ticker */
-        @keyframes marqueeContinuous {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee-scroll {
-          display: flex;
-          width: max-content;
-          animation: marqueeContinuous 22s linear infinite;
-        }
-
         @media (prefers-reduced-motion: reduce) {
-          .hero-ken-burns {
+          .hero-ken-burns,.hero-line-top,.hero-becoming,.hero-title,
+          .hero-line-bottom,.hero-tagline {
             animation: none !important; opacity: 1 !important;
             transform: none !important;
-          }
-          .animate-marquee-scroll {
-            animation: none !important;
           }
         }
       `}</style>
@@ -306,8 +293,8 @@ export const Hero: React.FC = () => {
         aria-hidden="true"
       />
 
-      {/* Hero Text Content — Positioned higher up over the dark gradient */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-24 pb-32 flex flex-col items-center justify-end min-h-screen">
+      {/* Hero Text Content — Positioned toward bottom over the dark gradient */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-16 flex flex-col items-center justify-end min-h-screen">
         {/* Static Script "Becoming" Calligraphy — Positioned close to title */}
         <span className="hero-becoming font-script text-5xl sm:text-7xl md:text-8xl lg:text-9xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent -mb-2 sm:-mb-4 z-10 font-normal tracking-wide drop-shadow-md leading-none">
           Becoming
@@ -322,20 +309,6 @@ export const Hero: React.FC = () => {
         <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light mb-6 text-shadow-hero">
           {weddingDetails.hero.tagline}
         </p>
-      </div>
-
-      {/* Continuous Marquee Scrolling Ticker Banner */}
-      <div className="w-full bg-[#0a1713] border-t border-[#f1c65a]/30 py-3.5 overflow-hidden relative z-20 shadow-2xl">
-        <div className="animate-marquee-scroll flex whitespace-nowrap items-center text-[#f1c65a]">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div key={i} className="flex items-center mx-6">
-              <span className="font-heading italic text-xs sm:text-sm md:text-base tracking-[0.3em] uppercase text-[#FBF7EF] font-light">
-                Two Hearts &bull; One Beautiful Journey
-              </span>
-              <span className="ml-8 text-[#f1c65a] text-xs font-serif">&bull;</span>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );
