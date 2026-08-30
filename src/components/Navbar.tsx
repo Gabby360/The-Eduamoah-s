@@ -4,7 +4,7 @@ import { weddingDetails } from '../mocks/weddingData';
 
 export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileState, setMobileState] = useState<'closed' | 'opening' | 'open' | 'closing'>('closed');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,31 +24,54 @@ export const Navbar: React.FC = () => {
     { name: 'LOCATION', href: '#location' },
   ];
 
+  // Open & Close Mobile Menu with Heart Portal Expansion Sequence
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen((prev) => !prev);
-  };
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const handleLinkClick = (href: string) => {
-    setIsMobileMenuOpen(false);
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
+    if (mobileState === 'closed') {
+      if (prefersReduced) {
+        setMobileState('open');
+        return;
+      }
+      setMobileState('opening');
+      setTimeout(() => {
+        setMobileState('open');
+      }, 750);
+    } else if (mobileState === 'open') {
+      if (prefersReduced) {
+        setMobileState('closed');
+        return;
+      }
+      setMobileState('closing');
+      setTimeout(() => {
+        setMobileState('closed');
+      }, 700);
     }
   };
 
+  const handleLinkClick = (href: string) => {
+    toggleMobileMenu();
+    const target = document.querySelector(href);
+    if (target) {
+      setTimeout(() => {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }, 350);
+    }
+  };
+
+  const isOpen = mobileState === 'opening' || mobileState === 'open';
+  const isTransitioning = mobileState === 'opening' || mobileState === 'closing';
+
   return (
     <>
-      <style>{`
-        @keyframes floatHeart {
-          0%   { transform: translateY(0px) scale(0.85) rotate(0deg); opacity: 0.20; }
-          50%  { transform: translateY(-25px) scale(1.15) rotate(12deg); opacity: 0.45; }
-          100% { transform: translateY(-50px) scale(0.85) rotate(-12deg); opacity: 0.20; }
-        }
-        @keyframes heartPulseGlow {
-          0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.12; }
-          50%      { transform: translate(-50%, -50%) scale(1.2); opacity: 0.28; }
-        }
-      `}</style>
+      {/* SVG Responsive Heart Clip-Path Mask Definition */}
+      <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
+        <defs>
+          <clipPath id="heart-portal-clip" clipPathUnits="objectBoundingBox">
+            <path d="M 0.5,0.18 C 0.33,-0.06 0,0.08 0,0.36 C 0,0.62 0.5,0.88 0.5,0.98 C 0.5,0.88 1,0.62 1,0.36 C 1,0.08 0.67,-0.06 0.5,0.18 Z" />
+          </clipPath>
+        </defs>
+      </svg>
 
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
@@ -80,73 +103,108 @@ export const Navbar: React.FC = () => {
             ))}
           </nav>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button with Animated Hamburger & Heart Badge Accent */}
           <button
             onClick={toggleMobileMenu}
             className="lg:hidden text-[#BFAC90] hover:text-[#f1c65a] p-2 focus:outline-none transition-all duration-300 z-50 relative flex items-center justify-center"
             aria-label="Toggle Navigation Menu"
           >
-            <div className={`transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-90 text-[#f1c65a]' : 'rotate-0'}`}>
-              {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            <div className={`transition-transform duration-500 ${isOpen ? 'rotate-180 text-[#f1c65a]' : 'rotate-0'}`}>
+              {isOpen ? <X size={28} /> : <Menu size={28} />}
             </div>
+
+            {/* Glowing Heart Indicator Badge during transition */}
+            {isTransitioning && (
+              <div className="absolute -inset-1 flex items-center justify-center pointer-events-none animate-ping opacity-75">
+                <Heart size={32} className="text-[#f1c65a] fill-[#f1c65a]/40" />
+              </div>
+            )}
           </button>
         </div>
       </header>
 
-      {/* ── SOLID FULL-SCREEN MOBILE NAVIGATION OVERLAY WITH LOVE ANIMATION ── */}
-      <div
-        className={`lg:hidden fixed inset-0 z-40 bg-[#0a1713] flex flex-col justify-center items-center overflow-hidden transition-all duration-300 ease-in-out ${
-          isMobileMenuOpen
-            ? 'opacity-100 pointer-events-auto scale-100'
-            : 'opacity-0 pointer-events-none scale-95'
-        }`}
-      >
-        {/* Subtle champagne radial glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(241,198,90,0.14)_0%,rgba(241,198,90,0.02)_60%,transparent_80%)] pointer-events-none" />
+      {/* ── MOBILE HEART PORTAL NAVIGATION OVERLAY ── */}
+      {mobileState !== 'closed' && (
+        <div
+          className={`lg:hidden fixed inset-0 z-40 flex flex-col justify-center items-center overflow-hidden transition-colors duration-500 ${
+            mobileState === 'open' ? 'bg-[#0a1713] pointer-events-auto' : 'pointer-events-auto'
+          }`}
+        >
+          {/* Heart-Shaped Expanding / Contracting Mask Layer */}
+          <div
+            className={`absolute inset-0 bg-[#0a1713] border-4 border-[#f1c65a]/40 shadow-2xl transition-all ease-out ${
+              mobileState === 'opening'
+                ? 'animate-heart-expand'
+                : mobileState === 'open'
+                ? 'scale-[8] opacity-100'
+                : 'animate-heart-contract'
+            }`}
+            style={{
+              clipPath: 'url(#heart-portal-clip)',
+              transformOrigin: '90% 40px', // Centers heart portal expansion on top-right menu button
+              willChange: 'transform, opacity',
+            }}
+          >
+            {/* Champagne Glow inside Heart Portal */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(241,198,90,0.25)_0%,rgba(241,198,90,0.05)_60%,transparent_80%)]" />
+          </div>
 
-        {/* Gold border accent frame */}
-        <div className="absolute inset-4 sm:inset-6 border border-[#f1c65a]/20 pointer-events-none" />
+          {/* Keyframes for Heart Portal Animation */}
+          <style>{`
+            @keyframes heartExpand {
+              0%   { transform: scale(0.05); opacity: 0.2; }
+              30%  { transform: scale(0.45); opacity: 0.85; }
+              75%  { transform: scale(2.8); opacity: 0.95; }
+              100% { transform: scale(8.0); opacity: 1.0; }
+            }
+            @keyframes heartContract {
+              0%   { transform: scale(8.0); opacity: 1.0; }
+              35%  { transform: scale(2.8); opacity: 0.9; }
+              75%  { transform: scale(0.3); opacity: 0.6; }
+              100% { transform: scale(0.0); opacity: 0.0; }
+            }
+            @keyframes navLinkFadeUp {
+              from { opacity: 0; transform: translateY(16px); }
+              to   { opacity: 1; transform: translateY(0); }
+            }
+            .animate-heart-expand {
+              animation: heartExpand 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            }
+            .animate-heart-contract {
+              animation: heartContract 0.70s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+            }
+            .animate-nav-link {
+              animation: navLinkFadeUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            }
+          `}</style>
 
-        {/* ── LOVE ANIMATION (Romantic Floating & Pulsing Hearts) ── */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Big pulsing center heart glow */}
-          <div className="absolute top-1/2 left-1/2 animate-[heartPulseGlow_4.5s_ease-in-out_infinite]">
-            <Heart size={180} className="text-[#f1c65a]/30 fill-[#f1c65a]/15 filter blur-[1px]" />
-          </div>
-          {/* Floating gold hearts */}
-          <div className="absolute top-1/6 left-8 animate-[floatHeart_5s_ease-in-out_infinite]">
-            <Heart size={32} className="text-[#f1c65a]/45 fill-[#f1c65a]/35" />
-          </div>
-          <div className="absolute bottom-1/5 right-8 animate-[floatHeart_6s_ease-in-out_1.5s_infinite]">
-            <Heart size={38} className="text-[#e2b324]/45 fill-[#e2b324]/35" />
-          </div>
-          <div className="absolute top-2/3 left-12 animate-[floatHeart_7s_ease-in-out_3s_infinite]">
-            <Heart size={24} className="text-[#f1c65a]/35 fill-[#f1c65a]/25" />
-          </div>
-          <div className="absolute top-1/3 right-12 animate-[floatHeart_5.5s_ease-in-out_2s_infinite]">
-            <Heart size={28} className="text-[#f1c65a]/40 fill-[#f1c65a]/30" />
+          {/* Navigation Links (Clean & Focused) */}
+          <div
+            className={`relative z-10 w-full max-w-sm px-8 text-center flex flex-col items-center justify-center transition-opacity duration-300 ${
+              mobileState === 'open' ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <div className="flex flex-col space-y-4 w-full">
+              {navLinks.map((link, idx) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleLinkClick(link.href);
+                  }}
+                  className={`text-base font-medium tracking-[0.25em] text-[#FBF7EF] hover:text-[#f1c65a] transition-colors py-3 border-b border-[#f1c65a]/15 uppercase ${
+                    mobileState === 'open' ? 'animate-nav-link' : ''
+                  }`}
+                  style={{ animationDelay: `${idx * 50 + 100}ms` }}
+                >
+                  {link.name}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
-
-        {/* Navigation Items (Clean & Focused) */}
-        <div className="relative z-10 w-full max-w-sm px-8 text-center flex flex-col items-center justify-center">
-          <div className="flex flex-col space-y-4 w-full">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleLinkClick(link.href);
-                }}
-                className="text-base font-medium tracking-[0.25em] text-[#FBF7EF] hover:text-[#f1c65a] transition-colors py-3 border-b border-[#f1c65a]/15 uppercase"
-              >
-                {link.name}
-              </a>
-            ))}
-          </div>
-        </div>
-      </div>
+      )}
     </>
   );
 };
