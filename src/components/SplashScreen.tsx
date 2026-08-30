@@ -41,23 +41,23 @@ export const SplashScreen: React.FC = () => {
       return () => clearTimeout(rTimer);
     }
 
-    // 3.0s: Transition into Slower Heart Aperture Reveal (cuts hole to reveal website)
+    // 3.0s: Transition into Extremely Slow Heart Aperture Reveal (cuts hole to reveal website)
     const tExpand = setTimeout(() => {
       setPhase('expanding');
     }, 3000);
 
-    // 7.5s: Complete reveal & unlock main website page (Luxurious 4.5s reveal opening)
+    // 10.5s: Complete reveal & unlock main website page (Extremely slow 7.5s reveal opening)
     const tComplete = setTimeout(() => {
       setPhase('complete');
       document.body.style.overflow = '';
       window.scrollTo(0, 0);
-    }, 7500);
+    }, 10500);
 
-    // Hard Failsafe at 9.0s
+    // Hard Failsafe at 12.0s
     const tFailsafe = setTimeout(() => {
       setPhase('complete');
       document.body.style.overflow = '';
-    }, 9000);
+    }, 12000);
 
     return () => {
       clearTimeout(tExpand);
@@ -252,13 +252,13 @@ export const SplashScreen: React.FC = () => {
           }
 
           .animate-heart-aperture {
-            animation: heartApertureExpand 4.5s cubic-bezier(0.25, 1, 0.35, 1) forwards;
+            animation: heartApertureExpand 7.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
             transform-origin: 50% 50%;
             will-change: transform;
           }
 
           .animate-heart-rim {
-            animation: heartRimExpand 4.5s cubic-bezier(0.25, 1, 0.35, 1) forwards;
+            animation: heartRimExpand 7.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
             transform-origin: center center;
             will-change: transform, opacity;
           }
