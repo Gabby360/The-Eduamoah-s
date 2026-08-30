@@ -250,29 +250,39 @@ export const Hero: React.FC = () => {
         @keyframes heroFadeIn {
           from { opacity: 0; } to { opacity: 1; }
         }
-        /* Golden Divider Drawn by Light Animation (1.5s) */
-        @keyframes goldenLineDraw {
+        /* Golden Divider Continuous Drawing Loop (Draws -> Holds -> Disappears -> Repeats) */
+        @keyframes goldenLineContinuousDraw {
+          /* 0% - 32%: Line draws outward from center (1.6s) */
           0% {
             transform: scaleX(0);
             opacity: 0;
-            filter: drop-shadow(0 0 2px rgba(241,198,90,0.4));
+            filter: drop-shadow(0 0 2px rgba(241,198,90,0.2));
           }
-          100% {
+          32% {
             transform: scaleX(1);
             opacity: 1;
-            filter: drop-shadow(0 0 12px rgba(241,198,90,0.9));
+            filter: drop-shadow(0 0 14px rgba(241,198,90,0.95));
           }
-        }
 
-        /* Secondary Golden Glow Breathing Effect */
-        @keyframes goldenGlowBreath {
-          0%, 100% {
-            filter: drop-shadow(0 0 4px rgba(241,198,90,0.4));
-            opacity: 0.9;
+          /* 32% - 68%: Holds fully drawn with ambient gold glow (1.8s hold) */
+          68% {
+            transform: scaleX(1);
+            opacity: 1;
+            filter: drop-shadow(0 0 8px rgba(241,198,90,0.7));
           }
-          50% {
-            filter: drop-shadow(0 0 16px rgba(241,198,90,1.0));
-            opacity: 1.0;
+
+          /* 68% - 84%: Fades and contracts back to center (0.8s) */
+          84% {
+            transform: scaleX(0);
+            opacity: 0;
+            filter: drop-shadow(0 0 2px rgba(241,198,90,0.1));
+          }
+
+          /* 84% - 100%: Brief pause before starting drawing loop again (0.8s pause) */
+          100% {
+            transform: scaleX(0);
+            opacity: 0;
+            filter: drop-shadow(0 0 0px transparent);
           }
         }
 
@@ -288,9 +298,7 @@ export const Hero: React.FC = () => {
           transform-origin: center center;
           position: relative;
           will-change: transform, opacity, filter;
-          animation:
-            goldenLineDraw 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both,
-            goldenGlowBreath 5s ease-in-out 1.7s infinite;
+          animation: goldenLineContinuousDraw 5s cubic-bezier(0.25, 0.9, 0.35, 1) infinite;
         }
 
         .hero-tagline     { animation: heroFadeIn 1.2s ease-out 0.8s both; }
