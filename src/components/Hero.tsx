@@ -63,8 +63,8 @@ export const Hero: React.FC = () => {
   const activeRef = useRef(false);
   const lastFrame = useRef(0);
 
-  // Typewriter Continuous Loop State
-  const FULL_TEXT = "Becoming THE EDUAMOAH'S";
+  // Typewriter Continuous Loop State for THE EDUAMOAH'S
+  const FULL_TEXT = "THE EDUAMOAH'S";
   const [typedText, setTypedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -337,24 +337,17 @@ export const Hero: React.FC = () => {
 
       {/* Hero Text Content — Positioned toward bottom over the dark gradient */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-16 flex flex-col items-center justify-end min-h-screen">
-        {/* Continuous Typewriter Container - Layout Stable */}
-        <div className="min-h-[110px] sm:min-h-[140px] md:min-h-[180px] flex items-center justify-center mb-2 w-full">
-          <div className="flex items-center justify-center flex-wrap text-center">
-            {/* Script "Becoming" Part */}
-            <span className="font-script text-4xl sm:text-6xl md:text-7xl lg:text-8xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-normal tracking-wide drop-shadow-md mr-3 sm:mr-5 leading-none">
-              {typedText.slice(0, Math.min(typedText.length, 8))}
-            </span>
+        {/* Static Script "Becoming" Calligraphy */}
+        <span className="hero-becoming font-script text-4xl sm:text-5xl md:text-6xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-1 font-normal tracking-wide drop-shadow-md">
+          Becoming
+        </span>
 
-            {/* Heading "THE EDUAMOAH'S" Part */}
-            {typedText.length > 8 && (
-              <h1 className="font-heading text-2xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl tracking-[0.06em] md:tracking-[0.12em] text-[#FBF7EF] font-normal uppercase text-shadow-hero inline-block leading-none">
-                {typedText.slice(8)}
-              </h1>
-            )}
-
-            {/* Subtle Thin Gold Blinking Cursor */}
+        {/* Continuous Typewriter Heading for "THE EDUAMOAH'S" */}
+        <div className="min-h-[60px] sm:min-h-[90px] md:min-h-[120px] flex items-center justify-center mb-4 w-full">
+          <h1 className="hero-title font-heading text-2xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl tracking-[0.06em] md:tracking-[0.12em] text-[#FBF7EF] font-normal uppercase text-shadow-hero inline-flex items-center justify-center leading-none">
+            <span>{typedText}</span>
             <span className="inline-block w-[2px] sm:w-[3px] h-[0.7em] bg-[#f1c65a] ml-1.5 align-middle animate-pulse shadow-[0_0_10px_rgba(241,198,90,0.9)]" />
-          </div>
+          </h1>
         </div>
 
         <div className="hero-line-bottom w-32 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mb-6" />
