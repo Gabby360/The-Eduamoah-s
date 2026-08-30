@@ -278,12 +278,12 @@ export const Hero: React.FC = () => {
         <img
           src={weddingDetails.couple.heroImage}
           alt={weddingDetails.couple.coupleName}
-          className="hero-ken-burns w-full h-full object-cover object-[50%_20%] md:object-[50%_22%] lg:object-[50%_25%]"
+          className="hero-ken-burns w-full h-full object-cover object-[50%_28%] md:object-[50%_38%] lg:object-[50%_42%] xl:object-[50%_45%]"
         />
         {/* Top subtle shade for navbar legibility */}
         <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#0a1713]/80 via-[#0a1713]/40 to-transparent pointer-events-none" />
-        {/* Bottom Dark Gradient Overlay (extends up to ~68% height) */}
-        <div className="absolute bottom-0 inset-x-0 h-[68%] bg-gradient-to-t from-[#0a1713] via-[#0a1713]/90 via-[#0a1713]/50 via-[#0a1713]/20 to-transparent pointer-events-none" />
+        {/* Bottom Dark Gradient Overlay (lower height so faces remain clear) */}
+        <div className="absolute bottom-0 inset-x-0 h-[52%] bg-gradient-to-t from-[#0a1713] via-[#0a1713]/90 via-[#0a1713]/40 to-transparent pointer-events-none" />
       </div>
 
       {/* Canvas — particles, glowing dust/embers, petals */}
