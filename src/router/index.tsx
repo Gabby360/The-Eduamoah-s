@@ -19,8 +19,8 @@ const HomePage: React.FC = () => {
       <SplashScreen />
       <Navbar />
       <Hero />
-      <Story />
       <Couple />
+      <Story />
       <WeddingSchedule />
       <Program />
       <Countdown />

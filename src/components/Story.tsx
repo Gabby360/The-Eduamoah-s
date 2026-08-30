@@ -35,7 +35,7 @@ const CHAPTERS = [
     }
   },
   {
-    title: 'How I Knew They Were The One',
+    title: 'How We Knew We Were For Each Other',
     date: 'The Moment Everything Became Clear',
     bride: {
       paragraphs: [
@@ -93,13 +93,6 @@ const ChapterBlock: React.FC<{ chapter: typeof CHAPTERS[0]; index: number }> = (
         <div className="p-7 md:p-10 bg-[#11221c] border-b md:border-b-0 md:border-r border-[#f1c65a]/15 relative">
           {/* Header row */}
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-9 h-9 rounded-full overflow-hidden border border-[#f1c65a]/50 shrink-0">
-              <img
-                src={weddingDetails.couple.brideImage}
-                alt="Nadia"
-                className="w-full h-full object-cover object-[50%_10%]"
-              />
-            </div>
             <div className="flex-1">
               <div className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-[11px] font-semibold tracking-[0.2em] uppercase">
                 Nadia's Perspective
@@ -119,13 +112,6 @@ const ChapterBlock: React.FC<{ chapter: typeof CHAPTERS[0]; index: number }> = (
         <div className="p-7 md:p-10 bg-[#0d1c15] relative">
           {/* Header row */}
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-9 h-9 rounded-full overflow-hidden border border-[#f1c65a]/50 shrink-0">
-              <img
-                src={weddingDetails.couple.groomImage}
-                alt="Graham"
-                className="w-full h-full object-cover object-top"
-              />
-            </div>
             <div className="flex-1">
               <div className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-[11px] font-semibold tracking-[0.2em] uppercase">
                 Graham's Perspective
@@ -167,44 +153,6 @@ export const Story: React.FC = () => {
           <div className="w-28 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mx-auto" />
         </div>
 
-        {/* Split Portrait Banner */}
-        <div className="relative mb-16 border border-[#f1c65a]/20 overflow-hidden shadow-2xl">
-          <div className="grid grid-cols-2 h-56 md:h-72">
-            <div className="relative overflow-hidden">
-              <img
-                src={weddingDetails.couple.brideImage}
-                alt="Nadia"
-                className="w-full h-full object-cover object-[50%_10%] brightness-75 hover:brightness-90 transition-all duration-700 scale-105 hover:scale-100"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0a1713]/70" />
-              <div className="absolute bottom-5 left-5">
-                <div className="font-script text-2xl md:text-3xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent drop-shadow-md">
-                  Nadia
-                </div>
-                <div className="text-[9px] tracking-[0.3em] uppercase text-[#A69272] font-mono">The Bride</div>
-              </div>
-            </div>
-            <div className="relative overflow-hidden">
-              <img
-                src={weddingDetails.couple.groomImage}
-                alt="Graham"
-                className="w-full h-full object-cover object-top brightness-75 hover:brightness-90 transition-all duration-700 scale-105 hover:scale-100"
-              />
-              <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0a1713]/70" />
-              <div className="absolute bottom-5 right-5 text-right">
-                <div className="font-script text-2xl md:text-3xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent drop-shadow-md">
-                  Graham
-                </div>
-                <div className="text-[9px] tracking-[0.3em] uppercase text-[#A69272] font-mono">The Groom</div>
-              </div>
-            </div>
-          </div>
-          {/* Center divider with gold heart node */}
-          <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-gradient-to-b from-transparent via-[#f1c65a]/80 to-transparent pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#0a1713] border border-[#f1c65a]/60 flex items-center justify-center shadow-lg shadow-[#f1c65a]/20">
-            <div className="w-3.5 h-3.5 rounded-full bg-gradient-to-br from-[#f1c65a] to-[#e2b324]" />
-          </div>
-        </div>
 
         {/* Chapter Blocks */}
         <div className="space-y-14">
