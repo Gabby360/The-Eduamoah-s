@@ -64,7 +64,7 @@ export const Hero: React.FC = () => {
   const lastFrame = useRef(0);
 
   // Typewriter Continuous Loop State
-  const FULL_TEXT = "BECOMING THE EDUAMOAH'S";
+  const FULL_TEXT = "Becoming THE EDUAMOAH'S";
   const [typedText, setTypedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -337,8 +337,6 @@ export const Hero: React.FC = () => {
 
       {/* Hero Text Content — Positioned toward bottom over the dark gradient */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-16 flex flex-col items-center justify-end min-h-screen">
-        <div className="hero-line-top w-16 h-[1px] bg-gradient-to-r from-[#f1c65a] to-[#e2b324] mb-4 mx-auto" />
-
         {/* Continuous Typewriter Container - Layout Stable */}
         <div className="min-h-[110px] sm:min-h-[140px] md:min-h-[180px] flex items-center justify-center mb-2 w-full">
           <div className="flex items-center justify-center flex-wrap text-center">
