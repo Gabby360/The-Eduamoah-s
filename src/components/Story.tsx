@@ -147,10 +147,9 @@ export const Story: React.FC = () => {
           <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em] mb-4">
             How We Found Each Other
           </h2>
-          <p className="font-heading italic text-base md:text-xl text-[#DACFB8] font-light max-w-xl mx-auto mb-6">
+          <p className="font-heading italic text-base md:text-xl text-[#DACFB8] font-light max-w-xl mx-auto">
             Two people. Two perspectives. One God-written love story.
           </p>
-          <div className="w-28 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mx-auto" />
         </div>
 
 
