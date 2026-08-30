@@ -18,10 +18,10 @@ interface DustParticle {
 
 /* ─────────────────────────────────────────────
    SPLASH SCREEN COMPONENT
-   Minimalist Breathing Love Symbol & Heart Portal Reveal
+   Minimalist Breathing Love Symbol & Slower Heart Aperture Reveal (Bright Inside)
 ───────────────────────────────────────────── */
 export const SplashScreen: React.FC = () => {
-  // Phase state: 'breathing' (0-10s) -> 'expanding' (10-12s) -> 'complete'
+  // Phase state: 'breathing' (0-3s) -> 'expanding' (3-5.8s) -> 'complete'
   const [phase, setPhase] = useState<'breathing' | 'expanding' | 'complete'>('breathing');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
@@ -41,23 +41,23 @@ export const SplashScreen: React.FC = () => {
       return () => clearTimeout(rTimer);
     }
 
-    // 3.0s: Transition from 3-second quiet breathing heartbeat into Heart Reveal Portal
+    // 3.0s: Transition into Slower Heart Aperture Reveal (cuts hole to reveal website)
     const tExpand = setTimeout(() => {
       setPhase('expanding');
     }, 3000);
 
-    // 4.8s: Complete reveal & unlock main website page
+    // 5.8s: Complete reveal & unlock main website page (Slower 2.8s reveal)
     const tComplete = setTimeout(() => {
       setPhase('complete');
       document.body.style.overflow = '';
       window.scrollTo(0, 0);
-    }, 4800);
+    }, 5800);
 
-    // Hard Failsafe at 6.0s
+    // Hard Failsafe at 7.0s
     const tFailsafe = setTimeout(() => {
       setPhase('complete');
       document.body.style.overflow = '';
-    }, 6000);
+    }, 7000);
 
     return () => {
       clearTimeout(tExpand);
@@ -137,12 +137,19 @@ export const SplashScreen: React.FC = () => {
 
   return (
     <>
-      {/* SVG Clip-Path Definition for Heart-Shaped Reveal Portal */}
-      <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
+      {/* SVG Mask Definition for Heart Aperture Reveal (Cutout hole reveals website inside) */}
+      <svg className="fixed w-0 h-0 pointer-events-none" aria-hidden="true">
         <defs>
-          <clipPath id="splash-heart-reveal-clip" clipPathUnits="objectBoundingBox">
-            <path d="M 0.5,0.18 C 0.33,-0.06 0,0.08 0,0.36 C 0,0.62 0.5,0.88 0.5,0.98 C 0.5,0.88 1,0.62 1,0.36 C 1,0.08 0.67,-0.06 0.5,0.18 Z" />
-          </clipPath>
+          <mask id="heart-aperture-mask" maskUnits="objectBoundingBox">
+            {/* White area keeps the dark curtain visible */}
+            <rect x="0" y="0" width="1" height="1" fill="white" />
+            {/* Black heart in center cuts out transparent window to reveal website behind */}
+            <path
+              d="M 0.5,0.18 C 0.33,-0.06 0,0.08 0,0.36 C 0,0.62 0.5,0.88 0.5,0.98 C 0.5,0.88 1,0.62 1,0.36 C 1,0.08 0.67,-0.06 0.5,0.18 Z"
+              fill="black"
+              className={phase === 'expanding' ? 'animate-heart-aperture' : ''}
+            />
+          </mask>
         </defs>
       </svg>
 
@@ -151,9 +158,17 @@ export const SplashScreen: React.FC = () => {
         className={`fixed inset-0 z-[100] bg-[#0a1713] flex items-center justify-center overflow-hidden transition-opacity duration-1000 ${
           phase === 'expanding' ? 'pointer-events-none' : 'pointer-events-auto'
         }`}
+        style={
+          phase === 'expanding'
+            ? {
+                mask: 'url(#heart-aperture-mask)',
+                WebkitMask: 'url(#heart-aperture-mask)',
+              }
+            : {}
+        }
       >
         <style>{`
-          /* Gentle, quiet heartbeat breathing cycle (2.4s per breath) */
+          /* Quiet heartbeat breathing cycle (2.4s per breath) */
           @keyframes symbolBreathing {
             0% {
               transform: scale(0.92);
@@ -188,22 +203,38 @@ export const SplashScreen: React.FC = () => {
             }
           }
 
-          /* Dramatic Heart-Shaped Expansion Reveal */
-          @keyframes heartExpandReveal {
+          /* Slower, Cinematic Heart Aperture Reveal (Cutout Hole Opening to Website) */
+          @keyframes heartApertureExpand {
             0% {
-              transform: scale(0.08);
+              transform: scale(0.01);
+              transform-origin: 50% 50%;
+            }
+            20% {
+              transform: scale(0.6);
+              transform-origin: 50% 50%;
+            }
+            55% {
+              transform: scale(4.5);
+              transform-origin: 50% 50%;
+            }
+            100% {
+              transform: scale(45.0);
+              transform-origin: 50% 50%;
+            }
+          }
+
+          /* Expanding Golden Heart Rim Line */
+          @keyframes heartRimExpand {
+            0% {
+              transform: scale(0.1);
               opacity: 1.0;
             }
-            35% {
-              transform: scale(2.2);
-              opacity: 0.95;
-            }
-            75% {
-              transform: scale(18.0);
+            50% {
+              transform: scale(4.0);
               opacity: 0.85;
             }
             100% {
-              transform: scale(65.0);
+              transform: scale(35.0);
               opacity: 0.0;
             }
           }
@@ -216,8 +247,14 @@ export const SplashScreen: React.FC = () => {
             animation: haloBreathing 2.4s ease-in-out infinite;
           }
 
-          .animate-heart-reveal {
-            animation: heartExpandReveal 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+          .animate-heart-aperture {
+            animation: heartApertureExpand 2.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            transform-origin: 50% 50%;
+            will-change: transform;
+          }
+
+          .animate-heart-rim {
+            animation: heartRimExpand 2.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
             transform-origin: center center;
             will-change: transform, opacity;
           }
@@ -241,15 +278,23 @@ export const SplashScreen: React.FC = () => {
           <div className="animate-halo-breath w-72 h-72 rounded-full bg-[radial-gradient(circle_at_center,rgba(241,198,90,0.22)_0%,rgba(241,198,90,0.05)_55%,transparent_80%)] filter blur-2xl" />
         </div>
 
-        {/* ── EXPANDING HEART PORTAL MASK OVERLAY (Phase === 'expanding') ── */}
+        {/* ── EXPANDING GOLDEN HEART RIM PORTAL (Phase === 'expanding') ── */}
         {phase === 'expanding' && (
-          <div
-            className="absolute inset-0 z-[20] bg-[#0a1713] border-4 border-[#f1c65a]/60 animate-heart-reveal"
-            style={{
-              clipPath: 'url(#splash-heart-reveal-clip)',
-              transformOrigin: '50% 50%',
-            }}
-          />
+          <div className="absolute inset-0 z-[25] flex items-center justify-center pointer-events-none">
+            <svg
+              width="200"
+              height="200"
+              viewBox="0 0 100 100"
+              className="animate-heart-rim text-[#f1c65a] drop-shadow-[0_0_25px_rgba(241,198,90,0.9)]"
+            >
+              <path
+                d="M 50,18 C 33,-6 0,8 0,36 C 0,62 50,88 50,98 C 50,88 100,62 100,36 C 100,8 67,-6 50,18 Z"
+                fill="none"
+                stroke="#F1C65A"
+                strokeWidth="2.5"
+              />
+            </svg>
+          </div>
         )}
 
         {/* ── CENTER BREATHING TINY LOVE SYMBOL ── */}
