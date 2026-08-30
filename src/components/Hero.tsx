@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { weddingDetails } from '../mocks/weddingData';
-import { ChevronDown } from 'lucide-react';
 
 /* ─────────────────────────────────────────────
    HELPERS
@@ -63,48 +62,6 @@ export const Hero: React.FC = () => {
   const rafRef = useRef<number>(0);
   const activeRef = useRef(false);
   const lastFrame = useRef(0);
-
-  // Typewriter Continuous Loop State for THE EDUAMOAH'S
-  const FULL_TEXT = "THE EDUAMOAH'S";
-  const [typedText, setTypedText] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    const prefersReduced = typeof window !== 'undefined'
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false;
-
-    if (prefersReduced) {
-      setTypedText(FULL_TEXT);
-      return;
-    }
-
-    let timer: NodeJS.Timeout;
-
-    if (!isDeleting && typedText.length < FULL_TEXT.length) {
-      // Type next character (~120ms)
-      timer = setTimeout(() => {
-        setTypedText(FULL_TEXT.slice(0, typedText.length + 1));
-      }, 120);
-    } else if (!isDeleting && typedText.length === FULL_TEXT.length) {
-      // Completed phrase pause (~2.5s)
-      timer = setTimeout(() => {
-        setIsDeleting(true);
-      }, 2500);
-    } else if (isDeleting && typedText.length > 0) {
-      // Delete previous character (~70ms)
-      timer = setTimeout(() => {
-        setTypedText(FULL_TEXT.slice(0, typedText.length - 1));
-      }, 70);
-    } else if (isDeleting && typedText.length === 0) {
-      // Restart pause (~0.8s)
-      timer = setTimeout(() => {
-        setIsDeleting(false);
-      }, 800);
-    }
-
-    return () => clearTimeout(timer);
-  }, [typedText, isDeleting]);
 
   const dataRef = useRef<{
     particles: AmbientParticle[];
@@ -337,38 +294,21 @@ export const Hero: React.FC = () => {
       />
 
       {/* Hero Text Content — Positioned toward bottom over the dark gradient */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-28 pb-12 flex flex-col items-center justify-end min-h-screen">
-        {/* Static Script "Becoming" Calligraphy — Positioned closer with negative margin */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-16 flex flex-col items-center justify-end min-h-screen">
+        {/* Static Script "Becoming" Calligraphy — Positioned close to title */}
         <span className="hero-becoming font-script text-5xl sm:text-7xl md:text-8xl lg:text-9xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent -mb-2 sm:-mb-4 z-10 font-normal tracking-wide drop-shadow-md leading-none">
           Becoming
         </span>
 
-        {/* Continuous Typewriter Heading for "THE EDUAMOAH'S" */}
-        <div className="min-h-[70px] sm:min-h-[110px] md:min-h-[140px] flex items-center justify-center mb-3 w-full">
-          <h1 className="hero-title font-heading text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl tracking-[0.06em] md:tracking-[0.12em] text-[#FBF7EF] font-normal uppercase text-shadow-hero inline-flex items-center justify-center leading-none">
-            <span>{typedText}</span>
-            <span className="inline-block w-[2px] sm:w-[3px] h-[0.7em] bg-[#f1c65a] ml-1.5 align-middle animate-pulse shadow-[0_0_10px_rgba(241,198,90,0.9)]" />
-          </h1>
-        </div>
+        {/* Static Heading for "THE EDUAMOAH'S" */}
+        <h1 className="hero-title font-heading text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl tracking-[0.06em] md:tracking-[0.12em] text-[#FBF7EF] font-normal uppercase text-shadow-hero mb-4 leading-none">
+          {weddingDetails.couple.coupleName}
+        </h1>
 
-        <div className="hero-line-bottom w-32 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mb-4" />
-        <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light mb-4 text-shadow-hero">
+        <div className="hero-line-bottom w-32 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mb-6" />
+        <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light mb-6 text-shadow-hero">
           {weddingDetails.hero.tagline}
         </p>
-
-        {/* Scroll Down Indicator Arrow */}
-        <a
-          href="#couple"
-          className="mt-4 flex flex-col items-center justify-center group cursor-pointer"
-          aria-label="Scroll to Meet the Couple"
-        >
-          <span className="text-[9px] tracking-[0.3em] uppercase font-mono text-[#A69272] group-hover:text-[#f1c65a] transition-colors mb-1">
-            SCROLL DOWN
-          </span>
-          <div className="p-2 rounded-full border border-[#f1c65a]/30 group-hover:border-[#f1c65a] bg-[#0a1713]/80 group-hover:bg-[#f1c65a] group-hover:text-[#0a1713] text-[#f1c65a] animate-bounce transition-all duration-300 shadow-xl">
-            <ChevronDown size={18} />
-          </div>
-        </a>
       </div>
     </section>
   );
