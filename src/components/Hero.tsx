@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { weddingDetails } from '../mocks/weddingData';
 
 /* ─────────────────────────────────────────────
@@ -62,6 +62,48 @@ export const Hero: React.FC = () => {
   const rafRef = useRef<number>(0);
   const activeRef = useRef(false);
   const lastFrame = useRef(0);
+
+  // Typewriter Continuous Loop State
+  const FULL_TEXT = "BECOMING THE EDUAMOAH'S";
+  const [typedText, setTypedText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const prefersReduced = typeof window !== 'undefined'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false;
+
+    if (prefersReduced) {
+      setTypedText(FULL_TEXT);
+      return;
+    }
+
+    let timer: NodeJS.Timeout;
+
+    if (!isDeleting && typedText.length < FULL_TEXT.length) {
+      // Type next character (~120ms)
+      timer = setTimeout(() => {
+        setTypedText(FULL_TEXT.slice(0, typedText.length + 1));
+      }, 120);
+    } else if (!isDeleting && typedText.length === FULL_TEXT.length) {
+      // Completed phrase pause (~2.5s)
+      timer = setTimeout(() => {
+        setIsDeleting(true);
+      }, 2500);
+    } else if (isDeleting && typedText.length > 0) {
+      // Delete previous character (~70ms)
+      timer = setTimeout(() => {
+        setTypedText(FULL_TEXT.slice(0, typedText.length - 1));
+      }, 70);
+    } else if (isDeleting && typedText.length === 0) {
+      // Restart pause (~0.8s)
+      timer = setTimeout(() => {
+        setIsDeleting(false);
+      }, 800);
+    }
+
+    return () => clearTimeout(timer);
+  }, [typedText, isDeleting]);
 
   const dataRef = useRef<{
     particles: AmbientParticle[];
@@ -296,12 +338,27 @@ export const Hero: React.FC = () => {
       {/* Hero Text Content — Positioned toward bottom over the dark gradient */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-16 flex flex-col items-center justify-end min-h-screen">
         <div className="hero-line-top w-16 h-[1px] bg-gradient-to-r from-[#f1c65a] to-[#e2b324] mb-4 mx-auto" />
-        <span className="hero-becoming font-script text-4xl sm:text-5xl md:text-6xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-1 font-normal tracking-wide drop-shadow-md">
-          Becoming
-        </span>
-        <h1 className="hero-title font-heading text-2xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl tracking-[0.06em] md:tracking-[0.12em] text-[#FBF7EF] font-normal uppercase mb-4 text-shadow-hero whitespace-nowrap">
-          {weddingDetails.couple.coupleName}
-        </h1>
+
+        {/* Continuous Typewriter Container - Layout Stable */}
+        <div className="min-h-[110px] sm:min-h-[140px] md:min-h-[180px] flex items-center justify-center mb-2 w-full">
+          <div className="flex items-center justify-center flex-wrap text-center">
+            {/* Script "Becoming" Part */}
+            <span className="font-script text-4xl sm:text-6xl md:text-7xl lg:text-8xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-normal tracking-wide drop-shadow-md mr-3 sm:mr-5 leading-none">
+              {typedText.slice(0, Math.min(typedText.length, 8))}
+            </span>
+
+            {/* Heading "THE EDUAMOAH'S" Part */}
+            {typedText.length > 8 && (
+              <h1 className="font-heading text-2xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl tracking-[0.06em] md:tracking-[0.12em] text-[#FBF7EF] font-normal uppercase text-shadow-hero inline-block leading-none">
+                {typedText.slice(8)}
+              </h1>
+            )}
+
+            {/* Subtle Thin Gold Blinking Cursor */}
+            <span className="inline-block w-[2px] sm:w-[3px] h-[0.7em] bg-[#f1c65a] ml-1.5 align-middle animate-pulse shadow-[0_0_10px_rgba(241,198,90,0.9)]" />
+          </div>
+        </div>
+
         <div className="hero-line-bottom w-32 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mb-6" />
         <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light mb-6 text-shadow-hero">
           {weddingDetails.hero.tagline}
