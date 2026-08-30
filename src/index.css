@@ -5,38 +5,38 @@
 
 @layer base {
   :root {
-    --background: #0B0907;
-    --background-50: #0B0907;
-    --background-100: #141110;
-    --background-200: #1C1816;
-    --background-300: #26201C;
-    --background-400: #332B25;
-    --primary: #C29845;
-    --primary-50: #FBF3DF;
-    --primary-100: #F5E5C4;
-    --primary-200: #EBD3A0;
-    --primary-300: #DFC07C;
-    --primary-400: #D2AC5E;
-    --primary-500: #C29845;
-    --primary-600: #A88236;
-    --primary-700: #89692B;
-    --primary-800: #6B5122;
-    --accent: #B46F53;
-    --accent-50: #FAF1EC;
-    --accent-100: #F3DFD6;
-    --accent-200: #E7C4B5;
-    --accent-300: #D9A48E;
-    --accent-400: #C9886D;
-    --accent-500: #B46F53;
-    --secondary: #BFAC90;
-    --secondary-50: #F4EFE8;
-    --secondary-100: #E7DECF;
-    --secondary-200: #D5C6AF;
-    --secondary-300: #BFAC90;
-    --secondary-400: #A69272;
-    --secondary-500: #8E7A5C;
-    --secondary-600: #716148;
-    --secondary-700: #594C39;
+    --background: #0a1713;
+    --background-50: #0a1713;
+    --background-100: #11221c;
+    --background-200: #192e27;
+    --background-300: #223b32;
+    --background-400: #2d4a40;
+    --primary: #e2b324;
+    --primary-50: #fdf8e7;
+    --primary-100: #faeebe;
+    --primary-200: #f7e390;
+    --primary-300: #f4d762;
+    --primary-400: #f1c65a;
+    --primary-500: #e2b324;
+    --primary-600: #b88d18;
+    --primary-700: #8e6a11;
+    --primary-800: #66490a;
+    --accent: #f1c65a;
+    --accent-50: #fdf8e7;
+    --accent-100: #faeebe;
+    --accent-200: #f7e390;
+    --accent-300: #f4d762;
+    --accent-400: #f1c65a;
+    --accent-500: #e2b324;
+    --secondary: #d6c4a5;
+    --secondary-50: #faf7f2;
+    --secondary-100: #f2ece2;
+    --secondary-200: #e5dbcb;
+    --secondary-300: #d6c4a5;
+    --secondary-400: #c2ab84;
+    --secondary-500: #ad9163;
+    --secondary-600: #8f744b;
+    --secondary-700: #705a39;
     --foreground: #FBF7EF;
     --foreground-50: #FFFFFF;
     --foreground-100: #FBF7EF;
@@ -52,7 +52,8 @@
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Inter', sans-serif;
     --font-script: 'Great Vibes', cursive;
-    --gold-line: linear-gradient(90deg, transparent, #C29845, transparent);
+    --gold-line: linear-gradient(90deg, transparent, #f1c65a 30%, #e2b324 70%, transparent);
+    --gold-gradient: linear-gradient(135deg, #f1c65a 0%, #e2b324 100%);
   }
 
   html {
@@ -69,7 +70,7 @@
   }
 
   ::selection {
-    background-color: var(--primary-400);
+    background-color: #f1c65a;
     color: var(--background);
   }
 }
@@ -78,19 +79,22 @@
   .font-heading { font-family: var(--font-heading); }
   .font-script { font-family: var(--font-script); }
   .font-body { font-family: var(--font-body); }
-  .text-gold { color: var(--primary); }
+  .text-gold { color: #f1c65a; }
   .text-ivory { color: var(--foreground-100); }
   .text-warm-beige { color: var(--secondary); }
   .bg-deep-black { background-color: var(--background); }
   .bg-warm-brown { background-color: var(--background-100); }
   .bg-medium-brown { background-color: var(--background-200); }
-  .gold-border { border-color: var(--primary-400); }
+  .gold-border { border-color: #f1c65a; }
   .gold-line-gradient { background: var(--gold-line); }
   .gold-text-gradient {
-    background: linear-gradient(135deg, var(--primary-200) 0%, var(--primary-400) 100%);
+    background: linear-gradient(135deg, #f1c65a 0%, #e2b324 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+  .bg-gold-gradient {
+    background: linear-gradient(135deg, #f1c65a 0%, #e2b324 100%);
   }
 }
 

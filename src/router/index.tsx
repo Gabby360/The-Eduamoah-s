@@ -9,14 +9,13 @@ import { Program } from '../components/Program';
 import { Countdown } from '../components/Countdown';
 import { Gallery } from '../components/Gallery';
 import { RSVP } from '../components/RSVP';
-import { Blessings } from '../components/Blessings';
 import { Location } from '../components/Location';
 import { Footer } from '../components/Footer';
 import { SplashScreen } from '../components/SplashScreen';
 
 const HomePage: React.FC = () => {
   return (
-    <main className="bg-[#0B0907] min-h-screen text-[#FBF7EF] selection:bg-[#C29845] selection:text-[#0B0907]">
+    <main className="bg-[#0a1713] min-h-screen text-[#FBF7EF] selection:bg-[#f1c65a] selection:text-[#0a1713]">
       <SplashScreen />
       <Navbar />
       <Hero />
@@ -27,7 +26,6 @@ const HomePage: React.FC = () => {
       <Countdown />
       <Gallery />
       <RSVP />
-      <Blessings />
       <Location />
       <Footer />
     </main>

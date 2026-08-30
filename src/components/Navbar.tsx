@@ -21,7 +21,6 @@ export const Navbar: React.FC = () => {
     { name: 'PROGRAM', href: '#program' },
     { name: 'GALLERY', href: '#gallery' },
     { name: 'RSVP', href: '#rsvp' },
-    { name: 'LOVE', href: '#blessings' },
     { name: 'LOCATION', href: '#location' },
   ];
 
@@ -80,7 +79,7 @@ export const Navbar: React.FC = () => {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled
-            ? 'bg-[#0B0907]/90 backdrop-blur-md border-b border-[#C29845]/20 py-4 shadow-2xl shadow-black/50'
+            ? 'bg-[#0a1713]/90 backdrop-blur-md border-b border-[#f1c65a]/20 py-4 shadow-2xl shadow-black/50'
             : 'bg-gradient-to-b from-black/80 via-black/40 to-transparent py-6'
         }`}
       >
@@ -88,7 +87,7 @@ export const Navbar: React.FC = () => {
           {/* Monogram Logo */}
           <a
             href="#"
-            className="font-script text-2xl md:text-3xl text-[#D2AC5E] hover:text-[#FBF3DF] transition-colors tracking-wide z-50 relative"
+            className="font-script text-2xl md:text-3xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent hover:opacity-90 transition-opacity tracking-wide z-50 relative"
           >
             {weddingDetails.couple.coupleName}
           </a>
@@ -99,10 +98,10 @@ export const Navbar: React.FC = () => {
               <a
                 key={link.name}
                 href={link.href}
-                className="text-xs font-medium tracking-[0.2em] text-[#BFAC90] hover:text-[#C29845] transition-colors duration-300 relative py-1 group"
+                className="text-xs font-medium tracking-[0.2em] text-[#BFAC90] hover:text-[#f1c65a] transition-colors duration-300 relative py-1 group"
               >
                 {link.name}
-                <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#C29845] transition-all duration-300 group-hover:w-full" />
+                <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-gradient-to-r from-[#f1c65a] to-[#e2b324] transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
           </nav>
@@ -110,17 +109,17 @@ export const Navbar: React.FC = () => {
           {/* Mobile Menu Button with Animated Hamburger & Heart Icon Accent */}
           <button
             onClick={toggleMobileMenu}
-            className="lg:hidden text-[#BFAC90] hover:text-[#C29845] p-2 focus:outline-none transition-all duration-300 z-50 relative flex items-center justify-center"
+            className="lg:hidden text-[#BFAC90] hover:text-[#f1c65a] p-2 focus:outline-none transition-all duration-300 z-50 relative flex items-center justify-center"
             aria-label="Toggle Navigation Menu"
           >
-            <div className={`transition-transform duration-500 ${isOpen ? 'rotate-180 text-[#C29845]' : 'rotate-0'}`}>
+            <div className={`transition-transform duration-500 ${isOpen ? 'rotate-180 text-[#f1c65a]' : 'rotate-0'}`}>
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </div>
 
             {/* Small Glowing Heart Badge Indicator near button during trigger */}
             {isTransitioning && (
               <div className="absolute -inset-1 flex items-center justify-center pointer-events-none animate-ping opacity-75">
-                <Heart size={32} className="text-[#C29845] fill-[#C29845]/40" />
+                <Heart size={32} className="text-[#f1c65a] fill-[#f1c65a]/40" />
               </div>
             )}
           </button>
@@ -140,7 +139,7 @@ export const Navbar: React.FC = () => {
         >
           {/* Heart-Shaped Expanding / Contracting Mask Layer */}
           <div
-            className={`absolute inset-0 bg-[#0B0907] border-4 border-[#C29845]/40 shadow-2xl transition-all ease-out ${
+            className={`absolute inset-0 bg-[#0a1713] border-4 border-[#f1c65a]/40 shadow-2xl transition-all ease-out ${
               mobileState === 'opening'
                 ? 'animate-heart-expand'
                 : mobileState === 'open'
@@ -154,7 +153,7 @@ export const Navbar: React.FC = () => {
             }}
           >
             {/* Background Champagne Glow inside Heart Portal */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(194,152,69,0.25)_0%,rgba(194,152,69,0.05)_60%,transparent_80%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(241,198,90,0.25)_0%,rgba(241,198,90,0.05)_60%,transparent_80%)]" />
           </div>
 
           {/* Inline Keyframe Styles for Heart Expand & Contract */}
@@ -193,11 +192,11 @@ export const Navbar: React.FC = () => {
             }`}
           >
             {/* Small Monogram Logo inside Menu */}
-            <div className="font-script text-3xl text-[#D2AC5E] mb-2 drop-shadow-md">
+            <div className="font-script text-3xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-2 drop-shadow-md">
               {weddingDetails.couple.coupleName}
             </div>
 
-            <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C29845] to-transparent mb-2" />
+            <div className="w-20 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mb-2" />
 
             {/* Navigation Links */}
             <div className="flex flex-col space-y-4 w-full">
@@ -209,7 +208,7 @@ export const Navbar: React.FC = () => {
                     e.preventDefault();
                     handleLinkClick(link.href);
                   }}
-                  className={`text-sm font-medium tracking-[0.25em] text-[#FBF7EF] hover:text-[#C29845] transition-colors py-2 border-b border-[#C29845]/15 ${
+                  className={`text-sm font-medium tracking-[0.25em] text-[#FBF7EF] hover:text-[#f1c65a] transition-colors py-2 border-b border-[#f1c65a]/15 ${
                     mobileState === 'open' ? 'animate-nav-link' : ''
                   }`}
                   style={{ animationDelay: `${idx * 60 + 200}ms` }}

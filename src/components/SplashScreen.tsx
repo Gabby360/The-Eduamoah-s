@@ -54,10 +54,10 @@ function drawGoldHeart(
 
   // Gold 3D Gradient Fill
   const heartGrad = ctx.createLinearGradient(-10, -15, 10, 20);
-  heartGrad.addColorStop(0, '#FFF3D1');
-  heartGrad.addColorStop(0.3, '#E6C175');
-  heartGrad.addColorStop(0.7, '#C29845');
-  heartGrad.addColorStop(1, '#785214');
+  heartGrad.addColorStop(0, '#fff3d1');
+  heartGrad.addColorStop(0.3, '#f1c65a');
+  heartGrad.addColorStop(0.8, '#e2b324');
+  heartGrad.addColorStop(1, '#b88d18');
 
   ctx.fillStyle = heartGrad;
   ctx.shadowColor = 'rgba(210, 172, 94, 0.8)';
@@ -316,7 +316,7 @@ export const SplashScreen: React.FC = () => {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] bg-[#0B0907] flex items-center justify-center overflow-hidden transition-opacity duration-1000 ease-in-out ${
+      className={`fixed inset-0 z-[100] bg-[#0a1713] flex items-center justify-center overflow-hidden transition-opacity duration-1000 ease-in-out ${
         fadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
     >
@@ -393,7 +393,7 @@ export const SplashScreen: React.FC = () => {
 
       {/* Warm Ambient Golden Center Glow */}
       <div className="splash-glow absolute inset-0 z-[2] pointer-events-none flex items-center justify-center">
-        <div className="w-[650px] h-[650px] rounded-full bg-[radial-gradient(circle_at_center,rgba(194,152,69,0.20)_0%,rgba(194,152,69,0.06)_50%,transparent_75%)] filter blur-3xl" />
+        <div className="w-[650px] h-[650px] rounded-full bg-[radial-gradient(circle_at_center,rgba(241,198,90,0.20)_0%,rgba(241,198,90,0.06)_50%,transparent_75%)] filter blur-3xl" />
       </div>
 
       {/* Typography Overlay (Triggered by sceneIndex >= 4) */}
@@ -402,10 +402,10 @@ export const SplashScreen: React.FC = () => {
         {/* Scene 4 (4.4s+): "Two hearts. One beautiful journey." */}
         {sceneIndex >= 4 && sceneIndex < 5 && (
           <div className="flex flex-col items-center justify-center">
-            <span className="splash-script-1 font-script text-4xl sm:text-5xl text-[#D2AC5E] font-normal tracking-wide drop-shadow-md">
+            <span className="splash-script-1 font-script text-4xl sm:text-5xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-normal tracking-wide drop-shadow-md">
               Two hearts.
             </span>
-            <span className="splash-script-2 font-script text-4xl sm:text-5xl text-[#D2AC5E] font-normal tracking-wide drop-shadow-md mt-2">
+            <span className="splash-script-2 font-script text-4xl sm:text-5xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-normal tracking-wide drop-shadow-md mt-2">
               One beautiful journey.
             </span>
           </div>
@@ -414,14 +414,14 @@ export const SplashScreen: React.FC = () => {
         {/* Scene 5 (6.6s+): "THE EDUAMOAH'S" Title Card & Date */}
         {sceneIndex >= 5 && (
           <div className="splash-title-card flex flex-col items-center justify-center">
-            <span className="font-script text-2xl sm:text-3xl text-[#D2AC5E] mb-2">
+            <span className="font-script text-2xl sm:text-3xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-2">
               Becoming
             </span>
             <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl tracking-[0.08em] text-[#FBF7EF] font-normal uppercase mb-3 text-shadow-hero whitespace-nowrap">
               THE EDUAMOAH'S
             </h1>
-            <div className="splash-accent-line w-24 h-[1px] bg-gradient-to-r from-transparent via-[#C29845] to-transparent my-3" />
-            <div className="splash-date text-[#D2AC5E] text-xs sm:text-sm tracking-[0.35em] uppercase font-medium">
+            <div className="splash-accent-line w-28 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent my-3" />
+            <div className="splash-date bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs sm:text-sm tracking-[0.35em] uppercase font-semibold">
               OCTOBER 10, 2026
             </div>
           </div>

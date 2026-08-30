@@ -246,7 +246,7 @@ export const Hero: React.FC = () => {
         if (p.y < 0) { p.y = H; p.x = rand(0, W); }
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(194,152,69,${p.alpha.toFixed(3)})`;
+        ctx.fillStyle = `rgba(241,198,90,${p.alpha.toFixed(3)})`;
         ctx.fill();
       });
 
@@ -335,7 +335,7 @@ export const Hero: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0B0907]"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0a1713]"
     >
       <style>{`
         @keyframes kenBurns {
@@ -385,13 +385,13 @@ export const Hero: React.FC = () => {
           alt={weddingDetails.couple.coupleName}
           className="hero-ken-burns w-full h-full object-cover object-[50%_22%] md:object-[50%_25%] lg:object-[50%_28%] filter brightness-[0.78] contrast-[1.2] sepia-[35%] hue-rotate-[-10deg] saturate-[1.15]"
         />
-        <div className="absolute inset-0 bg-[#C29845]/25 mix-blend-color pointer-events-none" />
-        <div className="absolute inset-0 bg-[#372A14]/40 mix-blend-multiply pointer-events-none" />
-        <div className="absolute top-0 inset-x-0 h-48 bg-gradient-to-b from-[#0B0907] via-[#0B0907]/70 to-transparent pointer-events-none" />
-        <div className="absolute bottom-0 inset-x-0 h-56 bg-gradient-to-t from-[#0B0907] via-[#0B0907]/80 to-transparent pointer-events-none" />
-        <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-[#0B0907] via-[#0B0907]/60 to-transparent pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-[#0B0907] via-[#0B0907]/60 to-transparent pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,#0B0907_95%)] opacity-85 pointer-events-none" />
+        <div className="absolute inset-0 bg-[#f1c65a]/20 mix-blend-color pointer-events-none" />
+        <div className="absolute inset-0 bg-[#0a1713]/40 mix-blend-multiply pointer-events-none" />
+        <div className="absolute top-0 inset-x-0 h-48 bg-gradient-to-b from-[#0a1713] via-[#0a1713]/70 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 inset-x-0 h-56 bg-gradient-to-t from-[#0a1713] via-[#0a1713]/80 to-transparent pointer-events-none" />
+        <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-[#0a1713] via-[#0a1713]/60 to-transparent pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-[#0a1713] via-[#0a1713]/60 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,#0a1713_95%)] opacity-85 pointer-events-none" />
       </div>
 
       {/* Canvas — particles, butterflies, petals */}
@@ -403,18 +403,18 @@ export const Hero: React.FC = () => {
 
       {/* Hero Text Content — unchanged */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-24 pb-16 flex flex-col items-center justify-center min-h-screen">
-        <div className="hero-line-top w-16 h-[1px] bg-[#C29845] mb-4 mx-auto" />
-        <span className="hero-becoming font-script text-4xl sm:text-5xl md:text-6xl text-[#D2AC5E] mb-1 font-normal tracking-wide drop-shadow-md">
+        <div className="hero-line-top w-16 h-[1px] bg-gradient-to-r from-[#f1c65a] to-[#e2b324] mb-4 mx-auto" />
+        <span className="hero-becoming font-script text-4xl sm:text-5xl md:text-6xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-1 font-normal tracking-wide drop-shadow-md">
           Becoming
         </span>
         <h1 className="hero-title font-heading text-2xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl tracking-[0.06em] md:tracking-[0.12em] text-[#FBF7EF] font-normal uppercase mb-4 text-shadow-hero whitespace-nowrap">
           {weddingDetails.couple.coupleName}
         </h1>
-        <div className="hero-line-bottom w-28 h-[1px] bg-gradient-to-r from-transparent via-[#C29845] to-transparent mb-6" />
+        <div className="hero-line-bottom w-32 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mb-6" />
         <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light mb-6 text-shadow-hero">
           {weddingDetails.hero.tagline}
         </p>
-        <div className="hero-date text-[#D2AC5E] text-xs sm:text-sm md:text-base tracking-[0.35em] uppercase font-medium">
+        <div className="hero-date bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs sm:text-sm md:text-base tracking-[0.35em] uppercase font-semibold">
           {weddingDetails.wedding.date}
         </div>
       </div>

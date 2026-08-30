@@ -44,14 +44,14 @@ const UnitCard: React.FC<UnitCardProps> = ({
   return (
     <div
       className={`relative py-6 px-3 text-center flex flex-col items-center justify-center ${
-        !isLast ? 'md:border-r border-[#C29845]/25' : ''
+        !isLast ? 'md:border-r border-[#f1c65a]/25' : ''
       }`}
     >
       {/* Number Display Container */}
       <div className="relative overflow-hidden min-h-[4rem] sm:min-h-[5.5rem] md:min-h-[6.5rem] flex items-center justify-center">
         <span
           className={`font-heading text-5xl sm:text-7xl md:text-8xl font-normal block transition-all duration-300 ${
-            isLast ? 'text-[#D2AC5E] text-shadow-hero' : 'text-[#FBF7EF]'
+            isLast ? 'bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-shadow-hero' : 'text-[#FBF7EF]'
           } ${
             !isLocked
               ? 'blur-[1.5px] scale-105 opacity-80 animate-pulse'
@@ -72,7 +72,7 @@ const UnitCard: React.FC<UnitCardProps> = ({
 
       {/* Gold Accent Indicator when locked */}
       <div
-        className={`w-6 h-[1px] bg-[#C29845] mt-2 transition-all duration-500 ${
+        className={`w-6 h-[1px] bg-gradient-to-r from-[#f1c65a] to-[#e2b324] mt-2 transition-all duration-500 ${
           isLocked ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
         }`}
       />
@@ -192,10 +192,10 @@ export const Countdown: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-24 bg-[#141110] border-y border-[#C29845]/20 relative overflow-hidden"
+      className="py-24 bg-[#11221c] border-y border-[#f1c65a]/20 relative overflow-hidden"
     >
       {/* Background Subtle Radial Glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(194,152,69,0.06)_0%,transparent_70%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(241,198,90,0.06)_0%,transparent_70%)] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-6 text-center relative z-10">
 
@@ -205,13 +205,13 @@ export const Countdown: React.FC = () => {
             hasRevealed ? 'opacity-100 translateY-0' : 'opacity-0 translateY-6'
           }`}
         >
-          <span className="text-[#C29845] text-xs font-medium tracking-[0.35em] uppercase block mb-2">
+          <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs font-semibold tracking-[0.35em] uppercase block mb-2">
             COUNTDOWN
           </span>
           <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em] mb-4">
             Until We Say I Do
           </h2>
-          <div className="w-20 h-[1px] bg-gradient-to-r from-transparent via-[#C29845] to-transparent mx-auto mb-14" />
+          <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mx-auto mb-14" />
         </div>
 
         {/* Digital Counter Grid */}
