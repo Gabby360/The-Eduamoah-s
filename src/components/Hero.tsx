@@ -250,35 +250,35 @@ export const Hero: React.FC = () => {
         @keyframes heroFadeIn {
           from { opacity: 0; } to { opacity: 1; }
         }
-        /* Golden Divider Continuous Drawing Loop (Draws -> Holds -> Disappears -> Repeats) */
+        /* Golden Divider Continuous Drawing Loop (Slower, Cinematic 9.0s cycle) */
         @keyframes goldenLineContinuousDraw {
-          /* 0% - 32%: Line draws outward from center (1.6s) */
+          /* 0% - 30%: Line draws outward from center (2.7s) */
           0% {
             transform: scaleX(0);
             opacity: 0;
             filter: drop-shadow(0 0 2px rgba(241,198,90,0.2));
           }
-          32% {
+          30% {
             transform: scaleX(1);
             opacity: 1;
             filter: drop-shadow(0 0 14px rgba(241,198,90,0.95));
           }
 
-          /* 32% - 68%: Holds fully drawn with ambient gold glow (1.8s hold) */
-          68% {
+          /* 30% - 70%: Holds fully drawn with ambient gold glow (3.6s hold) */
+          70% {
             transform: scaleX(1);
             opacity: 1;
             filter: drop-shadow(0 0 8px rgba(241,198,90,0.7));
           }
 
-          /* 68% - 84%: Fades and contracts back to center (0.8s) */
-          84% {
+          /* 70% - 85%: Fades and contracts back to center (1.35s) */
+          85% {
             transform: scaleX(0);
             opacity: 0;
             filter: drop-shadow(0 0 2px rgba(241,198,90,0.1));
           }
 
-          /* 84% - 100%: Brief pause before starting drawing loop again (0.8s pause) */
+          /* 85% - 100%: Pause before starting drawing loop again (1.35s pause) */
           100% {
             transform: scaleX(0);
             opacity: 0;
@@ -298,7 +298,7 @@ export const Hero: React.FC = () => {
           transform-origin: center center;
           position: relative;
           will-change: transform, opacity, filter;
-          animation: goldenLineContinuousDraw 5s cubic-bezier(0.25, 0.9, 0.35, 1) infinite;
+          animation: goldenLineContinuousDraw 9s cubic-bezier(0.25, 0.9, 0.35, 1) infinite;
         }
 
         .hero-tagline     { animation: heroFadeIn 1.2s ease-out 0.8s both; }
