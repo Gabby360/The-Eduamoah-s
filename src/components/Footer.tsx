@@ -31,7 +31,7 @@ export const Footer: React.FC = () => {
 
         {/* Couple Script Monogram */}
         <div className="font-script text-4xl sm:text-5xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-10 drop-shadow-md">
-          {weddingDetails.couple.brideName} & {weddingDetails.couple.groomName}
+          Christabell &amp; George
         </div>
 
         {/* Scroll Back To Top Button */}
