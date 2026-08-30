@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Heart } from 'lucide-react';
 import { weddingDetails } from '../mocks/weddingData';
 
 export const Navbar: React.FC = () => {
@@ -38,6 +38,18 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
+      <style>{`
+        @keyframes floatHeart {
+          0%   { transform: translateY(0px) scale(0.85) rotate(0deg); opacity: 0.20; }
+          50%  { transform: translateY(-25px) scale(1.15) rotate(12deg); opacity: 0.45; }
+          100% { transform: translateY(-50px) scale(0.85) rotate(-12deg); opacity: 0.20; }
+        }
+        @keyframes heartPulseGlow {
+          0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.12; }
+          50%      { transform: translate(-50%, -50%) scale(1.2); opacity: 0.28; }
+        }
+      `}</style>
+
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled
@@ -81,7 +93,7 @@ export const Navbar: React.FC = () => {
         </div>
       </header>
 
-      {/* ── SOLID FULL-SCREEN MOBILE NAVIGATION OVERLAY ── */}
+      {/* ── SOLID FULL-SCREEN MOBILE NAVIGATION OVERLAY WITH LOVE ANIMATION ── */}
       <div
         className={`lg:hidden fixed inset-0 z-40 bg-[#0a1713] flex flex-col justify-center items-center overflow-hidden transition-all duration-300 ease-in-out ${
           isMobileMenuOpen
@@ -95,17 +107,30 @@ export const Navbar: React.FC = () => {
         {/* Gold border accent frame */}
         <div className="absolute inset-4 sm:inset-6 border border-[#f1c65a]/20 pointer-events-none" />
 
-        {/* Navigation Items */}
-        <div className="relative z-10 w-full max-w-sm px-8 text-center flex flex-col items-center justify-center space-y-6">
-          {/* Small Monogram Logo inside Menu */}
-          <div className="font-script text-3xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-1 drop-shadow-md">
-            {weddingDetails.couple.coupleName}
+        {/* ── LOVE ANIMATION (Romantic Floating & Pulsing Hearts) ── */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Big pulsing center heart glow */}
+          <div className="absolute top-1/2 left-1/2 animate-[heartPulseGlow_4.5s_ease-in-out_infinite]">
+            <Heart size={180} className="text-[#f1c65a]/30 fill-[#f1c65a]/15 filter blur-[1px]" />
           </div>
+          {/* Floating gold hearts */}
+          <div className="absolute top-1/6 left-8 animate-[floatHeart_5s_ease-in-out_infinite]">
+            <Heart size={32} className="text-[#f1c65a]/45 fill-[#f1c65a]/35" />
+          </div>
+          <div className="absolute bottom-1/5 right-8 animate-[floatHeart_6s_ease-in-out_1.5s_infinite]">
+            <Heart size={38} className="text-[#e2b324]/45 fill-[#e2b324]/35" />
+          </div>
+          <div className="absolute top-2/3 left-12 animate-[floatHeart_7s_ease-in-out_3s_infinite]">
+            <Heart size={24} className="text-[#f1c65a]/35 fill-[#f1c65a]/25" />
+          </div>
+          <div className="absolute top-1/3 right-12 animate-[floatHeart_5.5s_ease-in-out_2s_infinite]">
+            <Heart size={28} className="text-[#f1c65a]/40 fill-[#f1c65a]/30" />
+          </div>
+        </div>
 
-          <div className="w-20 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mb-2" />
-
-          {/* Navigation Links */}
-          <div className="flex flex-col space-y-3.5 w-full">
+        {/* Navigation Items (Clean & Focused) */}
+        <div className="relative z-10 w-full max-w-sm px-8 text-center flex flex-col items-center justify-center">
+          <div className="flex flex-col space-y-4 w-full">
             {navLinks.map((link) => (
               <a
                 key={link.name}
@@ -114,16 +139,11 @@ export const Navbar: React.FC = () => {
                   e.preventDefault();
                   handleLinkClick(link.href);
                 }}
-                className="text-sm font-medium tracking-[0.25em] text-[#FBF7EF] hover:text-[#f1c65a] transition-colors py-2 border-b border-[#f1c65a]/15"
+                className="text-base font-medium tracking-[0.25em] text-[#FBF7EF] hover:text-[#f1c65a] transition-colors py-3 border-b border-[#f1c65a]/15 uppercase"
               >
                 {link.name}
               </a>
             ))}
-          </div>
-
-          {/* Date Footer inside Menu */}
-          <div className="pt-4 text-[#A69272] text-[10px] tracking-[0.3em] uppercase font-mono">
-            OCTOBER 10, 2026 • ACCRA
           </div>
         </div>
       </div>
