@@ -1,130 +1,75 @@
 import React, { useEffect, useState, useRef } from 'react';
 
 /* ─────────────────────────────────────────────
-   HELPERS & TYPES FOR CINEMATIC TWO HEARTS CANVAS
+   HELPERS & DUST PARTICLES FOR ATMOSPHERIC CANVAS
 ───────────────────────────────────────────── */
 const rand = (min: number, max: number) => Math.random() * (max - min) + min;
 
 interface DustParticle {
-  x: number; y: number; r: number;
-  vx: number; vy: number;
-  alpha: number; dir: number; speed: number;
-}
-
-interface BurstParticle {
-  x: number; y: number;
-  vx: number; vy: number;
-  r: number; alpha: number; life: number; maxLife: number;
-}
-
-interface TrailPoint {
-  x: number; y: number; alpha: number; r: number;
-}
-
-/* Draw elegant 3D Luminous Gold Heart on Canvas */
-function drawGoldHeart(
-  ctx: CanvasRenderingContext2D,
-  cx: number, cy: number,
-  size: number, alpha: number, pulse: number
-) {
-  ctx.save();
-  ctx.globalAlpha = alpha;
-  ctx.translate(cx, cy);
-  const scale = (size / 30) * pulse;
-  ctx.scale(scale, scale);
-
-  // Outer ambient glow
-  const glowGrad = ctx.createRadialGradient(0, 0, 2, 0, 0, 35);
-  glowGrad.addColorStop(0, 'rgba(210, 172, 94, 0.65)');
-  glowGrad.addColorStop(0.4, 'rgba(194, 152, 69, 0.25)');
-  glowGrad.addColorStop(1, 'rgba(194, 152, 69, 0)');
-  ctx.fillStyle = glowGrad;
-  ctx.beginPath();
-  ctx.arc(0, 0, 35, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Heart Path
-  ctx.beginPath();
-  ctx.moveTo(0, -7);
-  ctx.bezierCurveTo(-5, -16, -16, -11, -16, 0);
-  ctx.bezierCurveTo(-16, 10, -2, 18, 0, 22);
-  ctx.bezierCurveTo(2, 18, 16, 10, 16, 0);
-  ctx.bezierCurveTo(16, -11, 5, -16, 0, -7);
-  ctx.closePath();
-
-  // Gold 3D Gradient Fill
-  const heartGrad = ctx.createLinearGradient(-10, -15, 10, 20);
-  heartGrad.addColorStop(0, '#fff3d1');
-  heartGrad.addColorStop(0.3, '#f1c65a');
-  heartGrad.addColorStop(0.8, '#e2b324');
-  heartGrad.addColorStop(1, '#b88d18');
-
-  ctx.fillStyle = heartGrad;
-  ctx.shadowColor = 'rgba(210, 172, 94, 0.8)';
-  ctx.shadowBlur = 18;
-  ctx.fill();
-
-  // Inner Highlight Rim
-  ctx.strokeStyle = 'rgba(255, 248, 225, 0.75)';
-  ctx.lineWidth = 1.2;
-  ctx.stroke();
-
-  ctx.restore();
+  x: number;
+  y: number;
+  r: number;
+  vx: number;
+  vy: number;
+  alpha: number;
+  dir: number;
+  speed: number;
 }
 
 /* ─────────────────────────────────────────────
    SPLASH SCREEN COMPONENT
+   Minimalist Breathing Love Symbol & Heart Portal Reveal
 ───────────────────────────────────────────── */
 export const SplashScreen: React.FC = () => {
-  const [fadingOut, setFadingOut] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
-  const [sceneIndex, setSceneIndex] = useState(0); // 0: Dark, 1: Appear/Travel, 4: Message, 5: Title
+  // Phase state: 'breathing' (0-10s) -> 'expanding' (10-12s) -> 'complete'
+  const [phase, setPhase] = useState<'breathing' | 'expanding' | 'complete'>('breathing');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
 
-  // 1. MASTER TIMELINE & FAILSAFE EFFECT (SPED UP TWO-HEARTS JOURNEY)
+  // 1. MASTER TIMELINE & FAILSAFE
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.overflow = 'hidden';
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
-      setFadingOut(true);
+      setPhase('expanding');
       const rTimer = setTimeout(() => {
-        setIsComplete(true);
+        setPhase('complete');
         document.body.style.overflow = '';
-      }, 600);
+      }, 700);
       return () => clearTimeout(rTimer);
     }
 
-    // Faster timeline triggers
-    const t1 = setTimeout(() => setSceneIndex(1), 600);    // 0.6s: Hearts appear
-    const t4 = setTimeout(() => setSceneIndex(4), 4400);   // 4.4s: "Two hearts. One beautiful journey."
-    const t5 = setTimeout(() => setSceneIndex(5), 6600);   // 6.6s: "THE EDUAMOAH'S" & Date
-    const tFade = setTimeout(() => setFadingOut(true), 8800); // 8.8s: Begin smooth dissolve
-    const tComp = setTimeout(() => {                       // 9.8s: Unmount & unlock page
-      setIsComplete(true);
+    // 10.0s: Transition from 10-second quiet breathing heartbeat into Heart Reveal Portal
+    const tExpand = setTimeout(() => {
+      setPhase('expanding');
+    }, 10000);
+
+    // 12.0s: Complete reveal & unlock main website page
+    const tComplete = setTimeout(() => {
+      setPhase('complete');
       document.body.style.overflow = '';
       window.scrollTo(0, 0);
-    }, 9800);
+    }, 12000);
 
-    // Hard Failsafe at 11.0s
-    const tFail = setTimeout(() => {
-      setFadingOut(true);
-      setIsComplete(true);
+    // Hard Failsafe at 13.5s
+    const tFailsafe = setTimeout(() => {
+      setPhase('complete');
       document.body.style.overflow = '';
-    }, 11000);
+    }, 13500);
 
     return () => {
-      clearTimeout(t1); clearTimeout(t4); clearTimeout(t5);
-      clearTimeout(tFade); clearTimeout(tComp); clearTimeout(tFail);
+      clearTimeout(tExpand);
+      clearTimeout(tComplete);
+      clearTimeout(tFailsafe);
       document.body.style.overflow = '';
     };
   }, []);
 
-  // 2. ANIMATED CANVAS EFFECT (FASTER TRAVEL & MERGE)
+  // 2. SPARSE ATMOSPHERIC GOLD DUST CANVAS
   useEffect(() => {
-    if (isComplete) return;
+    if (phase === 'complete') return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -138,30 +83,21 @@ export const SplashScreen: React.FC = () => {
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    const isMobile = window.innerWidth < 768;
-    const dustCount = isMobile ? 16 : 30;
+    const dustCount = window.innerWidth < 768 ? 12 : 24;
 
-    // Atmospheric Dust
     const dust: DustParticle[] = Array.from({ length: dustCount }, () => ({
       x: rand(0, window.innerWidth),
       y: rand(0, window.innerHeight),
-      r: rand(0.8, 2.2),
-      vx: rand(-0.08, 0.08),
-      vy: rand(-0.12, -0.04),
-      alpha: rand(0.06, 0.28),
+      r: rand(0.7, 1.8),
+      vx: rand(-0.06, 0.06),
+      vy: rand(-0.10, -0.03),
+      alpha: rand(0.05, 0.22),
       dir: Math.random() > 0.5 ? 1 : -1,
-      speed: rand(0.002, 0.005),
+      speed: rand(0.0015, 0.004),
     }));
 
-    const leftTrail: TrailPoint[] = [];
-    const rightTrail: TrailPoint[] = [];
-    let burstParticles: BurstParticle[] = [];
-    let rippleRadius = 0;
-    let rippleAlpha = 0;
-
-    const startTime = performance.now();
     let lastFrame = 0;
-    const FRAME_INTERVAL = 1000 / 32;
+    const FRAME_INTERVAL = 1000 / 30;
 
     const tick = (now: number) => {
       rafRef.current = requestAnimationFrame(tick);
@@ -170,139 +106,24 @@ export const SplashScreen: React.FC = () => {
 
       const W = canvas.width;
       const H = canvas.height;
-      const sec = (now - startTime) / 1000;
       ctx.clearRect(0, 0, W, H);
 
-      /* ── 1. Atmospheric Dust ── */
-      dust.forEach(p => {
-        p.x += p.vx; p.y += p.vy;
+      dust.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
         p.alpha += p.dir * p.speed;
-        if (p.alpha > 0.28 || p.alpha < 0.04) p.dir *= -1;
-        if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-        if (p.y < 0) { p.y = H; p.x = rand(0, W); }
+        if (p.alpha > 0.22 || p.alpha < 0.03) p.dir *= -1;
+        if (p.x < 0) p.x = W;
+        if (p.x > W) p.x = 0;
+        if (p.y < 0) {
+          p.y = H;
+          p.x = rand(0, W);
+        }
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(194, 152, 69, ${p.alpha.toFixed(3)})`;
+        ctx.fillStyle = `rgba(241, 198, 90, ${p.alpha.toFixed(3)})`;
         ctx.fill();
       });
-
-      /* ── 2. Heart Calculations & Faster Journey Math ── */
-      const startXOffset = isMobile ? Math.min(W * 0.32, 130) : 220;
-      const centerY = H * 0.44;
-      const timeSec = sec;
-
-      let leftX = W / 2 - startXOffset;
-      let leftY = centerY + Math.sin(timeSec * 2.2) * 10;
-      let rightX = W / 2 + startXOffset;
-      let rightY = centerY + Math.cos(timeSec * 2.2) * 10;
-      let heartAlpha = 0;
-      let isMerged = false;
-
-      // Phase 1: Appear (0.6s - 1.2s)
-      if (sec >= 0.6 && sec < 1.2) {
-        heartAlpha = Math.min((sec - 0.6) / 0.6, 1);
-      }
-      // Phase 2: Brief pause (1.2s - 1.6s)
-      else if (sec >= 1.2 && sec < 1.6) {
-        heartAlpha = 1;
-      }
-      // Phase 3: Travel towards each other (1.6s - 3.4s) — 1.8s duration (40% faster!)
-      else if (sec >= 1.6 && sec < 3.4) {
-        heartAlpha = 1;
-        const moveT = Math.min((sec - 1.6) / 1.8, 1);
-        const easeT = moveT < 0.5 ? 2 * moveT * moveT : -1 + (4 - 2 * moveT) * moveT; // smooth cubic ease
-        const currentDist = startXOffset * (1 - easeT);
-
-        leftX = W / 2 - currentDist;
-        leftY = centerY + Math.sin(timeSec * 2.8) * (10 * (1 - easeT * 0.7));
-        rightX = W / 2 + currentDist;
-        rightY = centerY + Math.cos(timeSec * 2.8) * (10 * (1 - easeT * 0.7));
-
-        // Add Light Trails
-        if (moveT > 0.05) {
-          leftTrail.push({ x: leftX, y: leftY, alpha: 0.5, r: rand(1.5, 3) });
-          rightTrail.push({ x: rightX, y: rightY, alpha: 0.5, r: rand(1.5, 3) });
-        }
-      }
-      // Phase 4: Merge in center (3.4s - 4.4s)
-      else if (sec >= 3.4 && sec < 4.4) {
-        heartAlpha = Math.max(1 - (sec - 3.4) / 1.0, 0);
-        leftX = W / 2;
-        leftY = centerY;
-        rightX = W / 2;
-        rightY = centerY;
-        isMerged = true;
-
-        // Trigger Ripple & Burst at 3.4s
-        if (rippleRadius === 0) {
-          rippleRadius = 10;
-          rippleAlpha = 0.8;
-          burstParticles = Array.from({ length: 26 }, () => {
-            const angle = rand(0, Math.PI * 2);
-            const spd = rand(1.4, 4.0);
-            return {
-              x: W / 2, y: centerY,
-              vx: Math.cos(angle) * spd,
-              vy: Math.sin(angle) * spd,
-              r: rand(1.5, 3.5),
-              alpha: rand(0.7, 1.0),
-              life: 0, maxLife: rand(25, 45),
-            };
-          });
-        }
-      }
-
-      /* ── 3. Draw Light Trails ── */
-      [leftTrail, rightTrail].forEach(trail => {
-        for (let i = trail.length - 1; i >= 0; i--) {
-          const pt = trail[i];
-          pt.alpha -= 0.02;
-          if (pt.alpha <= 0) {
-            trail.splice(i, 1);
-            continue;
-          }
-          ctx.beginPath();
-          ctx.arc(pt.x, pt.y, pt.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(210, 172, 94, ${pt.alpha.toFixed(2)})`;
-          ctx.fill();
-        }
-      });
-
-      /* ── 4. Draw Gold Ripple & Burst Particles ── */
-      if (rippleAlpha > 0) {
-        rippleRadius += 2.5;
-        rippleAlpha -= 0.018;
-        ctx.save();
-        ctx.strokeStyle = `rgba(210, 172, 94, ${Math.max(rippleAlpha, 0).toFixed(2)})`;
-        ctx.lineWidth = 1.8;
-        ctx.beginPath();
-        ctx.arc(W / 2, centerY, rippleRadius, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      burstParticles.forEach((p) => {
-        p.x += p.vx; p.y += p.vy;
-        p.life++;
-        p.alpha = Math.max(1 - p.life / p.maxLife, 0);
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(230, 193, 117, ${p.alpha.toFixed(2)})`;
-        ctx.fill();
-      });
-
-      /* ── 5. Draw Hearts ── */
-      if (heartAlpha > 0.01) {
-        const pulseVal = 1 + Math.sin(timeSec * 3) * 0.04;
-        if (!isMerged) {
-          drawGoldHeart(ctx, leftX, leftY, 28, heartAlpha, pulseVal);
-          drawGoldHeart(ctx, rightX, rightY, 28, heartAlpha, pulseVal);
-        } else {
-          // Merged golden heart pulsing & dissolving
-          const mergePulse = 1 + Math.sin((sec - 3.4) * 6) * 0.08;
-          drawGoldHeart(ctx, W / 2, centerY, 34, heartAlpha, mergePulse);
-        }
-      }
     };
 
     rafRef.current = requestAnimationFrame(tick);
@@ -310,124 +131,159 @@ export const SplashScreen: React.FC = () => {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener('resize', resize);
     };
-  }, [isComplete]);
+  }, [phase]);
 
-  if (isComplete) return null;
+  if (phase === 'complete') return null;
 
   return (
-    <div
-      className={`fixed inset-0 z-[100] bg-[#0a1713] flex items-center justify-center overflow-hidden transition-opacity duration-1000 ease-in-out ${
-        fadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
-      }`}
-    >
-      <style>{`
-        /* Scene Glow */
-        @keyframes candleGlow {
-          0%   { opacity: 0; transform: scale(0.7); }
-          50%  { opacity: 0.7; transform: scale(1.05); }
-          100% { opacity: 0.5; transform: scale(1.00); }
-        }
+    <>
+      {/* SVG Clip-Path Definition for Heart-Shaped Reveal Portal */}
+      <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
+        <defs>
+          <clipPath id="splash-heart-reveal-clip" clipPathUnits="objectBoundingBox">
+            <path d="M 0.5,0.18 C 0.33,-0.06 0,0.08 0,0.36 C 0,0.62 0.5,0.88 0.5,0.98 C 0.5,0.88 1,0.62 1,0.36 C 1,0.08 0.67,-0.06 0.5,0.18 Z" />
+          </clipPath>
+        </defs>
+      </svg>
 
-        /* Script Calligraphy Fade (Scene 4: ~4.4s) */
-        @keyframes splashScriptLine1 {
-          0%   { opacity: 0; transform: translateY(14px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes splashScriptLine2 {
-          0%   { opacity: 0; transform: translateY(14px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Title & Date Fade (Scene 5: ~6.6s) */
-        @keyframes splashTitleFade {
-          0%   { opacity: 0; transform: translateY(16px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes splashDateReveal {
-          0%   { opacity: 0; letter-spacing: 0.55em; }
-          100% { opacity: 1; letter-spacing: 0.35em; }
-        }
-        @keyframes lineGrowH {
-          0%   { transform: scaleX(0); }
-          100% { transform: scaleX(1); }
-        }
-
-        .splash-glow {
-          animation: candleGlow 2.0s ease-out 0.6s both;
-        }
-
-        .splash-script-1 {
-          animation: splashScriptLine1 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-        }
-        .splash-script-2 {
-          animation: splashScriptLine2 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both;
-        }
-
-        .splash-title-card {
-          animation: splashTitleFade 1.0s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-        }
-        .splash-accent-line {
-          animation: lineGrowH 0.7s ease-out 0.3s both;
-          transform-origin: center;
-        }
-        .splash-date {
-          animation: splashDateReveal 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s both;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .splash-glow, .splash-script-1, .splash-script-2, .splash-title-card, .splash-date {
-            animation: none !important;
-            opacity: 1 !important;
-            transform: none !important;
-            letter-spacing: inherit !important;
+      {/* Main Full-Screen Overlay Container */}
+      <div
+        className={`fixed inset-0 z-[100] bg-[#0a1713] flex items-center justify-center overflow-hidden transition-opacity duration-1000 ${
+          phase === 'expanding' ? 'pointer-events-none' : 'pointer-events-auto'
+        }`}
+      >
+        <style>{`
+          /* Gentle, quiet heartbeat breathing cycle (2.4s per breath) */
+          @keyframes symbolBreathing {
+            0% {
+              transform: scale(0.92);
+              opacity: 0.65;
+              filter: drop-shadow(0 0 6px rgba(241,198,90,0.35));
+            }
+            50% {
+              transform: scale(1.28);
+              opacity: 1.00;
+              filter: drop-shadow(0 0 22px rgba(241,198,90,0.85));
+            }
+            100% {
+              transform: scale(0.92);
+              opacity: 0.65;
+              filter: drop-shadow(0 0 6px rgba(241,198,90,0.35));
+            }
           }
-        }
-      `}</style>
 
-      {/* Background Canvas: Two Glowing Gold Hearts, Particle Trails & Dust */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 z-[1] w-full h-full pointer-events-none"
-        aria-hidden="true"
-      />
+          /* Ambient radial halo breathing rhythm */
+          @keyframes haloBreathing {
+            0% {
+              transform: scale(0.85);
+              opacity: 0.30;
+            }
+            50% {
+              transform: scale(1.15);
+              opacity: 0.70;
+            }
+            100% {
+              transform: scale(0.85);
+              opacity: 0.30;
+            }
+          }
 
-      {/* Warm Ambient Golden Center Glow */}
-      <div className="splash-glow absolute inset-0 z-[2] pointer-events-none flex items-center justify-center">
-        <div className="w-[650px] h-[650px] rounded-full bg-[radial-gradient(circle_at_center,rgba(241,198,90,0.20)_0%,rgba(241,198,90,0.06)_50%,transparent_75%)] filter blur-3xl" />
-      </div>
+          /* Dramatic Heart-Shaped Expansion Reveal */
+          @keyframes heartExpandReveal {
+            0% {
+              transform: scale(0.08);
+              opacity: 1.0;
+            }
+            35% {
+              transform: scale(2.2);
+              opacity: 0.95;
+            }
+            75% {
+              transform: scale(18.0);
+              opacity: 0.85;
+            }
+            100% {
+              transform: scale(65.0);
+              opacity: 0.0;
+            }
+          }
 
-      {/* Typography Overlay (Triggered by sceneIndex >= 4) */}
-      <div className="relative z-[10] max-w-lg md:max-w-xl mx-auto px-6 text-center flex flex-col items-center justify-center mt-32 md:mt-40">
-        
-        {/* Scene 4 (4.4s+): "Two hearts. One beautiful journey." */}
-        {sceneIndex >= 4 && sceneIndex < 5 && (
-          <div className="flex flex-col items-center justify-center">
-            <span className="splash-script-1 font-script text-4xl sm:text-5xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-normal tracking-wide drop-shadow-md">
-              Two hearts.
-            </span>
-            <span className="splash-script-2 font-script text-4xl sm:text-5xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-normal tracking-wide drop-shadow-md mt-2">
-              One beautiful journey.
-            </span>
-          </div>
+          .animate-symbol-breath {
+            animation: symbolBreathing 2.4s ease-in-out infinite;
+          }
+
+          .animate-halo-breath {
+            animation: haloBreathing 2.4s ease-in-out infinite;
+          }
+
+          .animate-heart-reveal {
+            animation: heartExpandReveal 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            transform-origin: center center;
+            will-change: transform, opacity;
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .animate-symbol-breath, .animate-halo-breath {
+              animation: none !important;
+            }
+          }
+        `}</style>
+
+        {/* Sparse Ambient Gold Dust Particles */}
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 z-[1] w-full h-full pointer-events-none"
+          aria-hidden="true"
+        />
+
+        {/* Quiet Ambient Golden Glow Halo behind symbol */}
+        <div className="absolute inset-0 z-[2] pointer-events-none flex items-center justify-center">
+          <div className="animate-halo-breath w-72 h-72 rounded-full bg-[radial-gradient(circle_at_center,rgba(241,198,90,0.22)_0%,rgba(241,198,90,0.05)_55%,transparent_80%)] filter blur-2xl" />
+        </div>
+
+        {/* ── EXPANDING HEART PORTAL MASK OVERLAY (Phase === 'expanding') ── */}
+        {phase === 'expanding' && (
+          <div
+            className="absolute inset-0 z-[20] bg-[#0a1713] border-4 border-[#f1c65a]/60 animate-heart-reveal"
+            style={{
+              clipPath: 'url(#splash-heart-reveal-clip)',
+              transformOrigin: '50% 50%',
+            }}
+          />
         )}
 
-        {/* Scene 5 (6.6s+): "THE EDUAMOAH'S" Title Card & Date */}
-        {sceneIndex >= 5 && (
-          <div className="splash-title-card flex flex-col items-center justify-center">
-            <span className="font-script text-2xl sm:text-3xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-2">
-              Becoming
-            </span>
-            <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl tracking-[0.08em] text-[#FBF7EF] font-normal uppercase mb-3 text-shadow-hero whitespace-nowrap">
-              THE EDUAMOAH'S
-            </h1>
-            <div className="splash-accent-line w-28 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent my-3" />
-            <div className="splash-date bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs sm:text-sm tracking-[0.35em] uppercase font-semibold">
-              OCTOBER 10, 2026
+        {/* ── CENTER BREATHING TINY LOVE SYMBOL ── */}
+        {phase === 'breathing' && (
+          <div className="relative z-[10] flex flex-col items-center justify-center pointer-events-none">
+            <div className="animate-symbol-breath flex items-center justify-center p-3">
+              {/* Elegant 3D Luminous Vector Gold Heart Icon (18px) */}
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 32 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4 sm:w-5 sm:h-5 text-[#f1c65a] drop-shadow-[0_0_12px_rgba(241,198,90,0.85)]"
+              >
+                <defs>
+                  <linearGradient id="tinyHeartGrad" x1="0" y1="0" x2="32" y2="32">
+                    <stop offset="0%" stopColor="#FFF3D1" />
+                    <stop offset="35%" stopColor="#F1C65A" />
+                    <stop offset="80%" stopColor="#E2B324" />
+                    <stop offset="100%" stopColor="#B88D18" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M16 5.5C13.5 1.5 7.5 1.5 4.5 5C1.5 8.5 2 13.5 6 17.5L16 27.5L26 17.5C30 13.5 30.5 8.5 27.5 5C24.5 1.5 18.5 1.5 16 5.5Z"
+                  fill="url(#tinyHeartGrad)"
+                  stroke="#FFF8E1"
+                  strokeWidth="0.8"
+                />
+              </svg>
             </div>
           </div>
         )}
-
       </div>
-    </div>
+    </>
   );
 };
