@@ -33,31 +33,28 @@ export const SplashScreen: React.FC = () => {
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
-      setPhase('expanding');
-      const rTimer = setTimeout(() => {
-        setPhase('complete');
-        document.body.style.overflow = '';
-      }, 700);
-      return () => clearTimeout(rTimer);
+      setPhase('complete');
+      document.body.style.overflow = '';
+      return;
     }
 
-    // 3.0s: Transition into Extremely Slow Heart Aperture Reveal (cuts hole to reveal website)
+    // 1.8s: Transition into Heart Aperture Reveal & IMMEDIATELY UNLOCK SCROLLING
     const tExpand = setTimeout(() => {
       setPhase('expanding');
-    }, 3000);
+      document.body.style.overflow = '';
+    }, 1800);
 
-    // 10.5s: Complete reveal & unlock main website page (Extremely slow 7.5s reveal opening)
+    // 3.0s: Complete reveal & unmount splash
     const tComplete = setTimeout(() => {
       setPhase('complete');
       document.body.style.overflow = '';
-      window.scrollTo(0, 0);
-    }, 10500);
+    }, 3000);
 
-    // Hard Failsafe at 12.0s
+    // Hard Failsafe at 3.5s
     const tFailsafe = setTimeout(() => {
       setPhase('complete');
       document.body.style.overflow = '';
-    }, 12000);
+    }, 3500);
 
     return () => {
       clearTimeout(tExpand);
@@ -252,13 +249,13 @@ export const SplashScreen: React.FC = () => {
           }
 
           .animate-heart-aperture {
-            animation: heartApertureExpand 7.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+            animation: heartApertureExpand 1.2s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
             transform-origin: 50% 50%;
             will-change: transform;
           }
 
           .animate-heart-rim {
-            animation: heartRimExpand 7.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+            animation: heartRimExpand 1.2s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
             transform-origin: center center;
             will-change: transform, opacity;
           }
