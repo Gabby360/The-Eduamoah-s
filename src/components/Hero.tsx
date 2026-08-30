@@ -250,25 +250,93 @@ export const Hero: React.FC = () => {
         @keyframes heroFadeIn {
           from { opacity: 0; } to { opacity: 1; }
         }
-        @keyframes lineGrow {
-          from { transform: scaleX(0); opacity: 0; }
-          to   { transform: scaleX(1);  opacity: 1; }
+        /* Golden Divider Drawn by Light Animation (1.8s) */
+        @keyframes goldenLineDraw {
+          0% {
+            transform: scaleX(0);
+            opacity: 0;
+            filter: drop-shadow(0 0 2px rgba(241,198,90,0.2));
+          }
+          30% {
+            transform: scaleX(0.35);
+            opacity: 0.75;
+            filter: drop-shadow(0 0 12px rgba(241,198,90,0.95));
+          }
+          70% {
+            transform: scaleX(0.85);
+            opacity: 0.95;
+            filter: drop-shadow(0 0 10px rgba(241,198,90,0.85));
+          }
+          100% {
+            transform: scaleX(1);
+            opacity: 1;
+            filter: drop-shadow(0 0 4px rgba(241,198,90,0.4));
+          }
         }
+
+        /* Golden Divider Secondary Light Breathing Effect (6.0s cycle) */
+        @keyframes goldenGlowBreath {
+          0%, 100% {
+            filter: drop-shadow(0 0 4px rgba(241,198,90,0.35));
+            opacity: 0.85;
+          }
+          50% {
+            filter: drop-shadow(0 0 16px rgba(241,198,90,0.95));
+            opacity: 1.0;
+          }
+        }
+
+        /* Light Trail Traveling Along the Line */
+        @keyframes goldenTrailSweep {
+          0% {
+            transform: translateX(-100%);
+            opacity: 0;
+          }
+          35% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+        }
+
         .hero-ken-burns {
           animation: kenBurns 24s ease-in-out infinite;
           transform-origin: center center;
           will-change: transform;
         }
-        .hero-line-top    { transform-origin: center; animation: lineGrow   1.1s cubic-bezier(.25,.46,.45,.94) 0.4s both; }
-        .hero-becoming    {                            animation: heroFadeUp 1.1s cubic-bezier(.25,.46,.45,.94) 0.9s both; }
-        .hero-title       {                            animation: heroFadeUp 1.1s cubic-bezier(.25,.46,.45,.94) 1.5s both; }
-        .hero-line-bottom { transform-origin: center; animation: lineGrow   1.1s cubic-bezier(.25,.46,.45,.94) 1.9s both; }
-        .hero-tagline     {                            animation: heroFadeIn 1.2s ease-out                     2.3s both; }
+        .hero-becoming    { animation: heroFadeUp 1.1s cubic-bezier(.25,.46,.45,.94) 0.5s both; }
+        .hero-title       { animation: heroFadeUp 1.1s cubic-bezier(.25,.46,.45,.94) 0.9s both; }
+        
+        .hero-line-bottom {
+          transform-origin: center center;
+          position: relative;
+          overflow: hidden;
+          will-change: transform, opacity, filter;
+          animation:
+            goldenLineDraw 1.8s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both,
+            goldenGlowBreath 6s ease-in-out 3.2s infinite;
+        }
+
+        .hero-line-bottom::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, transparent 0%, rgba(255,248,225,0.95) 50%, transparent 100%);
+          animation: goldenTrailSweep 1.8s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+          pointer-events: none;
+        }
+
+        .hero-tagline     { animation: heroFadeIn 1.2s ease-out 1.8s both; }
+
         @media (prefers-reduced-motion: reduce) {
-          .hero-ken-burns,.hero-line-top,.hero-becoming,.hero-title,
-          .hero-line-bottom,.hero-tagline {
-            animation: none !important; opacity: 1 !important;
+          .hero-ken-burns, .hero-becoming, .hero-title,
+          .hero-line-bottom, .hero-line-bottom::after, .hero-tagline {
+            animation: none !important;
+            opacity: 1 !important;
             transform: none !important;
+            filter: none !important;
           }
         }
       `}</style>
@@ -305,7 +373,7 @@ export const Hero: React.FC = () => {
           {weddingDetails.couple.coupleName}
         </h1>
 
-        <div className="hero-line-bottom w-32 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mb-6" />
+        <div className="hero-line-bottom w-36 sm:w-44 md:w-52 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mb-6" />
         <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light mb-6 text-shadow-hero">
           {weddingDetails.hero.tagline}
         </p>
