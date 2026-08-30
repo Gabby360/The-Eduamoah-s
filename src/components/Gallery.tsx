@@ -167,21 +167,21 @@ export const Gallery: React.FC = () => {
           </h2>
         </div>
 
-        {/* Gallery Grid — Staggered Fade-In Reveal + Continuous Ken Burns Movement */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Gallery 2-Column Grid — Staggered Fade-In Reveal + Continuous Ken Burns + 3D Hover Lift */}
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
           {weddingDetails.gallery.images.map((img, idx) => (
             <div
               key={idx}
               ref={el => setRef(el, idx)}
               onClick={() => openLightbox(idx)}
-              className={`group relative cursor-pointer overflow-hidden border border-[#f1c65a]/20 bg-[#11221c] aspect-[4/5] shadow-xl transition-all duration-500 hover:border-[#f1c65a]/60 ${
+              className={`group relative cursor-pointer overflow-hidden rounded-2xl sm:rounded-3xl border border-[#f1c65a]/30 bg-[#11221c] aspect-[3/4] sm:aspect-[4/5] shadow-xl transition-all duration-500 ease-out hover:border-[#f1c65a] hover:scale-[1.03] hover:-translate-y-2 hover:shadow-[0_15px_35px_rgba(241,198,90,0.22)] ${
                 swept[idx] ? 'gallery-sweep' : ''
               }`}
               style={{
                 opacity: visible[idx] ? 1 : 0,
-                transform: visible[idx] ? 'translateY(0)' : 'translateY(15px)',
+                transform: visible[idx] ? 'scale(1) translateY(0)' : 'scale(0.92) translateY(25px)',
                 transition: visible[idx]
-                  ? 'opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), transform 1.0s cubic-bezier(0.16, 1, 0.3, 1)'
+                  ? 'opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1)'
                   : 'none',
                 willChange: visible[idx] ? 'auto' : 'opacity, transform',
               }}
@@ -191,28 +191,28 @@ export const Gallery: React.FC = () => {
                 src={img.url}
                 alt={img.title}
                 loading="lazy"
-                className={`w-full h-full object-cover filter brightness-90 group-hover:brightness-100 transition-all duration-700 ${getKenBurnsClass(
+                className={`w-full h-full object-cover filter brightness-95 group-hover:brightness-105 group-hover:scale-110 transition-all duration-700 ${getKenBurnsClass(
                   idx
                 )}`}
                 style={{
-                  animationDelay: `${(idx * 0.6) % 2.4}s`,
+                  animationDelay: `${(idx * 0.5) % 2.5}s`,
                 }}
               />
 
               {/* Dark Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 z-10">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 sm:p-6 z-10">
                 <span className="text-[#f1c65a] text-[10px] tracking-[0.25em] uppercase block font-semibold mb-1">
                   {img.category}
                 </span>
-                <h4 className="font-heading text-xl text-[#FBF7EF] font-normal mb-2">{img.title}</h4>
-                <div className="flex items-center text-[#f1c65a] text-xs tracking-wider">
-                  <Maximize2 size={14} className="mr-1.5" /> Click to view
+                <h4 className="font-heading text-base sm:text-xl text-[#FBF7EF] font-normal mb-1.5">{img.title}</h4>
+                <div className="flex items-center text-[#f1c65a] text-[11px] sm:text-xs tracking-wider font-mono">
+                  <Maximize2 size={13} className="mr-1.5" /> View Photo
                 </div>
               </div>
 
-              {/* Corner Frame Highlights */}
-              <div className="absolute top-2 left-2 w-4 h-4 border-t border-l border-[#f1c65a]/0 group-hover:border-[#f1c65a] transition-all duration-300 z-10" />
-              <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-[#f1c65a]/0 group-hover:border-[#f1c65a] transition-all duration-300 z-10" />
+              {/* Corner Frame Accents */}
+              <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-[#f1c65a]/0 group-hover:border-[#f1c65a] transition-all duration-300 z-10 rounded-tl" />
+              <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-[#f1c65a]/0 group-hover:border-[#f1c65a] transition-all duration-300 z-10 rounded-br" />
             </div>
           ))}
         </div>
