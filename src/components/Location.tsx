@@ -21,10 +21,10 @@ export const Location: React.FC = () => {
           <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mx-auto" />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="max-w-2xl mx-auto">
           
           {/* Venue Info Box */}
-          <div className="lg:col-span-6 bg-[#0a1713] p-8 md:p-12 border border-[#f1c65a]/30 shadow-2xl">
+          <div className="bg-[#0a1713] p-8 md:p-12 border border-[#f1c65a]/30 shadow-2xl">
             <div className="flex items-center space-x-3 mb-6">
               <MapPin size={24} className="text-[#f1c65a]" />
               <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs tracking-[0.25em] uppercase font-semibold">
@@ -57,33 +57,6 @@ export const Location: React.FC = () => {
               <Navigation size={16} />
               <span>GET DIRECTIONS ON GOOGLE MAPS</span>
             </a>
-          </div>
-
-          {/* QR Code Location Map Card */}
-          <div className="lg:col-span-6 bg-[#0a1713] border border-[#f1c65a]/30 p-8 md:p-10 text-center relative overflow-hidden shadow-2xl flex flex-col items-center justify-center">
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              <QrCode size={20} className="text-[#f1c65a]" />
-              <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs tracking-[0.3em] uppercase font-semibold">
-                SCAN FOR LOCATION
-              </span>
-            </div>
-
-            {/* QR Code Frame */}
-            <div className="p-4 bg-[#0a1713] border-2 border-[#f1c65a]/50 rounded-lg shadow-2xl mb-4 relative group">
-              <img
-                src={qrCodeUrl}
-                alt="Scan For Location - Google Maps QR Code"
-                className="w-48 h-48 md:w-56 md:h-56 object-contain mx-auto"
-              />
-              <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-[#f1c65a]" />
-              <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-[#f1c65a]" />
-              <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-[#f1c65a]" />
-              <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-[#f1c65a]" />
-            </div>
-
-            <p className="text-[#DACFB8] text-xs tracking-widest uppercase font-mono">
-              Point your smartphone camera to open Google Maps navigation
-            </p>
           </div>
 
         </div>
