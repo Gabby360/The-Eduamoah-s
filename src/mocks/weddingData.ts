@@ -8,13 +8,13 @@ export interface Blessing {
 
 export const weddingDetails = {
   couple: {
-    brideName: 'Nadia Amoah',
-    groomName: 'Kwame Edu',
+    brideName: 'Dns. Christabell Esi Appiah Odoom',
+    groomName: 'Elder George Graham Kwesi Eduamoah',
     coupleName: "The Eduamoah's",
     brideSubtitle: 'THE BRIDE',
     groomSubtitle: 'THE GROOM',
-    brideBio: 'A soul full of grace, warmth, and joy. Nadia brings light to every room she enters and fills Kwame\'s world with endless love and inspiration.',
-    groomBio: 'A man of strength, character, and integrity. Kwame\'s devotion to Nadia is unwavering, as they step into this beautiful lifetime together.',
+    brideBio: 'A soul full of grace, warmth, and devotion. Christabell brings light to every room she enters and fills George\'s world with endless love and joy.',
+    groomBio: 'A man of strong faith, character, and integrity. George\'s devotion to Christabell is unwavering as they step into this sacred lifetime together.',
     heroImage: '/hero-custom.jpg',
     storyImage: '/story-custom.jpg',
     brideImage: '/bride-custom.jpg',
@@ -22,16 +22,22 @@ export const weddingDetails = {
     footerImage: '/gallery-15.jpg',
   },
   wedding: {
-    date: 'October 10, 2026',
+    date: '10th October 2026',
     dayOfWeek: 'Saturday',
-    time: '2:00 PM',
-    venue: 'The Grand Ivory Ballroom',
-    address: '42 Independence Avenue, East Legon, Accra, Ghana',
-    ceremonyTime: '2:00 PM',
-    receptionTime: '4:00 PM',
-    dinnerTime: '6:00 PM',
-    celebrationTime: '8:00 PM',
+    time: '10:00 AM',
+    venue: 'KCC 1 (The Church of Pentecost Kasoa Central Chapel)',
+    address: 'Kasoa, Ghana',
+    ceremonyTime: '10:00 AM',
+    receptionTime: '1:00 PM',
+    dinnerTime: '3:00 PM',
+    celebrationTime: '4:00 PM',
+    googleMapsSearchUrl: 'https://www.google.com/maps/search/?api=1&query=The+Church+of+Pentecost+Kasoa+Central+Chapel',
   },
+  rsvpContacts: [
+    { name: 'Dn Benjamin Arhu', phone: '0544577854', displayPhone: '054 457 7854' },
+    { name: 'Benjamina Agyeiwaa', phone: '0246353253', displayPhone: '024 635 3253' },
+    { name: 'Dn Eric Amoah', phone: '0559566117', displayPhone: '055 956 6117' },
+  ],
   hero: {
     tagline: 'Two hearts. One beautiful journey.',
     scrollText: 'SCROLL TO DISCOVER',
@@ -39,7 +45,7 @@ export const weddingDetails = {
   story: {
     headline: 'TWO HEARTS. ONE BEAUTIFUL STORY. A LIFETIME TO GO.',
     brideStory: {
-      author: 'Nadia Amoah',
+      author: 'Dns. Christabell Esi Appiah Odoom',
       title: "Her Perspective",
       chapters: [
         {
@@ -66,7 +72,7 @@ export const weddingDetails = {
       ]
     },
     groomStory: {
-      author: 'Graham / Kwame Edu',
+      author: 'Elder George Graham Kwesi Eduamoah',
       title: "His Perspective",
       chapters: [
         {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { CheckCircle2, Heart } from 'lucide-react';
+import { CheckCircle2, Heart, Phone } from 'lucide-react';
+import { weddingDetails } from '../mocks/weddingData';
 
 export const RSVP: React.FC = () => {
   const [attending, setAttending] = useState<'yes' | 'no' | null>(null);
@@ -26,7 +27,7 @@ export const RSVP: React.FC = () => {
 
   return (
     <section id="rsvp" className="py-24 bg-[#11221c] relative overflow-hidden">
-      <div className="max-w-3xl mx-auto px-6 md:px-12">
+      <div className="max-w-4xl mx-auto px-6 md:px-12">
         
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -39,6 +40,32 @@ export const RSVP: React.FC = () => {
           <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mx-auto mt-4" />
         </div>
 
+        {/* Official RSVP Contacts Card */}
+        <div className="mb-14 bg-[#0a1713] border border-[#f1c65a]/30 p-6 md:p-8 shadow-2xl">
+          <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs tracking-[0.3em] uppercase font-semibold block text-center mb-6">
+            RSVP CONTACT PERSONS
+          </span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {weddingDetails.rsvpContacts.map((contact, idx) => (
+              <a
+                key={idx}
+                href={`tel:${contact.phone}`}
+                className="bg-[#11221c] border border-[#f1c65a]/20 hover:border-[#f1c65a] p-4 text-center group transition-all duration-300 shadow-md flex flex-col items-center justify-center space-y-2"
+              >
+                <div className="w-10 h-10 rounded-full bg-[#0a1713] border border-[#f1c65a]/40 group-hover:border-[#f1c65a] group-hover:bg-[#f1c65a] text-[#f1c65a] group-hover:text-[#0a1713] flex items-center justify-center transition-all duration-300">
+                  <Phone size={18} />
+                </div>
+                <div className="text-sm font-medium text-[#FBF7EF]">
+                  {contact.name}
+                </div>
+                <div className="text-xs text-[#f1c65a] tracking-wider font-mono">
+                  {contact.displayPhone}
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+
         {submitted ? (
           <div className="bg-[#0a1713] border border-[#f1c65a] p-10 text-center animate-scale-in shadow-2xl">
             <CheckCircle2 size={48} className="text-[#f1c65a] mx-auto mb-4" />
@@ -47,7 +74,7 @@ export const RSVP: React.FC = () => {
             </h3>
             <p className="text-[#DACFB8] text-base leading-relaxed mb-6 font-light max-w-md mx-auto">
               {attending === 'yes'
-                ? "Your response has been received. We can't wait to celebrate our special day with you in Accra!"
+                ? "Your response has been received. We can't wait to celebrate our special day with you in Kasoa!"
                 : "Thank you for letting us know. You will be missed dearly on our wedding day."}
             </p>
             <button

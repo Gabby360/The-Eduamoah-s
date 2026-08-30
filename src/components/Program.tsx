@@ -55,10 +55,10 @@ export const Program: React.FC = () => {
               OFFICIAL WEDDING PROGRAM
             </span>
             <h3 className="font-heading text-2xl md:text-4xl text-[#FBF7EF] font-normal tracking-wide">
-              Nadia & Kwame
+              Dns. Christabell & Elder George Graham
             </h3>
             <p className="text-[#A69272] text-xs md:text-sm tracking-[0.2em] uppercase mt-2 font-mono">
-              October 10, 2026 • Accra, Ghana
+              10th October 2026 • Kasoa, Ghana
             </p>
           </div>
 

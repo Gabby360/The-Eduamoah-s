@@ -1,11 +1,10 @@
 import React from 'react';
 import { weddingDetails } from '../mocks/weddingData';
-import { MapPin, Navigation, Compass } from 'lucide-react';
+import { MapPin, Navigation, QrCode } from 'lucide-react';
 
 export const Location: React.FC = () => {
-  const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    weddingDetails.wedding.venue + ', ' + weddingDetails.wedding.address
-  )}`;
+  const mapUrl = weddingDetails.wedding.googleMapsSearchUrl;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(mapUrl)}&color=f1c65a&bgcolor=0a1713`;
 
   return (
     <section id="location" className="py-24 bg-[#11221c] relative overflow-hidden">
@@ -25,34 +24,26 @@ export const Location: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Venue Info Box */}
-          <div className="lg:col-span-5 bg-[#0a1713] p-8 md:p-12 border border-[#f1c65a]/30 shadow-2xl">
+          <div className="lg:col-span-6 bg-[#0a1713] p-8 md:p-12 border border-[#f1c65a]/30 shadow-2xl">
             <div className="flex items-center space-x-3 mb-6">
               <MapPin size={24} className="text-[#f1c65a]" />
               <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs tracking-[0.25em] uppercase font-semibold">
-                ACCRA, GHANA
+                KASOA, GHANA
               </span>
             </div>
 
-            <h3 className="font-heading text-3xl text-[#FBF7EF] font-normal uppercase mb-4 leading-tight">
+            <h3 className="font-heading text-2xl md:text-3xl text-[#FBF7EF] font-normal uppercase mb-4 leading-tight">
               {weddingDetails.wedding.venue}
             </h3>
 
-            <p className="text-[#DACFB8] text-base leading-relaxed font-light mb-8">
-              {weddingDetails.wedding.address}
-            </p>
-
             <div className="space-y-4 pt-6 border-t border-[#f1c65a]/20 mb-8">
               <div className="flex items-center justify-between text-xs text-[#A69272] tracking-wider uppercase">
-                <span>CEREMONY</span>
+                <span>WEDDING CEREMONY</span>
                 <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-semibold">{weddingDetails.wedding.ceremonyTime}</span>
               </div>
               <div className="flex items-center justify-between text-xs text-[#A69272] tracking-wider uppercase">
                 <span>RECEPTION</span>
                 <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-semibold">{weddingDetails.wedding.receptionTime}</span>
-              </div>
-              <div className="flex items-center justify-between text-xs text-[#A69272] tracking-wider uppercase">
-                <span>DINNER & CELEBRATION</span>
-                <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-semibold">6:00 PM TILL LATE</span>
               </div>
             </div>
 
@@ -64,28 +55,35 @@ export const Location: React.FC = () => {
               className="w-full py-4 bg-gradient-to-r from-[#f1c65a] to-[#e2b324] text-[#0a1713] text-xs tracking-[0.25em] uppercase font-semibold hover:brightness-110 transition-all duration-300 shadow-xl flex items-center justify-center space-x-2"
             >
               <Navigation size={16} />
-              <span>GET DIRECTIONS</span>
+              <span>GET DIRECTIONS ON GOOGLE MAPS</span>
             </a>
           </div>
 
-          {/* Interactive Map Frame / Preview */}
-          <div className="lg:col-span-7 h-[420px] bg-[#0a1713] border border-[#f1c65a]/30 relative overflow-hidden shadow-2xl group">
-            <iframe
-              title="Venue Location Map"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.6136279624536!2d-0.1585!3d5.6425!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMzgnMzMuMCJOIDDCsDA5JzMwLjYiVw!5e0!3m2!1sen!2sgh!4v1680000000000!5m2!1sen!2sgh"
-              width="100%"
-              height="100%"
-              style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) contrast(120%)' }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="w-full h-full opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-            />
-            {/* Map Overlay Frame */}
-            <div className="absolute top-4 left-4 bg-[#0a1713]/90 px-4 py-2 border border-[#f1c65a]/40 text-xs bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent tracking-widest uppercase font-mono flex items-center space-x-2">
-              <Compass size={14} className="animate-spin-slow text-[#f1c65a]" />
-              <span>EAST LEGON, ACCRA</span>
+          {/* QR Code Location Map Card */}
+          <div className="lg:col-span-6 bg-[#0a1713] border border-[#f1c65a]/30 p-8 md:p-10 text-center relative overflow-hidden shadow-2xl flex flex-col items-center justify-center">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <QrCode size={20} className="text-[#f1c65a]" />
+              <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs tracking-[0.3em] uppercase font-semibold">
+                SCAN FOR LOCATION
+              </span>
             </div>
+
+            {/* QR Code Frame */}
+            <div className="p-4 bg-[#0a1713] border-2 border-[#f1c65a]/50 rounded-lg shadow-2xl mb-4 relative group">
+              <img
+                src={qrCodeUrl}
+                alt="Scan For Location - Google Maps QR Code"
+                className="w-48 h-48 md:w-56 md:h-56 object-contain mx-auto"
+              />
+              <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-[#f1c65a]" />
+              <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-[#f1c65a]" />
+              <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-[#f1c65a]" />
+              <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-[#f1c65a]" />
+            </div>
+
+            <p className="text-[#DACFB8] text-xs tracking-widest uppercase font-mono">
+              Point your smartphone camera to open Google Maps navigation
+            </p>
           </div>
 
         </div>
