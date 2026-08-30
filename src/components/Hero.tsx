@@ -378,20 +378,17 @@ export const Hero: React.FC = () => {
         }
       `}</style>
 
-      {/* Background with Ken Burns */}
+      {/* Background with Ken Burns - Original Untouched Photo */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <img
           src={weddingDetails.couple.heroImage}
           alt={weddingDetails.couple.coupleName}
-          className="hero-ken-burns w-full h-full object-cover object-[50%_22%] md:object-[50%_25%] lg:object-[50%_28%] filter brightness-[0.78] contrast-[1.2] sepia-[35%] hue-rotate-[-10deg] saturate-[1.15]"
+          className="hero-ken-burns w-full h-full object-cover object-[50%_20%] md:object-[50%_22%] lg:object-[50%_25%]"
         />
-        <div className="absolute inset-0 bg-[#f1c65a]/20 mix-blend-color pointer-events-none" />
-        <div className="absolute inset-0 bg-[#0a1713]/40 mix-blend-multiply pointer-events-none" />
-        <div className="absolute top-0 inset-x-0 h-48 bg-gradient-to-b from-[#0a1713] via-[#0a1713]/70 to-transparent pointer-events-none" />
-        <div className="absolute bottom-0 inset-x-0 h-56 bg-gradient-to-t from-[#0a1713] via-[#0a1713]/80 to-transparent pointer-events-none" />
-        <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-[#0a1713] via-[#0a1713]/60 to-transparent pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-[#0a1713] via-[#0a1713]/60 to-transparent pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,#0a1713_95%)] opacity-85 pointer-events-none" />
+        {/* Top subtle shade for navbar legibility */}
+        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#0a1713]/80 via-[#0a1713]/40 to-transparent pointer-events-none" />
+        {/* Bottom-Only Dark Gradient Overlay (starts at ~45-50%) */}
+        <div className="absolute bottom-0 inset-x-0 h-[55%] bg-gradient-to-t from-[#0a1713] via-[#0a1713]/90 via-[#0a1713]/50 to-transparent pointer-events-none" />
       </div>
 
       {/* Canvas — particles, butterflies, petals */}
@@ -401,8 +398,8 @@ export const Hero: React.FC = () => {
         aria-hidden="true"
       />
 
-      {/* Hero Text Content — unchanged */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-24 pb-16 flex flex-col items-center justify-center min-h-screen">
+      {/* Hero Text Content — Positioned toward bottom over the dark gradient */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-16 flex flex-col items-center justify-end min-h-screen">
         <div className="hero-line-top w-16 h-[1px] bg-gradient-to-r from-[#f1c65a] to-[#e2b324] mb-4 mx-auto" />
         <span className="hero-becoming font-script text-4xl sm:text-5xl md:text-6xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-1 font-normal tracking-wide drop-shadow-md">
           Becoming
