@@ -220,14 +220,14 @@ export const Gallery: React.FC = () => {
 
       {/* Lightbox Modal */}
       {selectedImageIndex !== null && (
-        <div onClick={closeLightbox} className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center p-4">
+        <div onClick={closeLightbox} className="fixed inset-0 z-50 bg-[#060f0c]/98 flex items-center justify-center p-4">
           <button onClick={closeLightbox} className="absolute top-6 right-6 text-[#BFAC90] hover:text-[#f1c65a] p-2 transition-colors z-50 focus:outline-none" aria-label="Close Lightbox">
             <X size={32} />
           </button>
-          <button onClick={prevImage} className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-[#BFAC90] hover:text-[#f1c65a] p-3 rounded-full bg-black/40 hover:bg-black/80 border border-[#f1c65a]/30 transition-all z-50" aria-label="Previous Image">
+          <button onClick={prevImage} className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-[#BFAC90] hover:text-[#f1c65a] p-3 rounded-full bg-[#0a1713] hover:bg-[#11221c] border border-[#f1c65a]/40 transition-all z-50 shadow-xl" aria-label="Previous Image">
             <ChevronLeft size={28} />
           </button>
-          <button onClick={nextImage} className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-[#BFAC90] hover:text-[#f1c65a] p-3 rounded-full bg-black/40 hover:bg-black/80 border border-[#f1c65a]/30 transition-all z-50" aria-label="Next Image">
+          <button onClick={nextImage} className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-[#BFAC90] hover:text-[#f1c65a] p-3 rounded-full bg-[#0a1713] hover:bg-[#11221c] border border-[#f1c65a]/40 transition-all z-50 shadow-xl" aria-label="Next Image">
             <ChevronRight size={28} />
           </button>
           <div onClick={e => e.stopPropagation()} className="max-w-4xl max-h-[85vh] relative flex flex-col items-center border border-[#f1c65a]/40 bg-[#11221c] p-2">

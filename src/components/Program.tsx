@@ -35,10 +35,9 @@ export const Program: React.FC = () => {
           <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs font-semibold tracking-[0.3em] uppercase block mb-3">
             ORDER OF EVENTS
           </span>
-          <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em] mb-4">
+          <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em]">
             The Celebration
           </h2>
-          <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mx-auto" />
         </div>
 
         {/* Program Preview Card Container */}
@@ -51,7 +50,7 @@ export const Program: React.FC = () => {
 
           {/* Program Header Inside Card */}
           <div className="text-center pb-8 border-b border-[#f1c65a]/20 mb-10">
-            <span className="inline-block bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-[10px] tracking-[0.3em] uppercase font-semibold border border-[#f1c65a]/30 px-4 py-1.5 bg-[#0a1713]/80 rounded-full mb-4">
+            <span className="inline-block bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-[10px] tracking-[0.3em] uppercase font-semibold border border-[#f1c65a]/30 px-4 py-1.5 bg-[#0a1713] rounded-full mb-4">
               OFFICIAL WEDDING PROGRAM
             </span>
             <h3 className="font-heading text-2xl md:text-4xl text-[#FBF7EF] font-normal tracking-wide">

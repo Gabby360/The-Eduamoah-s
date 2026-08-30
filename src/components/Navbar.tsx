@@ -75,10 +75,10 @@ export const Navbar: React.FC = () => {
       </svg>
 
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-[#0a1713] ${
           isScrolled
-            ? 'bg-[#0a1713]/90 backdrop-blur-md border-b border-[#f1c65a]/20 py-4 shadow-2xl shadow-black/50'
-            : 'bg-gradient-to-b from-black/80 via-black/40 to-transparent py-6'
+            ? 'border-b border-[#f1c65a]/30 py-4 shadow-2xl shadow-black/80'
+            : 'border-b border-[#f1c65a]/10 py-5'
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">

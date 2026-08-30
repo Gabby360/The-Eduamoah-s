@@ -41,7 +41,7 @@ export const Footer: React.FC = () => {
             className="group flex flex-col items-center space-y-2 text-[#A69272] hover:text-[#f1c65a] transition-colors duration-300 focus:outline-none"
             aria-label="Scroll Back to Top"
           >
-            <div className="p-3 rounded-full border border-[#f1c65a]/30 group-hover:border-[#f1c65a] bg-[#0a1713]/60 group-hover:bg-gradient-to-r group-hover:from-[#f1c65a] group-hover:to-[#e2b324] group-hover:text-[#0a1713] transition-all duration-300 shadow-xl">
+            <div className="p-3 rounded-full border border-[#f1c65a]/30 group-hover:border-[#f1c65a] bg-[#0a1713] group-hover:bg-gradient-to-r group-hover:from-[#f1c65a] group-hover:to-[#e2b324] group-hover:text-[#0a1713] transition-all duration-300 shadow-xl">
               <ChevronUp size={20} />
             </div>
             <span className="text-[10px] tracking-[0.3em] uppercase font-semibold">

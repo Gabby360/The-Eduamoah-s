@@ -208,10 +208,9 @@ export const Countdown: React.FC = () => {
           <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs font-semibold tracking-[0.35em] uppercase block mb-2">
             COUNTDOWN
           </span>
-          <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em] mb-4">
+          <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em] mb-12">
             Until We Say I Do
           </h2>
-          <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mx-auto mb-14" />
         </div>
 
         {/* Digital Counter Grid */}
@@ -257,7 +256,7 @@ export const Countdown: React.FC = () => {
             hasRevealed ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          OCTOBER 10, 2026 • ACCRA, GHANA
+          10TH OCTOBER 2026 • KASOA, GHANA
         </div>
 
       </div>

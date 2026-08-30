@@ -52,7 +52,7 @@ export const WeddingSchedule: React.FC = () => {
               {/* Gold Dot on Line */}
               <div className="absolute -left-[37px] md:-left-[53px] top-1.5 w-4 h-4 rounded-full bg-gradient-to-br from-[#f1c65a] to-[#e2b324] border-4 border-[#0a1713] group-hover:scale-125 transition-transform duration-300 shadow-md shadow-[#f1c65a]/50" />
               
-              <div className="bg-[#11221c]/80 p-6 md:p-8 border border-[#f1c65a]/20 transition-all duration-300 hover:border-[#f1c65a]/60 hover:bg-[#11221c]">
+              <div className="bg-[#11221c] p-6 md:p-8 border border-[#f1c65a]/20 transition-all duration-300 hover:border-[#f1c65a]/60">
                 <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs md:text-sm font-semibold tracking-[0.25em] uppercase block mb-1">
                   {item.time}
                 </span>
