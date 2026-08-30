@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Smartphone, Landmark, Copy, Check, Gift } from 'lucide-react';
+import { Smartphone, Landmark, Copy, Check } from 'lucide-react';
 
 export const Gifts: React.FC = () => {
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -27,11 +27,7 @@ export const Gifts: React.FC = () => {
           <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em] mb-4">
             Monetary Gifts
           </h2>
-          <div className="flex items-center justify-center space-x-3 mt-4 mb-6">
-            <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] to-[#e2b324]" />
-            <Gift size={18} className="text-[#f1c65a]" />
-            <div className="w-16 h-[1px] bg-gradient-to-l from-transparent via-[#f1c65a] to-[#e2b324]" />
-          </div>
+          <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mx-auto mt-4 mb-6" />
           
           <p className="text-[#DACFB8] text-base md:text-lg leading-relaxed font-light max-w-2xl mx-auto">
             Your presence at our wedding is the greatest gift of all. However, if you wish to honor us with a gift, a monetary contribution towards our future together would be deeply appreciated.
