@@ -16,13 +16,14 @@ interface DustParticle {
   speed: number;
 }
 
+type SplashPhase = 'breathing' | 'anticipation' | 'opening' | 'complete';
+
 /* ─────────────────────────────────────────────
    SPLASH SCREEN COMPONENT
-   Minimalist Breathing Love Symbol & Slower Heart Aperture Reveal (Bright Inside)
+   Multi-Stage Cinematic Heart Opening Transition (10s Breathing + 6s Opening)
 ───────────────────────────────────────────── */
 export const SplashScreen: React.FC = () => {
-  // Phase state: 'breathing' (0-3s) -> 'expanding' (3-5.8s) -> 'complete'
-  const [phase, setPhase] = useState<'breathing' | 'expanding' | 'complete'>('breathing');
+  const [phase, setPhase] = useState<SplashPhase>('breathing');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
 
@@ -33,7 +34,7 @@ export const SplashScreen: React.FC = () => {
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
-      setPhase('expanding');
+      setPhase('opening');
       const rTimer = setTimeout(() => {
         setPhase('complete');
         document.body.style.overflow = '';
@@ -41,26 +42,32 @@ export const SplashScreen: React.FC = () => {
       return () => clearTimeout(rTimer);
     }
 
-    // 3.0s: Transition into Extremely Slow Heart Aperture Reveal (cuts hole to reveal website)
-    const tExpand = setTimeout(() => {
-      setPhase('expanding');
-    }, 3000);
+    // 10.0s: Stage 1 Breathing completes -> Stage 2 Anticipation (glow & pulse pause 0.8s)
+    const tAnticipation = setTimeout(() => {
+      setPhase('anticipation');
+    }, 10000);
 
-    // 10.5s: Complete reveal & unlock main website page (Extremely slow 7.5s reveal opening)
+    // 10.8s: Stage 2 Anticipation completes -> Stage 3-6 Multi-Stage Heart Opening Sequence (5.2s)
+    const tOpening = setTimeout(() => {
+      setPhase('opening');
+    }, 10800);
+
+    // 16.0s: Stage 6 Complete reveal & unlock main website page
     const tComplete = setTimeout(() => {
       setPhase('complete');
       document.body.style.overflow = '';
       window.scrollTo(0, 0);
-    }, 10500);
+    }, 16000);
 
-    // Hard Failsafe at 12.0s
+    // Hard Failsafe at 17.5s
     const tFailsafe = setTimeout(() => {
       setPhase('complete');
       document.body.style.overflow = '';
-    }, 12000);
+    }, 17500);
 
     return () => {
-      clearTimeout(tExpand);
+      clearTimeout(tAnticipation);
+      clearTimeout(tOpening);
       clearTimeout(tComplete);
       clearTimeout(tFailsafe);
       document.body.style.overflow = '';
@@ -83,7 +90,7 @@ export const SplashScreen: React.FC = () => {
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    const dustCount = window.innerWidth < 768 ? 12 : 24;
+    const dustCount = window.innerWidth < 768 ? 14 : 28;
 
     const dust: DustParticle[] = Array.from({ length: dustCount }, () => ({
       x: rand(0, window.innerWidth),
@@ -147,7 +154,7 @@ export const SplashScreen: React.FC = () => {
             <path
               d="M 0.5,0.18 C 0.33,-0.06 0,0.08 0,0.36 C 0,0.62 0.5,0.88 0.5,0.98 C 0.5,0.88 1,0.62 1,0.36 C 1,0.08 0.67,-0.06 0.5,0.18 Z"
               fill="black"
-              className={phase === 'expanding' ? 'animate-heart-aperture' : ''}
+              className={phase === 'opening' ? 'animate-multi-stage-aperture' : ''}
             />
           </mask>
         </defs>
@@ -156,10 +163,10 @@ export const SplashScreen: React.FC = () => {
       {/* Main Full-Screen Overlay Container */}
       <div
         className={`fixed inset-0 z-[100] bg-[#0a1713] flex items-center justify-center overflow-hidden transition-opacity duration-1000 ${
-          phase === 'expanding' ? 'pointer-events-none' : 'pointer-events-auto'
+          phase === 'opening' ? 'pointer-events-none' : 'pointer-events-auto'
         }`}
         style={
-          phase === 'expanding'
+          phase === 'opening'
             ? {
                 mask: 'url(#heart-aperture-mask)',
                 WebkitMask: 'url(#heart-aperture-mask)',
@@ -168,7 +175,7 @@ export const SplashScreen: React.FC = () => {
         }
       >
         <style>{`
-          /* Quiet heartbeat breathing cycle (2.4s per breath) */
+          /* Stage 1: Gentle heartbeat breathing cycle (2.4s per breath) */
           @keyframes symbolBreathing {
             0% {
               transform: scale(0.92);
@@ -184,6 +191,25 @@ export const SplashScreen: React.FC = () => {
               transform: scale(0.92);
               opacity: 0.65;
               filter: drop-shadow(0 0 6px rgba(241,198,90,0.35));
+            }
+          }
+
+          /* Stage 2: Pre-reveal anticipation moment (glow intensifies & gentle single pulse) */
+          @keyframes symbolAnticipation {
+            0% {
+              transform: scale(1.0);
+              opacity: 0.8;
+              filter: drop-shadow(0 0 10px rgba(241,198,90,0.5));
+            }
+            50% {
+              transform: scale(1.4);
+              opacity: 1.0;
+              filter: drop-shadow(0 0 35px rgba(241,198,90,0.95));
+            }
+            100% {
+              transform: scale(1.15);
+              opacity: 0.9;
+              filter: drop-shadow(0 0 25px rgba(241,198,90,0.8));
             }
           }
 
@@ -203,68 +229,101 @@ export const SplashScreen: React.FC = () => {
             }
           }
 
-          /* Slower, Cinematic Heart Aperture Reveal (Cutout Hole Opening to Website) */
-          @keyframes heartApertureExpand {
+          /* Multi-stage Heart Aperture Reveal (Stages 3 to 6: 5.2s duration) */
+          @keyframes multiStageHeartAperture {
+            /* Stage 3: Grows slowly from tiny to medium (0s to 2.0s = 0% to 38%) */
             0% {
               transform: scale(0.01);
               transform-origin: 50% 50%;
             }
-            15% {
-              transform: scale(0.3);
+            25% {
+              transform: scale(0.5);
               transform-origin: 50% 50%;
             }
-            45% {
+            38% {
+              transform: scale(1.8);
+              transform-origin: 50% 50%;
+            }
+
+            /* Stage 4: Heartbeat pulse expand -> contract -> expand (2.0s to 2.7s = 38% to 52%) */
+            44% {
+              transform: scale(2.6);
+              transform-origin: 50% 50%;
+            }
+            48% {
               transform: scale(2.2);
               transform-origin: 50% 50%;
             }
-            75% {
-              transform: scale(12.0);
+            52% {
+              transform: scale(3.5);
               transform-origin: 50% 50%;
             }
+
+            /* Stage 5: Full Viewport Heart Expansion (2.7s to 4.2s = 52% to 82%) */
+            68% {
+              transform: scale(14.0);
+              transform-origin: 50% 50%;
+            }
+            82% {
+              transform: scale(45.0);
+              transform-origin: 50% 50%;
+            }
+
+            /* Stage 6: Final handoff to homepage (4.2s to 5.2s = 82% to 100%) */
             100% {
-              transform: scale(50.0);
+              transform: scale(65.0);
               transform-origin: 50% 50%;
             }
           }
 
-          /* Expanding Golden Heart Rim Line */
-          @keyframes heartRimExpand {
-            0% {
-              transform: scale(0.1);
-              opacity: 1.0;
-            }
-            50% {
-              transform: scale(4.0);
-              opacity: 0.85;
-            }
-            100% {
-              transform: scale(40.0);
-              opacity: 0.0;
-            }
+          /* Multi-stage Expanding Golden Heart Rim Line */
+          @keyframes multiStageHeartRim {
+            0% { transform: scale(0.05); opacity: 1.0; }
+            38% { transform: scale(1.8); opacity: 0.95; }
+            44% { transform: scale(2.6); opacity: 1.0; }
+            48% { transform: scale(2.2); opacity: 0.9; }
+            52% { transform: scale(3.5); opacity: 0.95; }
+            82% { transform: scale(35.0); opacity: 0.4; }
+            100% { transform: scale(55.0); opacity: 0.0; }
+          }
+
+          /* Stage 6: Soft Warm Golden Illumination Light Burst at 80-90% viewport */
+          @keyframes warmLightBurst {
+            0%, 65% { opacity: 0; }
+            80% { opacity: 0.35; }
+            100% { opacity: 0; }
           }
 
           .animate-symbol-breath {
             animation: symbolBreathing 2.4s ease-in-out infinite;
           }
 
+          .animate-symbol-anticipation {
+            animation: symbolAnticipation 0.8s ease-out forwards;
+          }
+
           .animate-halo-breath {
             animation: haloBreathing 2.4s ease-in-out infinite;
           }
 
-          .animate-heart-aperture {
-            animation: heartApertureExpand 7.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+          .animate-multi-stage-aperture {
+            animation: multiStageHeartAperture 5.2s cubic-bezier(0.25, 0.9, 0.35, 1) forwards;
             transform-origin: 50% 50%;
             will-change: transform;
           }
 
-          .animate-heart-rim {
-            animation: heartRimExpand 7.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+          .animate-multi-stage-rim {
+            animation: multiStageHeartRim 5.2s cubic-bezier(0.25, 0.9, 0.35, 1) forwards;
             transform-origin: center center;
             will-change: transform, opacity;
           }
 
+          .animate-light-burst {
+            animation: warmLightBurst 5.2s ease-out forwards;
+          }
+
           @media (prefers-reduced-motion: reduce) {
-            .animate-symbol-breath, .animate-halo-breath {
+            .animate-symbol-breath, .animate-halo-breath, .animate-symbol-anticipation {
               animation: none !important;
             }
           }
@@ -277,19 +336,28 @@ export const SplashScreen: React.FC = () => {
           aria-hidden="true"
         />
 
+        {/* Soft Warm Illumination Light Burst Layer */}
+        {phase === 'opening' && (
+          <div className="animate-light-burst absolute inset-0 z-[30] bg-[radial-gradient(circle_at_center,rgba(241,198,90,0.5)_0%,rgba(241,198,90,0.15)_60%,transparent_85%)] pointer-events-none" />
+        )}
+
         {/* Quiet Ambient Golden Glow Halo behind symbol */}
         <div className="absolute inset-0 z-[2] pointer-events-none flex items-center justify-center">
-          <div className="animate-halo-breath w-72 h-72 rounded-full bg-[radial-gradient(circle_at_center,rgba(241,198,90,0.22)_0%,rgba(241,198,90,0.05)_55%,transparent_80%)] filter blur-2xl" />
+          <div
+            className={`w-72 h-72 rounded-full bg-[radial-gradient(circle_at_center,rgba(241,198,90,0.22)_0%,rgba(241,198,90,0.05)_55%,transparent_80%)] filter blur-2xl ${
+              phase === 'breathing' ? 'animate-halo-breath' : 'opacity-80 scale-125'
+            }`}
+          />
         </div>
 
-        {/* ── EXPANDING GOLDEN HEART RIM PORTAL (Phase === 'expanding') ── */}
-        {phase === 'expanding' && (
+        {/* ── EXPANDING GOLDEN HEART RIM PORTAL (Phase === 'opening') ── */}
+        {phase === 'opening' && (
           <div className="absolute inset-0 z-[25] flex items-center justify-center pointer-events-none">
             <svg
               width="200"
               height="200"
               viewBox="0 0 100 100"
-              className="animate-heart-rim text-[#f1c65a] drop-shadow-[0_0_25px_rgba(241,198,90,0.9)]"
+              className="animate-multi-stage-rim text-[#f1c65a] drop-shadow-[0_0_25px_rgba(241,198,90,0.9)]"
             >
               <path
                 d="M 50,18 C 33,-6 0,8 0,36 C 0,62 50,88 50,98 C 50,88 100,62 100,36 C 100,8 67,-6 50,18 Z"
@@ -301,10 +369,14 @@ export const SplashScreen: React.FC = () => {
           </div>
         )}
 
-        {/* ── CENTER BREATHING TINY LOVE SYMBOL ── */}
-        {phase === 'breathing' && (
+        {/* ── CENTER BREATHING / ANTICIPATION TINY LOVE SYMBOL ── */}
+        {(phase === 'breathing' || phase === 'anticipation') && (
           <div className="relative z-[10] flex flex-col items-center justify-center pointer-events-none">
-            <div className="animate-symbol-breath flex items-center justify-center p-3">
+            <div
+              className={`flex items-center justify-center p-3 ${
+                phase === 'breathing' ? 'animate-symbol-breath' : 'animate-symbol-anticipation'
+              }`}
+            >
               {/* Elegant 3D Luminous Vector Gold Heart Icon with Outer Gold Outline Ring */}
               <svg
                 width="24"
