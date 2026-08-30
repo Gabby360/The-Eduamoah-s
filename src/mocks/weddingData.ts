@@ -38,11 +38,59 @@ export const weddingDetails = {
   },
   story: {
     headline: 'TWO HEARTS. ONE BEAUTIFUL STORY. A LIFETIME TO GO.',
-    paragraphs: [
-      'It began with a simple hello, and from that moment, everything changed. Their paths crossed on a warm evening in Accra, where laughter became the soundtrack of a beautiful beginning.',
-      'What started as two strangers sharing a conversation blossomed into a connection neither could have imagined. Through every season, their love grew deeper, stronger, and more extraordinary.',
-      'Now, after years of building dreams together, they are ready to say "I do" and begin the most beautiful chapter of their love story.',
-    ],
+    brideStory: {
+      author: 'Nadia Amoah',
+      title: "Her Perspective",
+      chapters: [
+        {
+          title: "1. How We Met",
+          content: [
+            "Graham and I met on the 30th of December, 2021, at PCC, while we were preparing for the PENSA Ghana Conference 2022. He was the Accommodation Head, and I was part of the Food Committee.",
+            "When I arrived that day, I was told to contact him for a place to sleep. I called him, and we met at the dining hall. He said he was eating and would help me after, but when I got there, I saw him chatting. He was just about to get his food, but instead, he was everywhere — talking to people, the center of attention. I was beyond exhausted, and honestly, that whole scene frustrated me. He seemed to be everywhere at once — always talking, always moving. That first day, I was genuinely annoyed. I never thought I would become friends with him, let alone fall in love."
+          ]
+        },
+        {
+          title: "2. What Attracted Me To Him",
+          content: [
+            "My Journey with Graham wasn’t love at first sight. After that first day, we kept crossing paths at the conference. Slowly, we began greeting each other more often and sharing small moments. After the conference, what started as a casual acquaintance grew into a deep friendship. We became good friends, then best friends, and eventually accountability partners, prayer partners, and finally lovers.",
+            "In fact, from the very start of our friendship, I kept telling him I didn’t like dark-skinned guys. I’d joke that he was too dark for me, that I preferred guys with a complexion somewhere between 5:30 p.m. and 7:30 p.m. — but not as dark as 9 p.m. But then I will say our love grew slowly at the place of prayers, when we were just interceding for others and for each other. But I will say I first found his voice attractive and then the way He walks."
+          ]
+        },
+        {
+          title: "3. How I Knew He Was The One",
+          content: [
+            "Well I will say I had my personal conviction and I completely knew He was the one when I realized that I easily do me when I am around him, how He cares so much about me and my future.",
+            "Our journey has been one of faith, hope, and love. Every step was guided by God, and every lesson was anchored in faith and hope. And today, I am so grateful — because I never imagined that a frustrating first day, or my own bias against dark skin, would lead me to this place: doing life, hand in hand, with him."
+          ]
+        }
+      ]
+    },
+    groomStory: {
+      author: 'Graham / Kwame Edu',
+      title: "His Perspective",
+      chapters: [
+        {
+          title: "1. How We Met",
+          content: [
+            "I was at Pentecost Convention Center (PCC) on December 2021 in preparation towards PENSA Ghana Conference January, 2022 where an unknown number called me. I was used to receiving unknown calls due to my role as the Accommodation Head for the conference.",
+            "Picking up the call was this soft voice in distress asking for her room reservation. She explained to me that she was part of the Food Committee of which she had my number from the Committee Head. Since I was already taking my supper at Eunice Addison Block (cafeteria), I asked her to come around. Inviting her to join me for a meal gradually evolved into exchanged pleasantries, calls and WhatsApp conversations. Eventually, we became what she called “Accountability Partners.”"
+          ]
+        },
+        {
+          title: "2. What Was The Attraction?",
+          content: [
+            "The attraction was not immediate or based on our usual “spec.” In fact, we were almost polar opposites. However, our conversations began to pick up momentum, and we found ourselves sharing our burdens, praying for each other and becoming intercessors for others as well. That spiritual connection and the depth of our friendship gradually revealed a bond that was both unexpected and profound."
+          ]
+        },
+        {
+          title: "3. How I Knew She Was The One",
+          content: [
+            "I knew she was the one when I realized that, despite our differences, she complements my vision. What began as an unlikely possibility became a watershed moment in our lives. Our love languages burgeoned, our relationship deepened, and I came to understand that God had been incredibly faithful in bringing us together.",
+            "Her eventual response to my proposal, “I agree to marry you” delivered via a QR code on my birthday, was a poignant and beautiful gesture and a memorable confirmation of the journey we had begun as Accountability Partners."
+          ]
+        }
+      ]
+    }
   },
   timeline: [
     {
