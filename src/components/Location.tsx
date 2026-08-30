@@ -7,11 +7,11 @@ export const Location: React.FC = () => {
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(mapUrl)}&color=f1c65a&bgcolor=0a1713`;
 
   return (
-    <section id="location" className="py-24 bg-[#11221c] relative overflow-hidden">
+    <section id="location" className="py-12 bg-[#11221c] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8">
           <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs font-semibold tracking-[0.3em] uppercase block mb-3">
             LOCATION
           </span>

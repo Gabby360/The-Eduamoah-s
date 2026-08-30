@@ -8,7 +8,7 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="relative bg-[#0a1713] overflow-hidden text-[#FBF7EF] pt-24 pb-12 border-t border-[#f1c65a]/30">
+    <footer className="relative bg-[#0a1713] overflow-hidden text-[#FBF7EF] pt-12 pb-12 border-t border-[#f1c65a]/30">
       {/* Background Banner with Overlay */}
       <div className="absolute inset-0 z-0">
         <img

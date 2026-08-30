@@ -13,18 +13,18 @@ export const Gifts: React.FC = () => {
   };
 
   return (
-    <section id="gifts" className="py-24 bg-[#0a1713] relative overflow-hidden">
+    <section id="gifts" className="py-12 bg-[#0a1713] relative overflow-hidden">
       {/* Subtle Radial Glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(241,198,90,0.04)_0%,transparent_70%)] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto px-6 md:px-12 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8">
           <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs font-semibold tracking-[0.3em] uppercase block mb-3">
             GIFTS
           </span>
-          <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em] mb-6">
+          <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em] mb-4">
             Monetary Gifts
           </h2>
           

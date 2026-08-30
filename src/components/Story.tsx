@@ -144,31 +144,31 @@ const ChapterBlock: React.FC<{ chapter: typeof CHAPTERS[0]; index: number }> = (
 
 export const Story: React.FC = () => {
   return (
-    <section id="story" className="py-24 bg-[#0a1713] relative overflow-hidden">
+    <section id="story" className="py-12 bg-[#0a1713] relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(241,198,90,0.04)_0%,transparent_70%)] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-6 md:px-12 relative z-10">
 
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs font-semibold tracking-[0.3em] uppercase block mb-3">
+        <div className="text-center mb-8">
+          <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs font-semibold tracking-[0.3em] uppercase block mb-2">
             OUR STORY
           </span>
-          <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em] mb-4">
+          <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em]">
             How We Found Each Other
           </h2>
         </div>
 
         {/* Chapter Blocks */}
-        <div className="space-y-14">
+        <div className="space-y-8">
           {CHAPTERS.map((chapter, idx) => (
             <ChapterBlock key={idx} chapter={chapter} index={idx} />
           ))}
         </div>
 
         {/* Closing Signature */}
-        <div className="text-center mt-20 pt-10 border-t border-[#f1c65a]/20">
-          <p className="font-heading italic text-[#DACFB8] text-base md:text-lg font-light max-w-lg mx-auto mb-6 leading-relaxed">
+        <div className="text-center mt-10 pt-6 border-t border-[#f1c65a]/20">
+          <p className="font-heading italic text-[#DACFB8] text-base md:text-lg font-light max-w-lg mx-auto mb-4 leading-relaxed">
             &ldquo;From accountability partners at PCC to forever partners in life &mdash; every step was guided by God.&rdquo;
           </p>
           <div className="font-script text-4xl md:text-5xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent">

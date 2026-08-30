@@ -3,12 +3,12 @@ import { weddingDetails } from '../mocks/weddingData';
 
 export const WeddingSchedule: React.FC = () => {
   return (
-    <section id="wedding" className="py-24 bg-[#0a1713] relative overflow-hidden">
+    <section id="wedding" className="py-12 bg-[#0a1713] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs font-semibold tracking-[0.3em] uppercase block mb-3">
+        <div className="text-center mb-8">
+          <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs font-semibold tracking-[0.3em] uppercase block mb-2">
             THE WEDDING
           </span>
           <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em]">
@@ -17,7 +17,7 @@ export const WeddingSchedule: React.FC = () => {
         </div>
 
         {/* Venue & Location Cards Header */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
           {/* Venue Info */}
           <div className="bg-[#11221c] p-8 border border-[#f1c65a]/30 relative">
             <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs tracking-[0.3em] uppercase font-semibold block mb-2">
@@ -46,7 +46,7 @@ export const WeddingSchedule: React.FC = () => {
         </div>
 
         {/* Vertical Gold Timeline */}
-        <div className="max-w-3xl mx-auto relative pl-8 md:pl-12 border-l border-[#f1c65a]/40 space-y-12 my-8">
+        <div className="max-w-3xl mx-auto relative pl-8 md:pl-12 border-l border-[#f1c65a]/40 space-y-6 my-4">
           {weddingDetails.timeline.map((item, idx) => (
             <div key={idx} className="relative group">
               {/* Gold Dot on Line */}

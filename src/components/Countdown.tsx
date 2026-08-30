@@ -192,7 +192,7 @@ export const Countdown: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-24 bg-[#11221c] border-y border-[#f1c65a]/20 relative overflow-hidden"
+      className="py-12 bg-[#11221c] border-y border-[#f1c65a]/20 relative overflow-hidden"
     >
       {/* Background Subtle Radial Glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(241,198,90,0.06)_0%,transparent_70%)] pointer-events-none" />
@@ -208,7 +208,7 @@ export const Countdown: React.FC = () => {
           <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs font-semibold tracking-[0.35em] uppercase block mb-2">
             COUNTDOWN
           </span>
-          <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em] mb-12">
+          <h2 className="font-heading text-3xl md:text-5xl text-[#FBF7EF] uppercase font-normal tracking-[0.1em] mb-8">
             Until We Say I Do
           </h2>
         </div>
