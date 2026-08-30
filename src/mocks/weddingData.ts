@@ -123,6 +123,11 @@ export const weddingDetails = {
   gallery: {
     images: [
       {
+        url: '/gallery-16.jpg',
+        title: 'Garden Gaze',
+        category: 'Romance'
+      },
+      {
         url: '/gallery-13.jpg',
         title: 'Close Embrace',
         category: 'Romance'
