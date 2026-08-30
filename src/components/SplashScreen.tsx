@@ -46,18 +46,18 @@ export const SplashScreen: React.FC = () => {
       setPhase('expanding');
     }, 3000);
 
-    // 5.8s: Complete reveal & unlock main website page (Slower 2.8s reveal)
+    // 7.5s: Complete reveal & unlock main website page (Luxurious 4.5s reveal opening)
     const tComplete = setTimeout(() => {
       setPhase('complete');
       document.body.style.overflow = '';
       window.scrollTo(0, 0);
-    }, 5800);
+    }, 7500);
 
-    // Hard Failsafe at 7.0s
+    // Hard Failsafe at 9.0s
     const tFailsafe = setTimeout(() => {
       setPhase('complete');
       document.body.style.overflow = '';
-    }, 7000);
+    }, 9000);
 
     return () => {
       clearTimeout(tExpand);
@@ -209,16 +209,20 @@ export const SplashScreen: React.FC = () => {
               transform: scale(0.01);
               transform-origin: 50% 50%;
             }
-            20% {
-              transform: scale(0.6);
+            15% {
+              transform: scale(0.3);
               transform-origin: 50% 50%;
             }
-            55% {
-              transform: scale(4.5);
+            45% {
+              transform: scale(2.2);
+              transform-origin: 50% 50%;
+            }
+            75% {
+              transform: scale(12.0);
               transform-origin: 50% 50%;
             }
             100% {
-              transform: scale(45.0);
+              transform: scale(50.0);
               transform-origin: 50% 50%;
             }
           }
@@ -234,7 +238,7 @@ export const SplashScreen: React.FC = () => {
               opacity: 0.85;
             }
             100% {
-              transform: scale(35.0);
+              transform: scale(40.0);
               opacity: 0.0;
             }
           }
@@ -248,13 +252,13 @@ export const SplashScreen: React.FC = () => {
           }
 
           .animate-heart-aperture {
-            animation: heartApertureExpand 2.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            animation: heartApertureExpand 4.5s cubic-bezier(0.25, 1, 0.35, 1) forwards;
             transform-origin: 50% 50%;
             will-change: transform;
           }
 
           .animate-heart-rim {
-            animation: heartRimExpand 2.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            animation: heartRimExpand 4.5s cubic-bezier(0.25, 1, 0.35, 1) forwards;
             transform-origin: center center;
             will-change: transform, opacity;
           }
