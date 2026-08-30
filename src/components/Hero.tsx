@@ -295,13 +295,13 @@ export const Hero: React.FC = () => {
 
       {/* Hero Text Content — Positioned toward bottom over the dark gradient */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-16 flex flex-col items-center justify-end min-h-screen">
-        {/* Static Script "Becoming" Calligraphy — Positioned close to title */}
-        <span className="hero-becoming font-script text-5xl sm:text-7xl md:text-8xl lg:text-9xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent -mb-2 sm:-mb-4 z-10 font-normal tracking-wide drop-shadow-md leading-none">
+        {/* Static Script "Becoming" Calligraphy — Refined font size */}
+        <span className="hero-becoming font-script text-3xl sm:text-4xl md:text-5xl lg:text-6xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-1 z-10 font-normal tracking-wide drop-shadow-md leading-none">
           Becoming
         </span>
 
-        {/* Static Heading for "THE EDUAMOAH'S" */}
-        <h1 className="hero-title font-heading text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl tracking-[0.06em] md:tracking-[0.12em] text-[#FBF7EF] font-normal uppercase text-shadow-hero mb-4 leading-none">
+        {/* Static Heading for "THE EDUAMOAH'S" — Reduced font size */}
+        <h1 className="hero-title font-heading text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl tracking-[0.06em] md:tracking-[0.1em] text-[#FBF7EF] font-normal uppercase text-shadow-hero mb-4 leading-none">
           {weddingDetails.couple.coupleName}
         </h1>
 
