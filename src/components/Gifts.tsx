@@ -59,7 +59,7 @@ export const Gifts: React.FC = () => {
 
             <div className="space-y-6">
               {/* Network */}
-              <div className="bg-[#0a1713]/80 p-4 border border-[#f1c65a]/15">
+              <div className="pb-4 border-b border-[#f1c65a]/15">
                 <span className="text-[10px] text-[#A69272] tracking-[0.2em] uppercase font-mono block mb-1">
                   NETWORK
                 </span>
@@ -69,7 +69,7 @@ export const Gifts: React.FC = () => {
               </div>
 
               {/* Mobile Number with Copy */}
-              <div className="bg-[#0a1713]/80 p-4 border border-[#f1c65a]/15 flex items-center justify-between">
+              <div className="pb-4 border-b border-[#f1c65a]/15 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] text-[#A69272] tracking-[0.2em] uppercase font-mono block mb-1">
                     NUMBER
@@ -80,7 +80,7 @@ export const Gifts: React.FC = () => {
                 </div>
                 <button
                   onClick={() => copyToClipboard('0596618116', 'momo-number')}
-                  className="p-2.5 rounded border border-[#f1c65a]/30 text-[#f1c65a] hover:bg-[#f1c65a] hover:text-[#0a1713] transition-all duration-300 flex items-center space-x-1.5 text-xs uppercase font-mono"
+                  className="p-2 rounded border border-[#f1c65a]/30 text-[#f1c65a] hover:bg-[#f1c65a] hover:text-[#0a1713] transition-all duration-300 flex items-center space-x-1.5 text-xs uppercase font-mono"
                   title="Copy MoMo Number"
                 >
                   {copiedField === 'momo-number' ? (
@@ -98,7 +98,7 @@ export const Gifts: React.FC = () => {
               </div>
 
               {/* Account Name */}
-              <div className="bg-[#0a1713]/80 p-4 border border-[#f1c65a]/15">
+              <div>
                 <span className="text-[10px] text-[#A69272] tracking-[0.2em] uppercase font-mono block mb-1">
                   ACCOUNT NAME
                 </span>
@@ -127,7 +127,7 @@ export const Gifts: React.FC = () => {
 
             <div className="space-y-6">
               {/* Bank Name */}
-              <div className="bg-[#0a1713]/80 p-4 border border-[#f1c65a]/15">
+              <div className="pb-4 border-b border-[#f1c65a]/15">
                 <span className="text-[10px] text-[#A69272] tracking-[0.2em] uppercase font-mono block mb-1">
                   BANK NAME
                 </span>
@@ -137,7 +137,7 @@ export const Gifts: React.FC = () => {
               </div>
 
               {/* Account Number with Copy */}
-              <div className="bg-[#0a1713]/80 p-4 border border-[#f1c65a]/15 flex items-center justify-between">
+              <div className="pb-4 border-b border-[#f1c65a]/15 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] text-[#A69272] tracking-[0.2em] uppercase font-mono block mb-1">
                     ACCOUNT NUMBER
@@ -148,7 +148,7 @@ export const Gifts: React.FC = () => {
                 </div>
                 <button
                   onClick={() => copyToClipboard('140003143181', 'bank-acc')}
-                  className="p-2.5 rounded border border-[#f1c65a]/30 text-[#f1c65a] hover:bg-[#f1c65a] hover:text-[#0a1713] transition-all duration-300 flex items-center space-x-1.5 text-xs uppercase font-mono"
+                  className="p-2 rounded border border-[#f1c65a]/30 text-[#f1c65a] hover:bg-[#f1c65a] hover:text-[#0a1713] transition-all duration-300 flex items-center space-x-1.5 text-xs uppercase font-mono"
                   title="Copy Account Number"
                 >
                   {copiedField === 'bank-acc' ? (
@@ -166,7 +166,7 @@ export const Gifts: React.FC = () => {
               </div>
 
               {/* Account Name */}
-              <div className="bg-[#0a1713]/80 p-4 border border-[#f1c65a]/15">
+              <div>
                 <span className="text-[10px] text-[#A69272] tracking-[0.2em] uppercase font-mono block mb-1">
                   ACCOUNT NAME
                 </span>
