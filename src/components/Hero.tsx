@@ -250,42 +250,6 @@ export const Hero: React.FC = () => {
         @keyframes heroFadeIn {
           from { opacity: 0; } to { opacity: 1; }
         }
-        /* Golden Divider Continuous Drawing Loop (Slower, Cinematic 9.0s cycle) */
-        @keyframes goldenLineContinuousDraw {
-          /* 0% - 30%: Line draws outward from center (2.7s) */
-          0% {
-            transform: scaleX(0);
-            opacity: 0;
-            filter: drop-shadow(0 0 2px rgba(241,198,90,0.2));
-          }
-          30% {
-            transform: scaleX(1);
-            opacity: 1;
-            filter: drop-shadow(0 0 14px rgba(241,198,90,0.95));
-          }
-
-          /* 30% - 70%: Holds fully drawn with ambient gold glow (3.6s hold) */
-          70% {
-            transform: scaleX(1);
-            opacity: 1;
-            filter: drop-shadow(0 0 8px rgba(241,198,90,0.7));
-          }
-
-          /* 70% - 85%: Fades and contracts back to center (1.35s) */
-          85% {
-            transform: scaleX(0);
-            opacity: 0;
-            filter: drop-shadow(0 0 2px rgba(241,198,90,0.1));
-          }
-
-          /* 85% - 100%: Pause before starting drawing loop again (1.35s pause) */
-          100% {
-            transform: scaleX(0);
-            opacity: 0;
-            filter: drop-shadow(0 0 0px transparent);
-          }
-        }
-
         .hero-ken-burns {
           animation: kenBurns 24s ease-in-out infinite;
           transform-origin: center center;
@@ -293,14 +257,7 @@ export const Hero: React.FC = () => {
         }
         .hero-becoming    { animation: heroFadeUp 1.1s cubic-bezier(.25,.46,.45,.94) 0.3s both; }
         .hero-title       { animation: heroFadeUp 1.1s cubic-bezier(.25,.46,.45,.94) 0.6s both; }
-        
-        .hero-line-bottom {
-          transform-origin: center center;
-          position: relative;
-          will-change: transform, opacity, filter;
-          animation: goldenLineContinuousDraw 9s cubic-bezier(0.25, 0.9, 0.35, 1) infinite;
-        }
-
+        .hero-line-bottom { transform-origin: center center; }
         .hero-tagline     { animation: heroFadeIn 1.2s ease-out 0.8s both; }
 
         @media (prefers-reduced-motion: reduce) {
