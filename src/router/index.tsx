@@ -13,11 +13,13 @@ import { Gifts } from '../components/Gifts';
 import { Location } from '../components/Location';
 import { Footer } from '../components/Footer';
 import { SplashScreen } from '../components/SplashScreen';
+import { MusicPlayer } from '../components/MusicPlayer';
 
 const HomePage: React.FC = () => {
   return (
     <main className="bg-[#0a1713] min-h-screen text-[#FBF7EF] selection:bg-[#f1c65a] selection:text-[#0a1713]">
       <SplashScreen />
+      <MusicPlayer />
       <Navbar />
       <Hero />
       <Couple />
