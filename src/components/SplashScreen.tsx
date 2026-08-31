@@ -57,7 +57,7 @@ export const SplashScreen: React.FC = () => {
     // Stage 3: G appears (2.2s)
     const t3 = setTimeout(() => setAnimStage(3), 2200);
 
-    // Stage 4: & appears (3.2s)
+    // Stage 4: & appears (3.4s)
     const t4 = setTimeout(() => setAnimStage(4), 3400);
 
     // Stage 5: A appears (4.2s)
@@ -202,12 +202,15 @@ export const SplashScreen: React.FC = () => {
     };
   }, [isComplete]);
 
-  // NATIVE ONCLICK USER GESTURE HANDLER: Starts audio SYNCHRONOUSLY inside gesture loop & triggers cinematic heart reveal
-  const handleSplashTap = () => {
+  // NATIVE ONCLICK & TOUCH USER GESTURE HANDLER: Starts audio SYNCHRONOUSLY inside gesture loop & triggers cinematic heart reveal
+  const handleSplashTap = (e?: React.SyntheticEvent) => {
+    if (e) {
+      e.stopPropagation();
+    }
     if (isProcessingRef.current || isTransitioning || isComplete) return;
     isProcessingRef.current = true;
 
-    // Execute audio.play() SYNCHRONOUSLY inside native onClick gesture call stack
+    // Execute audio.play() SYNCHRONOUSLY inside native onClick/touch gesture call stack
     globalAudio.playDirect();
 
     // Trigger Slow Cinematic Heart-Shaped Reveal Transition (1.9 seconds)
@@ -224,12 +227,9 @@ export const SplashScreen: React.FC = () => {
   return (
     <div
       onClick={handleSplashTap}
-      style={{
-        maskImage: isTransitioning ? 'url(#splashHeartMask)' : 'none',
-        WebkitMaskImage: isTransitioning ? 'url(#splashHeartMask)' : 'none',
-      }}
+      onTouchEnd={handleSplashTap}
       className={`fixed inset-0 z-50 flex items-center justify-center bg-[#050c08] overflow-hidden select-none cursor-pointer transition-opacity duration-1000 ${
-        isTransitioning ? 'pointer-events-none' : 'opacity-100'
+        isTransitioning ? 'pointer-events-none opacity-0 transition-opacity duration-1900' : 'opacity-100'
       }`}
     >
       <style>{`
@@ -340,31 +340,15 @@ export const SplashScreen: React.FC = () => {
         }
 
         /* Slow Romantic Heart Reveal Opening Expansion (1.9s) */
-        @keyframes heartMaskExpand {
+        @keyframes heartStrokeExpand {
           0% {
-            transform: scale(0.01);
-            opacity: 1;
-          }
-          80% {
-            transform: scale(18.0);
-            opacity: 1;
-          }
-          100% {
-            transform: scale(30.0);
+            transform: scale(0.05);
             opacity: 0.95;
+            stroke-width: 8px;
           }
-        }
-
-        /* Glowing Gold Heart Contour Outline Expanding along Reveal Edge */
-        @keyframes heartGlowStrokeExpand {
-          0% {
-            transform: scale(0.01);
+          60% {
+            transform: scale(14.0);
             opacity: 0.9;
-            stroke-width: 12px;
-          }
-          70% {
-            transform: scale(16.0);
-            opacity: 0.85;
             stroke-width: 3px;
           }
           100% {
@@ -402,45 +386,20 @@ export const SplashScreen: React.FC = () => {
           animation: tapBreathFloat 2.6s ease-in-out infinite;
         }
 
-        .animate-heart-mask-expand {
-          transform-origin: 160px 150px;
-          animation: heartMaskExpand 1.9s cubic-bezier(0.25, 1, 0.35, 1) forwards;
-        }
-
         .animate-heart-stroke-expand {
           transform-origin: 160px 150px;
-          animation: heartGlowStrokeExpand 1.9s cubic-bezier(0.25, 1, 0.35, 1) forwards;
+          animation: heartStrokeExpand 1.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .animate-ring-left, .animate-ring-right, .animate-monogram-g, .animate-monogram-amp, .animate-monogram-a, .animate-tap-float, .animate-heart-mask-expand, .animate-heart-stroke-expand {
+          .animate-ring-left, .animate-ring-right, .animate-monogram-g, .animate-monogram-amp, .animate-monogram-a, .animate-tap-float, .animate-heart-stroke-expand {
             animation: none !important;
             opacity: 1 !important;
           }
         }
       `}</style>
 
-      {/* SVG MASK DEFINITION FOR HEART-SHAPED REVEAL OPENING */}
-      <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
-        <defs>
-          <mask id="splashHeartMask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
-            {/* White background keeps splash screen visible */}
-            <rect x="0" y="0" width="100%" height="100%" fill="white" />
-            {/* Expanding black heart punches a growing opening through splash screen */}
-            {isTransitioning && (
-              <g transform={`translate(${typeof window !== 'undefined' ? window.innerWidth / 2 - 160 : 0}, ${typeof window !== 'undefined' ? window.innerHeight / 2 - 150 : 0})`}>
-                <path
-                  d="M 160 270 C 160 270 45 175 45 92 C 45 45 88 35 124 68 C 142 84 160 102 160 102 C 160 102 178 84 196 68 C 232 35 275 45 275 92 C 275 175 160 270 160 270 Z"
-                  fill="black"
-                  className="animate-heart-mask-expand"
-                />
-              </g>
-            )}
-          </mask>
-        </defs>
-      </svg>
-
-      {/* EXPANDING GOLDEN HEART CONTOUR CONTOUR OVERLAY */}
+      {/* EXPANDING GOLDEN HEART REVEAL OUTLINE OVERLAY */}
       {isTransitioning && (
         <div className="fixed inset-0 z-[60] pointer-events-none flex items-center justify-center">
           <svg
@@ -456,7 +415,7 @@ export const SplashScreen: React.FC = () => {
               stroke="url(#bandGoldGrad)"
               strokeWidth="2.5"
               fill="none"
-              filter="drop-shadow(0 0 15px rgba(245,230,190,0.85))"
+              filter="drop-shadow(0 0 20px rgba(245,230,190,0.9))"
               className="animate-heart-stroke-expand"
             />
           </svg>
@@ -479,9 +438,11 @@ export const SplashScreen: React.FC = () => {
 
       {/* MAIN ANIMATION CONTAINER (STYLIZED 3D INTERLOCKING BANDS + SPACIOUS MONOGRAM G & A) */}
       <div
-        className={`relative z-[20] flex flex-col items-center justify-center text-center px-4 w-full max-w-xl pointer-events-none transition-all duration-700 ${
-          isTransitioning ? 'opacity-30 scale-95' : 'opacity-100'
+        className={`relative z-[20] flex flex-col items-center justify-center text-center px-4 w-full max-w-xl pointer-events-auto cursor-pointer transition-all duration-700 ${
+          isTransitioning ? 'opacity-20 scale-95' : 'opacity-100'
         }`}
+        onClick={handleSplashTap}
+        onTouchEnd={handleSplashTap}
       >
         
         {/* STYLIZED 3D INTERLOCKING GOLD WEDDING BANDS & SPACIOUS G & A MONOGRAM */}
@@ -672,13 +633,15 @@ export const SplashScreen: React.FC = () => {
             A beautiful story begins here.
           </h2>
 
-          {/* Interaction Instruction with Gentle Breathing Animation */}
+          {/* Interaction Instruction CTA with Generous Touch Padding & High Z-Index */}
           <div
-            className={`animate-tap-float mt-1 flex flex-col items-center justify-center transition-all duration-1000 delay-500 ${
+            onClick={handleSplashTap}
+            onTouchEnd={handleSplashTap}
+            className={`animate-tap-float mt-1 flex flex-col items-center justify-center p-3 sm:p-4 cursor-pointer pointer-events-auto transition-all duration-1000 delay-500 ${
               animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-2'
             }`}
           >
-            <span className="text-[11px] sm:text-xs font-mono tracking-[0.3em] text-[#F5E6BE]/75 uppercase font-light italic drop-shadow-[0_0_12px_rgba(245,230,190,0.4)]">
+            <span className="text-[11px] sm:text-xs font-mono tracking-[0.3em] text-[#F5E6BE]/85 hover:text-[#FFF9EB] uppercase font-light italic drop-shadow-[0_0_12px_rgba(245,230,190,0.5)] transition-colors duration-300">
               Tap gently to enter
             </span>
           </div>
