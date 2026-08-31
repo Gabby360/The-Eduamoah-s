@@ -24,15 +24,16 @@ interface DustParticle {
 export const SplashScreen: React.FC = () => {
   // Phase state: 'breathing' (0-10s) -> 'expanding' (10-11.2s) -> 'complete'
   const [phase, setPhase] = useState<'breathing' | 'expanding' | 'complete'>('breathing');
+  const [showInstruction, setShowInstruction] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
 
-  // 1. MASTER TIMELINE & FAILSAFE
+  // 1. MASTER TIMELINE & INTENTIONAL TAP ACTIVATION
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.overflow = 'hidden';
 
-    // Controlled autoplay attempt on splash screen mount
+    // Controlled autoplay attempt on initial page load
     globalAudio.attemptPlay();
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -42,7 +43,12 @@ export const SplashScreen: React.FC = () => {
       return;
     }
 
-    // ~10.0s: Transition into Heart Aperture Reveal & UNLOCK SCROLLING
+    // Reveal subtle "Tap to enter" text at 4 seconds into breathing
+    const tInstruction = setTimeout(() => {
+      setShowInstruction(true);
+    }, 4000);
+
+    // ~10.0s Automatic Failsafe: Transition into Heart Aperture Reveal if no tap occurs
     const tExpand = setTimeout(() => {
       setPhase('expanding');
       document.body.style.overflow = '';
@@ -54,20 +60,28 @@ export const SplashScreen: React.FC = () => {
       document.body.style.overflow = '';
     }, 11200);
 
-    // Hard Failsafe at 12.0s
-    const tFailsafe = setTimeout(() => {
-      setPhase('complete');
-      document.body.style.overflow = '';
-    }, 12000);
-
     return () => {
+      clearTimeout(tInstruction);
       clearTimeout(tExpand);
       clearTimeout(tComplete);
-      clearTimeout(tFailsafe);
       document.body.style.overflow = '';
     };
   }, []);
 
+  // Single Tap/Touch Handler: Starts music and begins heart aperture transition at the exact same moment
+  const handleSplashTap = () => {
+    if (phase !== 'breathing') return;
+
+    // 1. Start audio immediately from inside intentional user activation event
+    globalAudio.play();
+
+    // 2. Start slow cinematic heart expansion at the exact same moment
+    setPhase('expanding');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      setPhase('complete');
+    }, 1200);
+  };
 
   // 2. SPARSE ATMOSPHERIC GOLD DUST CANVAS
   useEffect(() => {
@@ -157,16 +171,9 @@ export const SplashScreen: React.FC = () => {
 
       {/* Main Full-Screen Overlay Container */}
       <div
-        onClick={() => {
-          globalAudio.attemptPlay();
-          if (phase === 'breathing') {
-            setPhase('expanding');
-            document.body.style.overflow = '';
-            setTimeout(() => setPhase('complete'), 1200);
-          }
-        }}
+        onClick={handleSplashTap}
         className={`fixed inset-0 z-[100] bg-[#0a1713] flex items-center justify-center overflow-hidden transition-opacity duration-1000 ${
-          phase === 'expanding' ? 'pointer-events-none' : 'pointer-events-auto cursor-pointer'
+          phase === 'expanding' ? 'pointer-events-none' : 'pointer-events-auto cursor-pointer select-none'
         }`}
         style={
           phase === 'expanding'
@@ -311,9 +318,9 @@ export const SplashScreen: React.FC = () => {
           </div>
         )}
 
-        {/* ── CENTER BREATHING LOVE SYMBOL ── */}
+        {/* ── CENTER BREATHING LOVE SYMBOL & ROMANTIC INSTRUCTION ── */}
         {phase === 'breathing' && (
-          <div className="relative z-[10] flex flex-col items-center justify-center pointer-events-none">
+          <div className="relative z-[10] flex flex-col items-center justify-center pointer-events-none text-center px-4">
             <div className="animate-symbol-breath flex items-center justify-center p-3">
               {/* Elegant 3D Luminous Vector Gold Heart Icon with Outer Gold Outline Ring */}
               <svg
@@ -322,7 +329,7 @@ export const SplashScreen: React.FC = () => {
                 viewBox="0 0 36 36"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5 sm:w-6 sm:h-6 text-[#f1c65a] drop-shadow-[0_0_16px_rgba(241,198,90,0.9)]"
+                className="w-6 h-6 sm:w-7 sm:h-7 text-[#f1c65a] drop-shadow-[0_0_16px_rgba(241,198,90,0.9)]"
               >
                 <defs>
                   <linearGradient id="tinyHeartGrad" x1="0" y1="0" x2="36" y2="36">
@@ -349,6 +356,20 @@ export const SplashScreen: React.FC = () => {
                 />
               </svg>
             </div>
+
+            {/* Subtle Romantic "Tap to enter" Callout (Fades in gently beneath symbol) */}
+            <div
+              className={`mt-6 flex flex-col items-center gap-1.5 transition-all duration-1000 ${
+                showInstruction ? 'opacity-90 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+              }`}
+            >
+              <span className="text-[11px] sm:text-xs font-serif tracking-[0.35em] text-[#f1c65a]/90 uppercase font-light drop-shadow-[0_0_12px_rgba(241,198,90,0.4)]">
+                Tap to enter
+              </span>
+              <span className="text-xs text-[#f1c65a]/80 tracking-widest animate-pulse">
+                ♡
+              </span>
+            </div>
           </div>
         )}
 
@@ -356,3 +377,4 @@ export const SplashScreen: React.FC = () => {
     </>
   );
 };
+
