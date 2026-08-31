@@ -280,8 +280,8 @@ export const Hero: React.FC = () => {
         />
         {/* Top subtle shade for navbar legibility */}
         <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#0a1713]/80 via-[#0a1713]/40 to-transparent pointer-events-none" />
-        {/* Bottom Dark Gradient Overlay */}
-        <div className="absolute bottom-0 inset-x-0 h-[50%] bg-gradient-to-t from-[#0a1713] via-[#0a1713]/80 via-[#0a1713]/30 to-transparent pointer-events-none" />
+        {/* Bottom Dark Gradient Overlay — Shifted 56px upward on mobile only */}
+        <div className="absolute bottom-0 inset-x-0 h-[50%] bg-gradient-to-t from-[#0a1713] via-[#0a1713]/80 via-[#0a1713]/30 to-transparent pointer-events-none -translate-y-14 md:translate-y-0" />
       </div>
 
       {/* Canvas — particles, glowing dust/embers, petals */}
@@ -291,8 +291,8 @@ export const Hero: React.FC = () => {
         aria-hidden="true"
       />
 
-      {/* Hero Text Content — Positioned toward bottom over the dark gradient */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-16 flex flex-col items-center justify-end min-h-screen">
+      {/* Hero Text Content — Positioned toward bottom over the dark gradient (Shifted 56px upward on mobile only) */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-16 flex flex-col items-center justify-end min-h-screen -translate-y-14 md:translate-y-0">
         {/* Static Script "Becoming" Calligraphy — Refined font size */}
         <span className="hero-becoming font-script text-3xl sm:text-4xl md:text-5xl lg:text-6xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-1 z-10 font-normal tracking-wide drop-shadow-md leading-none">
           Becoming
