@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { audioManager } from '../utils/audioManager';
+import { globalAudio } from '../utils/audioManager';
 
 /* ─────────────────────────────────────────────
    HELPERS & DUST PARTICLES FOR ATMOSPHERIC CANVAS
@@ -22,7 +22,7 @@ interface DustParticle {
    Minimalist Breathing Love Symbol & Slower Heart Aperture Reveal (Bright Inside)
 ───────────────────────────────────────────── */
 export const SplashScreen: React.FC = () => {
-  // Phase state: 'breathing' (0-3s) -> 'expanding' (3-5.8s) -> 'complete'
+  // Phase state: 'breathing' (0-10s) -> 'expanding' (10-11.2s) -> 'complete'
   const [phase, setPhase] = useState<'breathing' | 'expanding' | 'complete'>('breathing');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
@@ -32,8 +32,8 @@ export const SplashScreen: React.FC = () => {
     window.scrollTo(0, 0);
     document.body.style.overflow = 'hidden';
 
-    // Trigger immediate automatic audio start
-    audioManager.attemptAutoplay();
+    // Controlled autoplay attempt on splash screen mount
+    globalAudio.attemptPlay();
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
@@ -42,23 +42,23 @@ export const SplashScreen: React.FC = () => {
       return;
     }
 
-    // 1.8s: Transition into Heart Aperture Reveal & IMMEDIATELY UNLOCK SCROLLING
+    // ~10.0s: Transition into Heart Aperture Reveal & UNLOCK SCROLLING
     const tExpand = setTimeout(() => {
       setPhase('expanding');
       document.body.style.overflow = '';
-    }, 1800);
+    }, 10000);
 
-    // 3.0s: Complete reveal & unmount splash
+    // 11.2s: Complete reveal & unmount splash
     const tComplete = setTimeout(() => {
       setPhase('complete');
       document.body.style.overflow = '';
-    }, 3000);
+    }, 11200);
 
-    // Hard Failsafe at 3.5s
+    // Hard Failsafe at 12.0s
     const tFailsafe = setTimeout(() => {
       setPhase('complete');
       document.body.style.overflow = '';
-    }, 3500);
+    }, 12000);
 
     return () => {
       clearTimeout(tExpand);
@@ -158,7 +158,7 @@ export const SplashScreen: React.FC = () => {
       {/* Main Full-Screen Overlay Container */}
       <div
         onClick={() => {
-          audioManager.unmuteAndPlay();
+          globalAudio.attemptPlay();
           if (phase === 'breathing') {
             setPhase('expanding');
             document.body.style.overflow = '';

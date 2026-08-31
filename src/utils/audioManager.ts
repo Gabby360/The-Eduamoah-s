@@ -1,17 +1,14 @@
-// Centralized HTML5 & Web Audio Manager for Immediate Automatic Wedding Music Playback
+// Centralized Single Global HTML5 Audio Engine for Wedding Website Autoplay
 
 type AudioStateListener = (isPlaying: boolean, isMuted: boolean) => void;
 
-class AudioManager {
+class GlobalAudioManager {
   private audio: HTMLAudioElement | null = null;
   private isPlaying: boolean = false;
   private isMuted: boolean = false;
   private listeners: Set<AudioStateListener> = new Set();
-  private hasAttemptedAutoplay: boolean = false;
-  private targetVolume: number = 0.85;
-  private fadeInterval: number | null = null;
-  private gestureHandler: (() => void) | null = null;
-  private audioCtx: AudioContext | null = null;
+  private targetVolume: number = 0.5; // Pleasant, comfortable background level
+  private userInteractionHandler: (() => void) | null = null;
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -23,105 +20,95 @@ class AudioManager {
     if (this.audio) return;
 
     try {
-      this.audio = new Audio('/wedding-music.wav');
+      // 1. Single Global Audio Instance
+      this.audio = new Audio();
       this.audio.loop = true;
       this.audio.preload = 'auto';
+      this.audio.volume = this.targetVolume;
+      this.audio.muted = false;
 
-      // 1. Listen for initial user activity on page to lift muted lock seamlessly
-      this.setupGestureListeners();
+      // Choose format (MP3 primary with WAV fallback)
+      const canPlayMp3 = this.audio.canPlayType('audio/mpeg');
+      this.audio.src = canPlayMp3 ? '/wedding-music.mp3' : '/wedding-music.wav';
 
-      // 2. Immediate Automatic Play attempt on page load
-      this.attemptAutoplay();
+      // 2. Controlled Autoplay Attempt 1: Immediate on creation
+      this.attemptPlay();
+
+      // 3. Controlled Autoplay Attempt 2: When audio data is ready
+      const handleCanPlay = () => {
+        if (!this.isPlaying) {
+          this.attemptPlay();
+        }
+      };
+      this.audio.addEventListener('canplaythrough', handleCanPlay, { once: true });
+      this.audio.addEventListener('loadeddata', handleCanPlay, { once: true });
+
+      // 4. Fallback listener for first legitimate user interaction (click, pointerdown, touchstart, keydown)
+      // NOTE: Scroll trigger has been completely removed per specification
+      this.setupFallbackGestureListeners();
     } catch (err) {
-      console.warn('Audio initialization notice:', err);
+      console.warn('Global audio init notice:', err);
     }
   }
 
-  private setupGestureListeners() {
-    this.gestureHandler = () => {
-      this.unmuteAndPlay();
+  private setupFallbackGestureListeners() {
+    this.userInteractionHandler = async () => {
+      if (!this.isPlaying) {
+        const success = await this.attemptPlay();
+        if (success) {
+          this.removeFallbackGestureListeners();
+        }
+      } else {
+        this.removeFallbackGestureListeners();
+      }
     };
 
-    const events = ['pointerdown', 'touchstart', 'mousedown', 'click', 'keydown', 'scroll', 'mousemove', 'wheel'];
+    // Legitimate user activation events ONLY (NO SCROLL)
+    const events = ['click', 'pointerdown', 'touchstart', 'keydown'];
     events.forEach((evt) => {
-      window.addEventListener(evt, this.gestureHandler!, { passive: true, once: true });
+      window.addEventListener(evt, this.userInteractionHandler!, { passive: true });
     });
   }
 
-  private removeGestureListeners() {
-    if (!this.gestureHandler) return;
-    const events = ['pointerdown', 'touchstart', 'mousedown', 'click', 'keydown', 'scroll', 'mousemove', 'wheel'];
+  private removeFallbackGestureListeners() {
+    if (!this.userInteractionHandler) return;
+    const events = ['click', 'pointerdown', 'touchstart', 'keydown'];
     events.forEach((evt) => {
-      window.removeEventListener(evt, this.gestureHandler!);
+      window.removeEventListener(evt, this.userInteractionHandler!);
     });
-    this.gestureHandler = null;
+    this.userInteractionHandler = null;
   }
 
-  public async attemptAutoplay() {
-    if (!this.audio || this.hasAttemptedAutoplay) return;
-    this.hasAttemptedAutoplay = true;
+  public async attemptPlay(): Promise<boolean> {
+    if (!this.audio) return false;
 
-    // Strategy 1: Attempt immediate unmuted autoplay on load
     try {
       this.audio.volume = this.targetVolume;
       this.audio.muted = false;
-      await this.audio.play();
-      this.isPlaying = true;
-      this.isMuted = false;
-      this.notify();
-      this.removeGestureListeners();
-      return;
-    } catch {
-      // Unmuted autoplay blocked by browser policy
-    }
+      const playPromise = this.audio.play();
+      if (playPromise !== undefined) {
+        await playPromise;
+      }
 
-    // Strategy 2: Muted Autoplay on load (Browsers 100% allow muted auto-start!)
-    try {
-      this.audio.muted = true;
-      await this.audio.play();
-      this.isPlaying = true;
-      this.isMuted = true;
-      this.notify();
-      // Track is now automatically streaming in background. Next movement/scroll unmutes it instantly!
+      // Verify actual HTML audio playback status
+      if (!this.audio.paused && this.audio.currentTime >= 0) {
+        this.isPlaying = true;
+        this.isMuted = false;
+        this.notify();
+        this.removeFallbackGestureListeners();
+        return true;
+      }
+      return false;
     } catch {
+      // Browser blocked unmuted autoplay - gracefully handle without throwing error
       this.isPlaying = false;
       this.notify();
-    }
-  }
-
-  public async unmuteAndPlay() {
-    if (!this.audio) return;
-
-    // Resume Web Audio Context if present
-    if (typeof window !== 'undefined' && (window.AudioContext || (window as any).webkitAudioContext)) {
-      if (!this.audioCtx) {
-        const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
-        this.audioCtx = new AudioCtxClass();
-      }
-      if (this.audioCtx.state === 'suspended') {
-        this.audioCtx.resume().catch(() => {});
-      }
-    }
-
-    try {
-      this.audio.muted = false;
-      this.isMuted = false;
-      this.audio.volume = this.targetVolume;
-
-      if (this.audio.paused) {
-        await this.audio.play();
-      }
-
-      this.isPlaying = true;
-      this.notify();
-      this.removeGestureListeners();
-    } catch (err) {
-      console.warn('Playback error:', err);
+      return false;
     }
   }
 
   public async play() {
-    await this.unmuteAndPlay();
+    return await this.attemptPlay();
   }
 
   public pause() {
@@ -132,10 +119,10 @@ class AudioManager {
   }
 
   public togglePlay() {
-    if (this.isPlaying && !this.audio?.paused) {
+    if (this.isPlaying && this.audio && !this.audio.paused) {
       this.pause();
     } else {
-      this.unmuteAndPlay();
+      this.attemptPlay();
     }
   }
 
@@ -148,6 +135,7 @@ class AudioManager {
 
   public subscribe(listener: AudioStateListener) {
     this.listeners.add(listener);
+    // Emit current state immediately to new subscriber
     listener(this.isPlaying, this.isMuted);
     return () => {
       this.listeners.delete(listener);
@@ -167,4 +155,4 @@ class AudioManager {
   }
 }
 
-export const audioManager = new AudioManager();
+export const globalAudio = new GlobalAudioManager();
