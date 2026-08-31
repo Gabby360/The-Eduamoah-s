@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { audioManager } from '../utils/audioManager';
 
 /* ─────────────────────────────────────────────
    HELPERS & DUST PARTICLES FOR ATMOSPHERIC CANVAS
@@ -30,6 +31,9 @@ export const SplashScreen: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.overflow = 'hidden';
+
+    // Trigger immediate automatic audio start
+    audioManager.attemptAutoplay();
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
@@ -63,6 +67,7 @@ export const SplashScreen: React.FC = () => {
       document.body.style.overflow = '';
     };
   }, []);
+
 
   // 2. SPARSE ATMOSPHERIC GOLD DUST CANVAS
   useEffect(() => {
@@ -152,8 +157,16 @@ export const SplashScreen: React.FC = () => {
 
       {/* Main Full-Screen Overlay Container */}
       <div
+        onClick={() => {
+          audioManager.unmuteAndPlay();
+          if (phase === 'breathing') {
+            setPhase('expanding');
+            document.body.style.overflow = '';
+            setTimeout(() => setPhase('complete'), 1200);
+          }
+        }}
         className={`fixed inset-0 z-[100] bg-[#0a1713] flex items-center justify-center overflow-hidden transition-opacity duration-1000 ${
-          phase === 'expanding' ? 'pointer-events-none' : 'pointer-events-auto'
+          phase === 'expanding' ? 'pointer-events-none' : 'pointer-events-auto cursor-pointer'
         }`}
         style={
           phase === 'expanding'
@@ -298,7 +311,7 @@ export const SplashScreen: React.FC = () => {
           </div>
         )}
 
-        {/* ── CENTER BREATHING TINY LOVE SYMBOL ── */}
+        {/* ── CENTER BREATHING LOVE SYMBOL ── */}
         {phase === 'breathing' && (
           <div className="relative z-[10] flex flex-col items-center justify-center pointer-events-none">
             <div className="animate-symbol-breath flex items-center justify-center p-3">
@@ -338,6 +351,7 @@ export const SplashScreen: React.FC = () => {
             </div>
           </div>
         )}
+
       </div>
     </>
   );
