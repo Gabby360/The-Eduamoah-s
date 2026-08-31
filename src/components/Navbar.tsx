@@ -82,15 +82,12 @@ export const Navbar: React.FC = () => {
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-          {/* Monogram Logo G & A */}
+          {/* Monogram Logo */}
           <a
             href="#"
-            className="font-serif text-xl md:text-2xl tracking-[0.25em] text-[#FBF7EF] hover:text-[#F5E6BE] transition-colors uppercase font-light drop-shadow-[0_0_10px_rgba(245,230,190,0.3)] z-50 relative flex items-center gap-1.5"
-            aria-label="G & A Wedding Homepage"
+            className="font-script text-2xl md:text-3xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent hover:opacity-90 transition-opacity tracking-wide z-50 relative"
           >
-            <span>G</span>
-            <span className="font-script text-[#F5E6BE] text-lg sm:text-xl font-normal">&</span>
-            <span>A</span>
+            {weddingDetails.couple.coupleName}
           </a>
 
           {/* Desktop Navigation */}

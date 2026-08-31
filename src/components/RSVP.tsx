@@ -44,13 +44,6 @@ export const RSVP: React.FC = () => {
         </div>
 
       </div>
-
-      {/* Decorative Low-Opacity G & A Monogram Background Watermark */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden select-none z-0" aria-hidden="true">
-        <span className="font-serif text-[24vw] leading-none text-[#F5E6BE] opacity-[0.025] tracking-[0.2em] uppercase font-light filter blur-[1px]">
-          G &amp; A
-        </span>
-      </div>
     </section>
   );
 };

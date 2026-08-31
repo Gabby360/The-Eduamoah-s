@@ -11,7 +11,6 @@ export const weddingDetails = {
     brideName: 'Dns. Christabell Esi Appiah Odoom',
     groomName: 'Elder George Graham Kwesi Eduamoah',
     coupleName: "The Eduamoah's",
-    monogram: 'G & A',
     brideSubtitle: 'THE BRIDE',
     groomSubtitle: 'THE GROOM',
     brideBio: 'A soul full of grace, warmth, and devotion. Christabell brings light to every room she enters and fills George\'s world with endless love and joy.',

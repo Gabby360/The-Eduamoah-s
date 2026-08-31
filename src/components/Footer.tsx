@@ -29,21 +29,10 @@ export const Footer: React.FC = () => {
         {/* Gold Accent Line */}
         <div className="w-28 h-[1px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent mx-auto mb-10" />
 
-        {/* Elegant Closing Monogram Treatment G & A */}
-        <div className="flex items-center justify-center gap-3 sm:gap-4 my-6">
-          <span className="font-serif text-3xl sm:text-5xl tracking-[0.1em] text-[#FBF7EF] font-light uppercase text-shadow-hero">
-            G
-          </span>
-          <span className="font-script text-2xl sm:text-4xl bg-gradient-to-r from-[#FFF7E3] via-[#F5E6BE] to-[#E2C875] bg-clip-text text-transparent font-normal">
-            &amp;
-          </span>
-          <span className="font-serif text-3xl sm:text-5xl tracking-[0.1em] text-[#FBF7EF] font-light uppercase text-shadow-hero">
-            A
-          </span>
+        {/* Couple Script Monogram */}
+        <div className="font-script text-4xl sm:text-5xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-10 drop-shadow-md">
+          Christabell &amp; George
         </div>
-        <p className="text-xs sm:text-sm tracking-[0.25em] text-[#F5E6BE]/80 uppercase font-serif mb-10 font-light">
-          {weddingDetails.wedding.date} • {weddingDetails.wedding.address}
-        </p>
 
         {/* Scroll Back To Top Button */}
         <div className="flex justify-center mb-12">
@@ -63,7 +52,7 @@ export const Footer: React.FC = () => {
 
         {/* Copyright */}
         <div className="pt-8 border-t border-white/10 text-[11px] text-[#A69272] font-mono tracking-wider">
-          © {new Date().getFullYear()} G &amp; A Wedding. All Rights Reserved.
+          © {new Date().getFullYear()} {weddingDetails.couple.coupleName}. All Rights Reserved.
         </div>
 
       </div>

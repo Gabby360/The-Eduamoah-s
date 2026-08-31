@@ -171,27 +171,11 @@ export const Story: React.FC = () => {
           <p className="font-heading italic text-[#DACFB8] text-base md:text-lg font-light max-w-lg mx-auto mb-4 leading-relaxed">
             &ldquo;From accountability partners at PCC to forever partners in life &mdash; every step was guided by God.&rdquo;
           </p>
-          {/* Closing Monogram Signature G & A */}
-          <div className="flex items-center justify-center gap-3 my-4">
-            <span className="font-serif text-3xl md:text-4xl tracking-[0.1em] text-[#FBF7EF] font-light uppercase">
-              G
-            </span>
-            <span className="font-script text-2xl md:text-3xl bg-gradient-to-r from-[#FFF7E3] via-[#F5E6BE] to-[#E2C875] bg-clip-text text-transparent">
-              &amp;
-            </span>
-            <span className="font-serif text-3xl md:text-4xl tracking-[0.1em] text-[#FBF7EF] font-light uppercase">
-              A
-            </span>
+          <div className="font-script text-4xl md:text-5xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent">
+            Christabell &amp; George
           </div>
         </div>
 
-      </div>
-
-      {/* Decorative Low-Opacity G & A Monogram Background Watermark */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden select-none z-0" aria-hidden="true">
-        <span className="font-serif text-[22vw] leading-none text-[#F5E6BE] opacity-[0.03] tracking-[0.2em] uppercase font-light filter blur-[1px]">
-          G &amp; A
-        </span>
       </div>
     </section>
   );
