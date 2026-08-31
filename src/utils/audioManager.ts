@@ -1,4 +1,4 @@
-// Centralized Single Global HTML5 Audio Engine for Wedding Website
+// Centralized Single Global HTML5 Audio Engine for Wedding Website (Mobile iOS & Android Optimized)
 
 export interface AudioDiagnosticState {
   userAgent: string;
@@ -48,7 +48,7 @@ class GlobalAudioManager {
       audioEl.muted = false;
       audioEl.style.display = 'none';
 
-      // Primary source: /wedding-music.mp3
+      // Primary web-safe source
       audioEl.src = '/wedding-music.mp3';
 
       if (document.body) {
@@ -58,6 +58,9 @@ class GlobalAudioManager {
           document.body.appendChild(audioEl);
         });
       }
+
+      // Explicitly load buffer immediately so readyState warms up before user click
+      audioEl.load();
 
       this.audio = audioEl;
     } catch (err) {
@@ -80,7 +83,7 @@ class GlobalAudioManager {
     };
   }
 
-  // Synchronous play call executing audio.play() on line 1 inside the user event call stack
+  // Synchronous play call executing audio.play() on line 1 inside the user click event call stack
   public playDirect(): Promise<boolean> {
     if (!this.audio) {
       this.init();
@@ -95,7 +98,7 @@ class GlobalAudioManager {
     this.audio.muted = false;
     this.audio.volume = this.targetVolume;
 
-    // Call audio.play() SYNCHRONOUSLY inside user gesture event call stack
+    // Call audio.play() SYNCHRONOUSLY inside user gesture click event call stack
     const playPromise = this.audio.play();
 
     if (playPromise === undefined) {
@@ -117,7 +120,7 @@ class GlobalAudioManager {
         const errMsg = err?.message || String(err);
         this.isPlaying = false;
         this.playResult = `PLAY REJECTED -> ${errName}: ${errMsg}`;
-        console.error('[AUDIO PLAY REJECTED]', errName, errMsg);
+        console.error('[MOBILE AUDIO PLAY REJECTED]', errName, errMsg);
         this.notify();
         return false;
       });

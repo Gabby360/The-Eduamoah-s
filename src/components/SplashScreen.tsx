@@ -21,7 +21,6 @@ export const SplashScreen: React.FC = () => {
   // Sequence Stage:
   // 1: initial -> 2: golden-glow -> 3: merging-lights -> 4: romantic-symbol -> 5: invitation-ready -> 6: transitioning -> complete
   const [animStage, setAnimStage] = useState<number>(1);
-  const [showInstruction, setShowInstruction] = useState<boolean>(false);
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [diag, setDiag] = useState<AudioDiagnosticState>(globalAudio.getDiagnostics());
@@ -46,7 +45,6 @@ export const SplashScreen: React.FC = () => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
       setAnimStage(5);
-      setShowInstruction(true);
     }
 
     // Stage 2: Golden Light Candlelight Glow (1.0s)
@@ -61,7 +59,6 @@ export const SplashScreen: React.FC = () => {
     // Stage 5: Invitation Message ("Come, let us begin." + "Tap to enter") (6.2s)
     const t5 = setTimeout(() => {
       setAnimStage(5);
-      setShowInstruction(true);
     }, 6200);
 
     return () => {
@@ -139,18 +136,17 @@ export const SplashScreen: React.FC = () => {
     };
   }, [isComplete]);
 
-  // 3. SINGLE CLEAN INTERACTION PATH (onPointerDown ONLY)
-  // SEQUENCE: TAP ENTER -> DIRECTLY CALL AUDIO PLAY -> CONFIRM RESULT -> START SPLASH EXIT -> REVEAL WEBSITE
-  const handleSplashTap = async (e: React.PointerEvent) => {
-    e.preventDefault();
+  // 3. SINGLE CLEAN CLICK INTERACTION HANDLER (onClick recognized by Mobile iOS Safari & Mobile Chrome)
+  // SEQUENCE: CLICK ENTER -> DIRECTLY CALL AUDIO PLAY -> CONFIRM RESULT -> START SPLASH EXIT -> REVEAL WEBSITE
+  const handleSplashTap = async (e: React.MouseEvent) => {
     if (isProcessingRef.current || isComplete) return;
     isProcessingRef.current = true;
 
-    // STEP 1: Execute playDirect() synchronously inside user pointer gesture call stack
+    // STEP 1: Execute playDirect() synchronously inside user click gesture event call stack
     const playSuccess = await globalAudio.playDirect();
     setDiag(globalAudio.getDiagnostics());
 
-    console.log('[SPLASH INTERACTION RESULT]', playSuccess ? 'SUCCESS' : 'FAILED', globalAudio.getDiagnostics());
+    console.log('[SPLASH CLICK RESULT]', playSuccess ? 'SUCCESS' : 'FAILED', globalAudio.getDiagnostics());
 
     // STEP 2: Start cinematic exit animation
     setIsTransitioning(true);
@@ -166,7 +162,7 @@ export const SplashScreen: React.FC = () => {
 
   return (
     <div
-      onPointerDown={handleSplashTap}
+      onClick={handleSplashTap}
       className={`fixed inset-0 z-[100] bg-[#060e0a] flex items-center justify-center overflow-hidden select-none cursor-pointer transition-opacity duration-1000 ${
         isTransitioning ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
       }`}
