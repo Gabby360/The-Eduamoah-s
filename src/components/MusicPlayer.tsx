@@ -84,8 +84,8 @@ export const MusicPlayer: React.FC = () => {
       ref={containerRef}
       className={`select-none transition-all duration-500 z-40 ${
         isScrolledPastHero
-          ? 'fixed bottom-5 right-4 sm:bottom-8 sm:right-8 left-auto top-auto'
-          : 'fixed top-[calc(100vh-148px)] right-3 sm:top-auto sm:bottom-8 sm:right-8 sm:left-auto'
+          ? 'fixed bottom-5 right-4 sm:bottom-14 sm:right-8 left-auto top-auto'
+          : 'fixed top-[calc(100vh-148px)] right-3 sm:top-auto sm:bottom-14 sm:right-8 sm:left-auto'
       }`}
     >
       <style>{`
