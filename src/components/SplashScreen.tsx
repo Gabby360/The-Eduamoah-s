@@ -344,17 +344,17 @@ export const SplashScreen: React.FC = () => {
           0% {
             transform: scale(0.05);
             opacity: 0.95;
-            stroke-width: 8px;
+            stroke-width: 3px;
           }
           60% {
             transform: scale(14.0);
-            opacity: 0.9;
-            stroke-width: 3px;
+            opacity: 0.85;
+            stroke-width: 1.2px;
           }
           100% {
             transform: scale(28.0);
             opacity: 0;
-            stroke-width: 1px;
+            stroke-width: 0.4px;
           }
         }
 
@@ -413,9 +413,9 @@ export const SplashScreen: React.FC = () => {
             <path
               d="M 160 270 C 160 270 45 175 45 92 C 45 45 88 35 124 68 C 142 84 160 102 160 102 C 160 102 178 84 196 68 C 232 35 275 45 275 92 C 275 175 160 270 160 270 Z"
               stroke="url(#bandGoldGrad)"
-              strokeWidth="2.5"
+              strokeWidth="1.2"
               fill="none"
-              filter="drop-shadow(0 0 20px rgba(245,230,190,0.9))"
+              filter="drop-shadow(0 0 10px rgba(245,230,190,0.5))"
               className="animate-heart-stroke-expand"
             />
           </svg>
