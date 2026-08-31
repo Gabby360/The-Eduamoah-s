@@ -359,7 +359,7 @@ export const SplashScreen: React.FC = () => {
             viewBox="0 0 400 300"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-72 h-60 sm:w-80 sm:h-64 text-[#F5E6BE] filter drop-shadow-[0_0_12px_rgba(245,230,190,0.6)]"
+            className="w-24 h-20 sm:w-32 sm:h-28 text-[#F5E6BE] filter drop-shadow-[0_0_8px_rgba(245,230,190,0.45)]"
           >
             <defs>
               <linearGradient id="silkChampagneGrad" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
