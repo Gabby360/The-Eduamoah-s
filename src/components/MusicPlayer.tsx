@@ -85,7 +85,7 @@ export const MusicPlayer: React.FC = () => {
       className={`select-none transition-all duration-500 z-40 ${
         isScrolledPastHero
           ? 'fixed bottom-5 right-4 sm:bottom-8 sm:right-8 left-auto top-auto'
-          : 'fixed top-[calc(100vh-148px)] left-[calc(50%+115px)] sm:left-[calc(50%+150px)] md:left-[calc(50%+220px)] lg:left-[calc(50%+270px)] xl:left-[calc(50%+325px)]'
+          : 'fixed top-[calc(100vh-148px)] right-3 sm:right-auto sm:left-[calc(50%+150px)] md:left-[calc(50%+220px)] lg:left-[calc(50%+270px)] xl:left-[calc(50%+325px)]'
       }`}
     >
       <style>{`
@@ -110,42 +110,15 @@ export const MusicPlayer: React.FC = () => {
         }
       `}</style>
 
-      {/* SINGLE UNIFIED COMPACT LUXURY MUSIC CAPSULE (Beside THE EDUAMOAH'S, Expands Vertically Upward) */}
-      <div
-        className={`flex flex-col-reverse items-center p-0.5 bg-[#060e0a]/95 border border-[#F5E6BE]/40 rounded-full shadow-[0_6px_24px_rgba(0,0,0,0.85)] backdrop-blur-md transition-all duration-300 ${
-          isAudioActive ? 'animate-music-gentle-float' : ''
-        }`}
-      >
-        {/* MAIN SINGLE COMPACT MUSIC BUTTON (w-8 h-8 = 32px) */}
-        <button
-          onClick={handleMainButtonTap}
-          className="relative flex items-center justify-center w-8 h-8 rounded-full text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none shrink-0 z-10"
-          title={isPanelOpen ? 'Close Controls' : 'Music Controls'}
-          aria-label="Music Controls"
-        >
-          {/* Subtle Gold Pulse Ring when playing & audible & panel is closed */}
-          {isAudioActive && !isPanelOpen && (
-            <span className="absolute inset-0 rounded-full border border-[#F5E6BE]/40 animate-ping opacity-30 pointer-events-none" />
-          )}
+      {/* ANCHORED CONTAINER FOR MAIN BUTTON WITH ABSOLUTE UPWARD EXPANDABLE PANEL */}
+      <div className="relative inline-flex flex-col items-center">
 
-          {/* Main Icon: VolumeX when muted, Spinning Music note when playing */}
-          {isMuted ? (
-            <VolumeX size={15} className="text-[#F5E6BE]/60" />
-          ) : (
-            <Music
-              size={15}
-              className={isPlaying ? 'text-[#F5E6BE] animate-spin' : 'text-[#F5E6BE]/70'}
-              style={isPlaying ? { animationDuration: '6s' } : {}}
-            />
-          )}
-        </button>
-
-        {/* EXPANDABLE COMPACT ADDITIONAL CONTROLS (Unfolds Vertically Upward) */}
+        {/* EXPANDABLE COMPACT ADDITIONAL CONTROLS — ANCHORED STRICTLY ABOVE MAIN BUTTON (Grows Upward into Open Space) */}
         <div
-          className={`flex flex-col-reverse items-center gap-1.5 overflow-hidden transition-all duration-300 ease-out origin-bottom ${
+          className={`absolute bottom-[calc(100%+8px)] left-1/2 -translate-x-1/2 flex flex-col-reverse items-center gap-1.5 p-1 bg-[#060e0a]/95 border border-[#F5E6BE]/40 rounded-full shadow-[0_6px_24px_rgba(0,0,0,0.85)] backdrop-blur-md transition-all duration-300 origin-bottom overflow-hidden ${
             isPanelOpen
-              ? 'max-h-[140px] opacity-100 mb-1 pt-1.5'
-              : 'max-h-0 opacity-0 mb-0 pt-0 pointer-events-none'
+              ? 'max-h-[140px] opacity-100 scale-100 pointer-events-auto'
+              : 'max-h-0 opacity-0 scale-95 pointer-events-none border-transparent p-0'
           }`}
         >
           {/* 3. Close / Turn Music Off Button */}
@@ -180,6 +153,36 @@ export const MusicPlayer: React.FC = () => {
 
           {/* Subtle Horizontal Divider */}
           <div className="w-3.5 h-[1px] bg-[#F5E6BE]/20 mb-0.5" />
+        </div>
+
+        {/* MAIN SINGLE COMPACT MUSIC BUTTON — ANCHORED STRICTLY IN PLACE BESIDE THE EDUAMOAH'S */}
+        <div
+          className={`p-0.5 bg-[#060e0a]/95 border border-[#F5E6BE]/40 rounded-full shadow-[0_6px_24px_rgba(0,0,0,0.85)] backdrop-blur-md transition-all duration-300 ${
+            isAudioActive ? 'animate-music-gentle-float' : ''
+          }`}
+        >
+          <button
+            onClick={handleMainButtonTap}
+            className="relative flex items-center justify-center w-8 h-8 rounded-full text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none shrink-0"
+            title={isPanelOpen ? 'Close Controls' : 'Music Controls'}
+            aria-label="Music Controls"
+          >
+            {/* Subtle Gold Pulse Ring when playing & audible & panel is closed */}
+            {isAudioActive && !isPanelOpen && (
+              <span className="absolute inset-0 rounded-full border border-[#F5E6BE]/40 animate-ping opacity-30 pointer-events-none" />
+            )}
+
+            {/* Main Icon: VolumeX when muted, Spinning Music note when playing */}
+            {isMuted ? (
+              <VolumeX size={15} className="text-[#F5E6BE]/60" />
+            ) : (
+              <Music
+                size={15}
+                className={isPlaying ? 'text-[#F5E6BE] animate-spin' : 'text-[#F5E6BE]/70'}
+                style={isPlaying ? { animationDuration: '6s' } : {}}
+              />
+            )}
+          </button>
         </div>
       </div>
     </div>
