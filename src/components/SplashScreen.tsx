@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { globalAudio } from '../utils/audioManager';
 
 /* ─────────────────────────────────────────────
-   ATMOSPHERIC SPARKLING DUST & ANATOMICAL REALISTIC BUTTERFLIES
+   ATMOSPHERIC & SPARKLING DUST PARTICLES
 ───────────────────────────────────────────── */
 const rand = (min: number, max: number) => Math.random() * (max - min) + min;
 
@@ -27,23 +27,6 @@ interface SparkleParticle {
   maxAlpha: number;
   pulseSpeed: number;
   color: string;
-}
-
-interface RealisticButterfly {
-  x: number;
-  y: number;
-  size: number;
-  vx: number;
-  vy: number;
-  angle: number;
-  targetAngle: number;
-  wingAngle: number;
-  wingSpeed: number;
-  alpha: number;
-  maxAlpha: number;
-  wobbleSpeed: number;
-  wobbleAmp: number;
-  depthScale: number;
 }
 
 export const SplashScreen: React.FC = () => {
@@ -97,7 +80,7 @@ export const SplashScreen: React.FC = () => {
     };
   }, []);
 
-  // 2. MAGICAL SPARKLING DUST & PHOTOREALISTIC FLOATING BUTTERFLIES
+  // 2. MAGICAL SPARKLING DUST & ATMOSPHERIC DUST PARTICLES
   useEffect(() => {
     if (isComplete) return;
 
@@ -116,7 +99,6 @@ export const SplashScreen: React.FC = () => {
     const isMobile = window.innerWidth < 768;
     const dustCount = isMobile ? 30 : 65;
     const sparkleCount = isMobile ? 45 : 90;
-    const butterflyCount = isMobile ? 3 : 5;
 
     // Ambient background dust
     const dust: DustParticle[] = Array.from({ length: dustCount }, () => ({
@@ -149,174 +131,8 @@ export const SplashScreen: React.FC = () => {
       };
     });
 
-    // Anatomically Realistic Photorealistic Butterflies
-    const butterflies: RealisticButterfly[] = Array.from({ length: butterflyCount }, () => {
-      const depthScale = rand(0.7, 1.2);
-      return {
-        x: rand(60, window.innerWidth - 60),
-        y: rand(window.innerHeight * 0.25, window.innerHeight * 0.85),
-        size: rand(14, 22) * depthScale,
-        vx: rand(-0.3, 0.3),
-        vy: rand(-0.45, -0.15),
-        angle: rand(-0.25, 0.25),
-        targetAngle: rand(-0.25, 0.25),
-        wingAngle: rand(0, Math.PI * 2),
-        wingSpeed: rand(0.09, 0.17),
-        alpha: rand(0.2, 0.6),
-        maxAlpha: rand(0.55, 0.85) * depthScale,
-        wobbleSpeed: rand(0.002, 0.005),
-        wobbleAmp: rand(0.4, 0.9),
-        depthScale,
-      };
-    });
-
     let lastFrame = 0;
     const FRAME_INTERVAL = 1000 / 30;
-
-    // HIGH-FIDELITY PHOTOREALISTIC BUTTERFLY CANVAS 2D DRAWING ROUTINE
-    const drawRealisticButterfly = (c: CanvasRenderingContext2D, b: RealisticButterfly) => {
-      c.save();
-      c.translate(b.x, b.y);
-      c.rotate(b.angle);
-      c.globalAlpha = Math.max(0.04, Math.min(b.alpha, b.maxAlpha));
-
-      // 3D Flapping Wing Scale Factor (-1 to 1)
-      const flap = Math.sin(b.wingAngle);
-      const wingXScale = Math.max(0.08, Math.abs(flap));
-      const s = b.size;
-
-      // 1. LEFT FOREWING & HINDWING
-      c.save();
-      c.scale(-wingXScale, 1);
-
-      // Left Forewing (Upper Wing)
-      const foreGradLeft = c.createRadialGradient(-s * 0.4, -s * 0.5, 0, -s * 0.5, -0.5 * s, s * 1.2);
-      foreGradLeft.addColorStop(0, '#FFF5D6');
-      foreGradLeft.addColorStop(0.35, '#F5E6BE');
-      foreGradLeft.addColorStop(0.7, '#D4B04C');
-      foreGradLeft.addColorStop(1.0, '#3A290A');
-
-      c.beginPath();
-      c.moveTo(0, -s * 0.1);
-      c.bezierCurveTo(-s * 0.5, -s * 1.1, -s * 1.3, -s * 0.9, -s * 1.1, -s * 0.2);
-      c.bezierCurveTo(-s * 0.9, s * 0.1, -s * 0.4, -0.05, 0, -s * 0.1);
-      c.fillStyle = foreGradLeft;
-      c.fill();
-      c.lineWidth = s * 0.04;
-      c.strokeStyle = '#231906';
-      c.stroke();
-
-      // Left Forewing Vein Details
-      c.beginPath();
-      c.moveTo(0, -s * 0.1);
-      c.quadraticCurveTo(-s * 0.6, -s * 0.6, -s * 1.1, -s * 0.7);
-      c.moveTo(-s * 0.35, -s * 0.35);
-      c.quadraticCurveTo(-s * 0.7, -s * 0.4, -s * 1.05, -s * 0.35);
-      c.moveTo(-s * 0.45, -s * 0.45);
-      c.quadraticCurveTo(-s * 0.8, -s * 0.2, -s * 0.95, -s * 0.05);
-      c.strokeStyle = 'rgba(35, 25, 6, 0.45)';
-      c.lineWidth = s * 0.025;
-      c.stroke();
-
-      // Left Hindwing (Lower Wing)
-      const hindGradLeft = c.createRadialGradient(-s * 0.3, s * 0.3, 0, -s * 0.4, s * 0.4, s * 0.8);
-      hindGradLeft.addColorStop(0, '#F5E6BE');
-      hindGradLeft.addColorStop(0.5, '#E2C875');
-      hindGradLeft.addColorStop(1.0, '#2A1D06');
-
-      c.beginPath();
-      c.moveTo(0, -s * 0.05);
-      c.bezierCurveTo(-s * 0.8, s * 0.05, -s * 1.0, s * 0.7, -s * 0.4, s * 0.95);
-      c.bezierCurveTo(-s * 0.1, s * 0.8, 0, s * 0.4, 0, -s * 0.05);
-      c.fillStyle = hindGradLeft;
-      c.fill();
-      c.lineWidth = s * 0.035;
-      c.strokeStyle = '#231906';
-      c.stroke();
-
-      c.restore();
-
-      // 2. RIGHT FOREWING & HINDWING
-      c.save();
-      c.scale(wingXScale, 1);
-
-      // Right Forewing
-      const foreGradRight = c.createRadialGradient(s * 0.4, -s * 0.5, 0, s * 0.5, -0.5 * s, s * 1.2);
-      foreGradRight.addColorStop(0, '#FFF5D6');
-      foreGradRight.addColorStop(0.35, '#F5E6BE');
-      foreGradRight.addColorStop(0.7, '#D4B04C');
-      foreGradRight.addColorStop(1.0, '#3A290A');
-
-      c.beginPath();
-      c.moveTo(0, -s * 0.1);
-      c.bezierCurveTo(s * 0.5, -s * 1.1, s * 1.3, -s * 0.9, s * 1.1, -s * 0.2);
-      c.bezierCurveTo(s * 0.9, s * 0.1, s * 0.4, -0.05, 0, -s * 0.1);
-      c.fillStyle = foreGradRight;
-      c.fill();
-      c.lineWidth = s * 0.04;
-      c.strokeStyle = '#231906';
-      c.stroke();
-
-      // Right Forewing Vein Details
-      c.beginPath();
-      c.moveTo(0, -s * 0.1);
-      c.quadraticCurveTo(s * 0.6, -s * 0.6, s * 1.1, -s * 0.7);
-      c.moveTo(s * 0.35, -s * 0.35);
-      c.quadraticCurveTo(s * 0.7, -s * 0.4, s * 1.05, -s * 0.35);
-      c.moveTo(s * 0.45, -s * 0.45);
-      c.quadraticCurveTo(s * 0.8, -s * 0.2, s * 0.95, -s * 0.05);
-      c.strokeStyle = 'rgba(35, 25, 6, 0.45)';
-      c.lineWidth = s * 0.025;
-      c.stroke();
-
-      // Right Hindwing
-      const hindGradRight = c.createRadialGradient(s * 0.3, s * 0.3, 0, s * 0.4, s * 0.4, s * 0.8);
-      hindGradRight.addColorStop(0, '#F5E6BE');
-      hindGradRight.addColorStop(0.5, '#E2C875');
-      hindGradRight.addColorStop(1.0, '#2A1D06');
-
-      c.beginPath();
-      c.moveTo(0, -s * 0.05);
-      c.bezierCurveTo(s * 0.8, s * 0.05, s * 1.0, s * 0.7, s * 0.4, s * 0.95);
-      c.bezierCurveTo(s * 0.1, s * 0.8, 0, s * 0.4, 0, -s * 0.05);
-      c.fillStyle = hindGradRight;
-      c.fill();
-      c.lineWidth = s * 0.035;
-      c.strokeStyle = '#231906';
-      c.stroke();
-
-      c.restore();
-
-      // 3. ANATOMICAL BODY & FINE ANTENNAE
-      // Segmented Thorax & Abdomen
-      const bodyGrad = c.createLinearGradient(0, -s * 0.4, 0, s * 0.5);
-      bodyGrad.addColorStop(0, '#FFF9EB');
-      bodyGrad.addColorStop(0.4, '#8C6B1F');
-      bodyGrad.addColorStop(1, '#231906');
-
-      c.beginPath();
-      c.ellipse(0, 0, s * 0.07, s * 0.42, 0, 0, Math.PI * 2);
-      c.fillStyle = bodyGrad;
-      c.fill();
-
-      // Head
-      c.beginPath();
-      c.arc(0, -s * 0.45, s * 0.08, 0, Math.PI * 2);
-      c.fillStyle = '#FFF9EB';
-      c.fill();
-
-      // Antennae (Delicate Curved Whispers)
-      c.beginPath();
-      c.moveTo(-s * 0.04, -s * 0.48);
-      c.quadraticCurveTo(-s * 0.2, -s * 0.7, -s * 0.3, -s * 0.75);
-      c.moveTo(s * 0.04, -s * 0.48);
-      c.quadraticCurveTo(s * 0.2, -s * 0.7, s * 0.3, -s * 0.75);
-      c.strokeStyle = 'rgba(255, 249, 235, 0.85)';
-      c.lineWidth = s * 0.03;
-      c.stroke();
-
-      c.restore();
-    };
 
     const tick = (now: number) => {
       rafRef.current = requestAnimationFrame(tick);
@@ -368,27 +184,6 @@ export const SplashScreen: React.FC = () => {
         ctx.shadowBlur = s.r * 3;
         ctx.fill();
         ctx.restore();
-      });
-
-      /* 3. Photorealistic Floating Butterflies */
-      butterflies.forEach((b) => {
-        b.x += b.vx + Math.sin(now * b.wobbleSpeed) * b.wobbleAmp;
-        b.y += b.vy;
-        b.wingAngle += b.wingSpeed;
-
-        // Organic Pitch/Yaw Tilt Smoothing
-        b.targetAngle = Math.sin(now * b.wobbleSpeed * 0.6) * 0.25;
-        b.angle += (b.targetAngle - b.angle) * 0.05;
-        b.alpha += Math.sin(now * 0.0012) * 0.004;
-
-        // Reset butterfly when floating out of view
-        if (b.y < -40 || b.x < -40 || b.x > W + 40) {
-          b.x = rand(50, W - 50);
-          b.y = H + rand(30, 90);
-          b.alpha = rand(0.15, 0.45);
-        }
-
-        drawRealisticButterfly(ctx, b);
       });
     };
 
@@ -620,7 +415,7 @@ export const SplashScreen: React.FC = () => {
         </div>
       )}
 
-      {/* Atmospheric Sparkling Dust Particles & Photorealistic Butterflies Canvas */}
+      {/* Atmospheric Sparkling Dust Particles Canvas */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 z-[1] w-full h-full pointer-events-none"
