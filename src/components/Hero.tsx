@@ -293,8 +293,8 @@ export const Hero: React.FC = () => {
 
       {/* Hero Text Content — Lowered slightly toward bottom */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-16 flex flex-col items-center justify-end min-h-screen">
-        {/* Static Script "Becoming" Calligraphy — Refined font size */}
-        <span className="hero-becoming font-script text-3xl sm:text-4xl md:text-5xl lg:text-6xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-1 z-10 font-normal tracking-wide drop-shadow-md leading-none">
+        {/* Static Script "Becoming" Calligraphy — Refined with padding & line-height to prevent glyph clipping */}
+        <span className="hero-becoming font-script text-3xl sm:text-4xl md:text-5xl lg:text-6xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent inline-block py-2 px-4 leading-normal overflow-visible z-10 font-normal tracking-wide drop-shadow-md">
           Becoming
         </span>
 
