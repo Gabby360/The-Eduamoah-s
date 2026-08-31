@@ -28,14 +28,14 @@ export const SplashScreen: React.FC = () => {
   const rafRef = useRef<number>(0);
   const hasTappedRef = useRef<boolean>(false);
 
-  // 1. TIMELINE CONTROLLER FOR THE 6-STAGE CINEMATIC ANIMATION
+  // 1. MASTER TIMELINE FOR THE 6-STAGE CINEMATIC ANIMATION
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.overflow = 'hidden';
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
-      setAnimStage(5); // Jump straight to invitation ready
+      setAnimStage(5);
     }
 
     // Stage 2: Golden Light Candlelight Glow (1.0s)
@@ -125,20 +125,23 @@ export const SplashScreen: React.FC = () => {
     };
   }, [isComplete]);
 
-  // 3. INTENTIONAL USER TAP / TOUCH HANDLER
-  // Synchronously triggers audio.play() and begins the cinematic dissolution
-  const handleSplashTap = () => {
+  // 3. INTENTIONAL USER POINTER / TOUCH HANDLER
+  // SEQUENCE: USER TAPS ENTER -> DIRECTLY CALL AUDIO PLAY -> CONFIRM PLAYBACK -> START SPLASH EXIT ANIMATION -> REVEAL WEBSITE
+  const handleSplashInteraction = async (e: React.SyntheticEvent) => {
     if (hasTappedRef.current || isComplete) return;
     hasTappedRef.current = true;
 
-    // A. Start Wedding Music IMMEDIATELY inside this exact touch/pointer event context
-    globalAudio.play();
+    // STEP 1: DIRECTLY CALL AUDIO PLAY FIRST inside this exact touch/pointer event handler
+    const playSuccess = await globalAudio.play();
 
-    // B. Trigger cinematic golden light portal expansion and gentle dissolution
+    // STEP 2: CONFIRM PLAYBACK IN CONSOLE / LOGS
+    console.log('[SPLASH INTERACTION] Mobile/Desktop Audio Play result:', playSuccess);
+
+    // STEP 3: START SPLASH EXIT ANIMATION
     setIsTransitioning(true);
     document.body.style.overflow = '';
 
-    // Complete transition after 1.3 seconds
+    // STEP 4: REVEAL WEBSITE
     setTimeout(() => {
       setIsComplete(true);
     }, 1300);
@@ -148,8 +151,8 @@ export const SplashScreen: React.FC = () => {
 
   return (
     <div
-      onClick={handleSplashTap}
-      onTouchStart={handleSplashTap}
+      onPointerDown={handleSplashInteraction}
+      onClick={handleSplashInteraction}
       className={`fixed inset-0 z-[100] bg-[#060e0a] flex items-center justify-center overflow-hidden select-none cursor-pointer transition-opacity duration-1000 ${
         isTransitioning ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
       }`}

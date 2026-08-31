@@ -5,12 +5,14 @@ import { globalAudio } from '../utils/audioManager';
 export const MusicPlayer: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     // Subscribe to single global audio instance state
-    const unsubscribe = globalAudio.subscribe((playing, muted) => {
+    const unsubscribe = globalAudio.subscribe((playing, muted, lastError) => {
       setIsPlaying(playing);
       setIsMuted(muted);
+      setErrorMsg(lastError);
     });
 
     return () => {
@@ -34,7 +36,7 @@ export const MusicPlayer: React.FC = () => {
       <div
         onClick={togglePlay}
         className="group cursor-pointer flex items-center gap-3 bg-[#11221c] border border-[#f1c65a]/40 hover:border-[#f1c65a] text-[#FBF7EF] px-4 py-2.5 rounded-full shadow-2xl transition-all duration-300 hover:scale-105"
-        title={isPlaying ? "Pause Wedding Music" : "Play Wedding Music"}
+        title={isPlaying ? "Pause Wedding Music" : errorMsg ? `Playback Notice: ${errorMsg}` : "Play Wedding Music"}
         aria-label="Toggle Wedding Music"
       >
         {/* Animated Music Disc Icon */}
@@ -49,7 +51,7 @@ export const MusicPlayer: React.FC = () => {
         {/* Status & Label */}
         <div className="hidden sm:flex flex-col text-left">
           <span className="text-[10px] tracking-[0.2em] text-[#f1c65a] uppercase font-mono leading-none mb-0.5">
-            {isPlaying && !isMuted ? 'Now Playing' : 'Background Music'}
+            {isPlaying && !isMuted ? 'Now Playing' : errorMsg ? 'Tap to Play' : 'Background Music'}
           </span>
           <span className="text-xs font-heading tracking-wide text-[#FBF7EF] leading-none">
             Wedding Music
