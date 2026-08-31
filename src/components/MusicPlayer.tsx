@@ -10,10 +10,19 @@ export const MusicPlayer: React.FC = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    // Helper to attempt unmuted audio playback
+    // Helper to attempt unmuted audio playback & Web Audio pipeline unlock
     const attemptPlay = async (): Promise<boolean> => {
       if (!audioRef.current) return false;
       try {
+        // Unlock Web Audio Context for iOS Safari & Mobile Chrome
+        if (typeof window !== 'undefined' && (window.AudioContext || (window as any).webkitAudioContext)) {
+          const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+          const ctx = new AudioCtxClass();
+          if (ctx.state === 'suspended') {
+            ctx.resume().catch(() => {});
+          }
+        }
+
         audioRef.current.volume = 0.85;
         audioRef.current.muted = false;
         await audioRef.current.play();
@@ -21,7 +30,15 @@ export const MusicPlayer: React.FC = () => {
         setIsMuted(false);
         return true;
       } catch {
-        setIsPlaying(false);
+        // Fallback: try muted background playback
+        try {
+          audioRef.current.muted = true;
+          await audioRef.current.play();
+          setIsPlaying(true);
+          setIsMuted(true);
+        } catch {
+          setIsPlaying(false);
+        }
         return false;
       }
     };
@@ -29,16 +46,20 @@ export const MusicPlayer: React.FC = () => {
     // 1. Attempt immediate playback on page load
     attemptPlay();
 
-    // 2. User activation gesture listener (ONLY removes itself when play() ACTUALLY succeeds)
+    // 2. Persistent user activation gesture listener for Desktop & Mobile Phones
     const handleUserGesture = async () => {
+      if (audioRef.current && audioRef.current.muted) {
+        audioRef.current.muted = false;
+        audioRef.current.volume = 0.85;
+      }
       const success = await attemptPlay();
       if (success) {
         removeListeners();
       }
     };
 
-    // User activation events in HTML5 spec: click, pointerdown, touchstart, keydown
-    const events = ['click', 'pointerdown', 'touchstart', 'keydown'];
+    // Mobile & Desktop activation events: touchstart, touchend, pointerdown, click, scroll, keydown
+    const events = ['touchstart', 'touchend', 'pointerdown', 'click', 'scroll', 'keydown'];
     const addListeners = () => {
       events.forEach((evt) => window.addEventListener(evt, handleUserGesture, { passive: true }));
     };
@@ -58,7 +79,7 @@ export const MusicPlayer: React.FC = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    if (isPlaying && !audio.paused) {
+    if (isPlaying && !audio.paused && !audio.muted) {
       audio.pause();
       setIsPlaying(false);
     } else {
@@ -81,17 +102,19 @@ export const MusicPlayer: React.FC = () => {
 
   return (
     <>
-      {/* HTML5 Audio Element in DOM tree with native autoPlay */}
+      {/* HTML5 Audio Element with dual MP3/WAV sources for instant mobile streaming */}
       <audio
         ref={audioRef}
-        src="/wedding-music.wav"
         autoPlay
         loop
         playsInline
         preload="auto"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
-      />
+      >
+        <source src="/wedding-music.mp3" type="audio/mpeg" />
+        <source src="/wedding-music.wav" type="audio/wav" />
+      </audio>
 
       <div className="fixed bottom-6 right-6 z-40 flex items-center gap-2">
         {/* Sound Wave Equalizer + Control Pill */}
@@ -113,7 +136,7 @@ export const MusicPlayer: React.FC = () => {
           {/* Status & Label */}
           <div className="hidden sm:flex flex-col text-left">
             <span className="text-[10px] tracking-[0.2em] text-[#f1c65a] uppercase font-mono leading-none mb-0.5">
-              {isPlaying ? 'Now Playing' : 'Background Music'}
+              {isPlaying && !isMuted ? 'Now Playing' : 'Background Music'}
             </span>
             <span className="text-xs font-heading tracking-wide text-[#FBF7EF] leading-none">
               Wedding Music
@@ -121,7 +144,7 @@ export const MusicPlayer: React.FC = () => {
           </div>
 
           {/* Animated Sound Wave Equalizer Bars when Playing */}
-          {isPlaying && (
+          {isPlaying && !isMuted && (
             <div className="flex items-end gap-0.5 h-3.5 px-1">
               <span className="w-0.5 bg-[#f1c65a] rounded-full animate-[bounce_0.8s_ease-in-out_infinite]" />
               <span className="w-0.5 bg-[#f1c65a] rounded-full animate-[bounce_1.2s_ease-in-out_infinite]" />
@@ -135,7 +158,7 @@ export const MusicPlayer: React.FC = () => {
             className="p-1 rounded-full text-[#f1c65a] hover:text-[#FFF] transition-colors focus:outline-none"
             aria-label={isPlaying ? "Pause" : "Play"}
           >
-            {isPlaying ? <Pause size={16} /> : <Play size={16} className="ml-0.5" />}
+            {isPlaying && !isMuted ? <Pause size={16} /> : <Play size={16} className="ml-0.5" />}
           </button>
         </div>
 
@@ -154,5 +177,6 @@ export const MusicPlayer: React.FC = () => {
     </>
   );
 };
+
 
 
