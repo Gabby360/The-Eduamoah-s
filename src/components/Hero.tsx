@@ -303,7 +303,6 @@ export const Hero: React.FC = () => {
           {weddingDetails.couple.coupleName}
         </h1>
 
-        <div className="hero-line-bottom w-40 sm:w-56 md:w-64 h-[2px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent my-4 mx-auto rounded-full shadow-[0_0_10px_rgba(241,198,90,0.8)]" />
         <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light mb-6 text-shadow-hero">
           {weddingDetails.hero.tagline}
         </p>
