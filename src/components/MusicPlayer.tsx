@@ -16,7 +16,7 @@ export const MusicPlayer: React.FC = () => {
       setIsMuted(muted);
     });
 
-    // Track scroll position to transition from beside Hero title to floating corner control
+    // Track scroll position
     const handleScroll = () => {
       setIsScrolledPastHero(window.scrollY > 380);
     };
@@ -85,7 +85,7 @@ export const MusicPlayer: React.FC = () => {
       className={`select-none transition-all duration-500 z-40 ${
         isScrolledPastHero
           ? 'fixed bottom-5 right-4 sm:bottom-8 sm:right-8 left-auto top-auto'
-          : 'fixed top-[calc(100vh-148px)] right-3 sm:right-auto sm:left-[calc(50%+150px)] md:left-[calc(50%+220px)] lg:left-[calc(50%+270px)] xl:left-[calc(50%+325px)]'
+          : 'fixed top-[calc(100vh-148px)] right-3 sm:top-auto sm:bottom-8 sm:right-8 sm:left-auto'
       }`}
     >
       <style>{`
@@ -155,7 +155,7 @@ export const MusicPlayer: React.FC = () => {
           <div className="w-3.5 h-[1px] bg-[#F5E6BE]/20 mb-0.5" />
         </div>
 
-        {/* MAIN SINGLE COMPACT MUSIC BUTTON — ANCHORED STRICTLY IN PLACE BESIDE THE EDUAMOAH'S */}
+        {/* MAIN SINGLE COMPACT MUSIC BUTTON — ANCHORED STRICTLY IN PLACE AT BOTTOM-RIGHT ON PC */}
         <div
           className={`p-0.5 bg-[#060e0a]/95 border border-[#F5E6BE]/40 rounded-full shadow-[0_6px_24px_rgba(0,0,0,0.85)] backdrop-blur-md transition-all duration-300 ${
             isAudioActive ? 'animate-music-gentle-float' : ''
