@@ -250,18 +250,33 @@ export const Hero: React.FC = () => {
         @keyframes heroFadeIn {
           from { opacity: 0; } to { opacity: 1; }
         }
+        @keyframes gSlideIn {
+          from { opacity: 0; transform: translateX(-24px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes aSlideIn {
+          from { opacity: 0; transform: translateX(24px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes ampFadeIn {
+          from { opacity: 0; transform: scale(0.85); }
+          to   { opacity: 1; transform: scale(1.0); }
+        }
+
         .hero-ken-burns {
           animation: kenBurns 24s ease-in-out infinite;
           transform-origin: center center;
           will-change: transform;
         }
         .hero-becoming    { animation: heroFadeUp 1.1s cubic-bezier(.25,.46,.45,.94) 0.3s both; }
-        .hero-title       { animation: heroFadeUp 1.1s cubic-bezier(.25,.46,.45,.94) 0.6s both; }
-        .hero-line-bottom { transform-origin: center center; }
-        .hero-tagline     { animation: heroFadeIn 1.2s ease-out 0.8s both; }
+        .hero-g           { animation: gSlideIn 1.2s cubic-bezier(.25,.46,.45,.94) 0.5s both; }
+        .hero-amp         { animation: ampFadeIn 1.2s cubic-bezier(.25,.46,.45,.94) 0.8s both; }
+        .hero-a           { animation: aSlideIn 1.2s cubic-bezier(.25,.46,.45,.94) 0.5s both; }
+        .hero-line-bottom { transform-origin: center center; animation: heroFadeIn 1.2s ease-out 1.0s both; }
+        .hero-tagline     { animation: heroFadeIn 1.2s ease-out 1.2s both; }
 
         @media (prefers-reduced-motion: reduce) {
-          .hero-ken-burns, .hero-becoming, .hero-title,
+          .hero-ken-burns, .hero-becoming, .hero-g, .hero-amp, .hero-a,
           .hero-line-bottom, .hero-tagline {
             animation: none !important;
             opacity: 1 !important;
@@ -293,20 +308,31 @@ export const Hero: React.FC = () => {
 
       {/* Hero Text Content — Positioned toward bottom over the dark gradient */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-16 flex flex-col items-center justify-end min-h-screen">
-        {/* Static Script "Becoming" Calligraphy — Refined font size */}
-        <span className="hero-becoming font-script text-3xl sm:text-4xl md:text-5xl lg:text-6xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent mb-1 z-10 font-normal tracking-wide drop-shadow-md leading-none">
-          Becoming
+        {/* Subtle Calligraphy Accent */}
+        <span className="hero-becoming font-serif text-xs sm:text-sm tracking-[0.35em] text-[#F5E6BE]/80 uppercase mb-2 font-light drop-shadow">
+          The Wedding of
         </span>
 
-        {/* Static Heading for "THE EDUAMOAH'S" — Reduced font size */}
-        <h1 className="hero-title font-heading text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl tracking-[0.06em] md:tracking-[0.1em] text-[#FBF7EF] font-normal uppercase text-shadow-hero mb-4 leading-none">
-          {weddingDetails.couple.coupleName}
+        {/* PRIMARY MONOGRAM G & A WITH SUBTLE ENTRANCE ANIMATION */}
+        <h1 className="flex items-center justify-center gap-3 sm:gap-6 md:gap-8 my-3 text-center">
+          <span className="hero-g font-serif text-5xl sm:text-7xl md:text-8xl lg:text-9xl tracking-[0.08em] text-[#FBF7EF] font-light uppercase text-shadow-hero drop-shadow-[0_4px_25px_rgba(0,0,0,0.8)]">
+            G
+          </span>
+          <span className="hero-amp font-script text-4xl sm:text-6xl md:text-7xl lg:text-8xl bg-gradient-to-r from-[#FFF7E3] via-[#F5E6BE] to-[#E2C875] bg-clip-text text-transparent font-normal drop-shadow-[0_0_20px_rgba(245,230,190,0.5)]">
+            &
+          </span>
+          <span className="hero-a font-serif text-5xl sm:text-7xl md:text-8xl lg:text-9xl tracking-[0.08em] text-[#FBF7EF] font-light uppercase text-shadow-hero drop-shadow-[0_4px_25px_rgba(0,0,0,0.8)]">
+            A
+          </span>
         </h1>
 
-        <div className="hero-line-bottom w-40 sm:w-56 md:w-64 h-[2px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent my-4 mx-auto rounded-full shadow-[0_0_10px_rgba(241,198,90,0.8)]" />
-        <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light mb-6 text-shadow-hero">
+        <div className="hero-line-bottom w-40 sm:w-56 md:w-64 h-[1.5px] bg-gradient-to-r from-transparent via-[#f1c65a] via-[#e2b324] to-transparent my-4 mx-auto rounded-full shadow-[0_0_10px_rgba(241,198,90,0.8)]" />
+        <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light mb-2 text-shadow-hero">
           {weddingDetails.hero.tagline}
         </p>
+        <span className="hero-tagline font-serif text-xs sm:text-sm tracking-[0.25em] text-[#F5E6BE]/80 uppercase font-light">
+          {weddingDetails.wedding.date} • {weddingDetails.wedding.address}
+        </span>
       </div>
     </section>
   );

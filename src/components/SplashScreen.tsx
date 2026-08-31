@@ -19,7 +19,7 @@ interface DustParticle {
 
 export const SplashScreen: React.FC = () => {
   // Sequence Stage:
-  // 1: ribbons-enter -> 2: approach -> 3: intertwine -> 4: heart-forming -> 5: heartbeat -> 6: atmosphere -> 7: invitation-ready
+  // 1: G appears -> 2: & appears -> 3: A appears -> 4: delicate heart draws -> 5: heartbeat -> 6: atmosphere -> 7: invitation-ready
   const [animStage, setAnimStage] = useState<number>(1);
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [isComplete, setIsComplete] = useState<boolean>(false);
@@ -28,7 +28,7 @@ export const SplashScreen: React.FC = () => {
   const rafRef = useRef<number>(0);
   const isProcessingRef = useRef<boolean>(false);
 
-  // 1. MASTER TIMELINE FOR THE 8-SCENE CINEMATIC ANIMATION
+  // 1. MASTER TIMELINE FOR THE MONOGRAM G & A ANIMATION
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.overflow = 'hidden';
@@ -39,23 +39,23 @@ export const SplashScreen: React.FC = () => {
       return;
     }
 
-    // Scene 2: Approach (1.4s)
-    const t2 = setTimeout(() => setAnimStage(2), 1400);
+    // Stage 2: & appears (1.0s)
+    const t2 = setTimeout(() => setAnimStage(2), 1000);
 
-    // Scene 3: Meeting & Intertwining (3.0s)
-    const t3 = setTimeout(() => setAnimStage(3), 3000);
+    // Stage 3: A appears (2.0s)
+    const t3 = setTimeout(() => setAnimStage(3), 2000);
 
-    // Scene 4: Forming the Heart (4.6s)
-    const t4 = setTimeout(() => setAnimStage(4), 4600);
+    // Stage 4: Delicate Heart Ring Draws (3.2s)
+    const t4 = setTimeout(() => setAnimStage(4), 3200);
 
-    // Scene 5: Heartbeat Pulse (6.2s)
-    const t5 = setTimeout(() => setAnimStage(5), 6200);
+    // Stage 5: Heartbeat Pulse (4.8s)
+    const t5 = setTimeout(() => setAnimStage(5), 4800);
 
-    // Scene 6: Golden Atmosphere & Dust (7.6s)
-    const t6 = setTimeout(() => setAnimStage(6), 7600);
+    // Stage 6: Golden Atmosphere & Glow (6.0s)
+    const t6 = setTimeout(() => setAnimStage(6), 6000);
 
-    // Scene 7: Invitation Message Reveal (8.4s)
-    const t7 = setTimeout(() => setAnimStage(7), 8400);
+    // Stage 7: Invitation Message Reveal (6.8s)
+    const t7 = setTimeout(() => setAnimStage(7), 6800);
 
     return () => {
       clearTimeout(t2);
@@ -128,28 +128,27 @@ export const SplashScreen: React.FC = () => {
     };
 
     rafRef.current = requestAnimationFrame(tick);
+
     return () => {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener('resize', resize);
     };
   }, [isComplete]);
 
-  // 3. INTENTIONAL USER TAP / CLICK HANDLER (Preserving working mobile audio!)
-  const handleSplashTap = async (e: React.MouseEvent) => {
-    if (isProcessingRef.current || isComplete) return;
+  // NATIVE ONCLICK USER GESTURE HANDLER: Starts audio SYNCHRONOUSLY inside gesture loop
+  const handleSplashTap = () => {
+    if (isProcessingRef.current || isTransitioning || isComplete) return;
     isProcessingRef.current = true;
 
-    // STEP 1: Execute playDirect() synchronously inside user click gesture event call stack
-    const playSuccess = await globalAudio.playDirect();
-    console.log('[SPLASH TAP RESULT]', playSuccess ? 'SUCCESS' : 'FAILED');
+    // Execute audio.play() SYNCHRONOUSLY on line 1 inside native onClick gesture call stack
+    globalAudio.playDirect();
 
-    // STEP 2: Start cinematic exit animation
+    // Trigger Golden Portal Exit Expansion
     setIsTransitioning(true);
-    document.body.style.overflow = '';
 
-    // STEP 3: Complete transition to main website after 1.2 seconds
     setTimeout(() => {
       setIsComplete(true);
+      document.body.style.overflow = '';
     }, 1200);
   };
 
@@ -158,43 +157,48 @@ export const SplashScreen: React.FC = () => {
   return (
     <div
       onClick={handleSplashTap}
-      className={`fixed inset-0 z-[100] bg-[#050c08] flex flex-col items-center justify-center overflow-hidden select-none cursor-pointer transition-opacity duration-1000 ${
-        isTransitioning ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-[#050c08] overflow-hidden select-none cursor-pointer transition-opacity duration-1000 ${
+        isTransitioning ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
-      aria-label="Tap to enter wedding invitation"
     >
       <style>{`
-        /* Ribbon 1 Flowing Draw (Left Journey) */
-        @keyframes ribbonLeftDraw {
+        /* Monogram Letter G Fade In from Left */
+        @keyframes monogramGFadeIn {
           0% {
-            stroke-dashoffset: 1200;
             opacity: 0;
-          }
-          20% {
-            opacity: 0.95;
+            transform: translateX(-20px);
           }
           100% {
-            stroke-dashoffset: 0;
-            opacity: 0.95;
+            opacity: 1;
+            transform: translateX(0);
           }
         }
 
-        /* Ribbon 2 Flowing Draw (Right Journey) */
-        @keyframes ribbonRightDraw {
+        /* Monogram Symbol & Fade In */
+        @keyframes monogramAmpFadeIn {
           0% {
-            stroke-dashoffset: 1200;
             opacity: 0;
-          }
-          20% {
-            opacity: 0.95;
+            transform: scale(0.8);
           }
           100% {
-            stroke-dashoffset: 0;
-            opacity: 0.95;
+            opacity: 1;
+            transform: scale(1);
           }
         }
 
-        /* Formed Golden Heart Drawing */
+        /* Monogram Letter A Fade In from Right */
+        @keyframes monogramAFadeIn {
+          0% {
+            opacity: 0;
+            transform: translateX(20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        /* Delicate Heart Line Drawing */
         @keyframes heartFormDraw {
           0% {
             stroke-dashoffset: 1000;
@@ -209,23 +213,23 @@ export const SplashScreen: React.FC = () => {
           }
         }
 
-        /* Subtle Elegant Heartbeat Pulse (Scene 5) */
+        /* Subtle Heartbeat Pulse */
         @keyframes heartDoublePulse {
           0% {
             transform: scale(1.00);
             filter: drop-shadow(0 0 8px rgba(245,230,190,0.4));
           }
           18% {
-            transform: scale(1.08);
-            filter: drop-shadow(0 0 24px rgba(245,230,190,0.85));
+            transform: scale(1.06);
+            filter: drop-shadow(0 0 20px rgba(245,230,190,0.8));
           }
           34% {
             transform: scale(0.98);
-            filter: drop-shadow(0 0 10px rgba(245,230,190,0.5));
+            filter: drop-shadow(0 0 10px rgba(245,230,190,0.45));
           }
           48% {
-            transform: scale(1.04);
-            filter: drop-shadow(0 0 18px rgba(245,230,190,0.75));
+            transform: scale(1.03);
+            filter: drop-shadow(0 0 16px rgba(245,230,190,0.7));
           }
           65% {
             transform: scale(1.00);
@@ -237,14 +241,14 @@ export const SplashScreen: React.FC = () => {
           }
         }
 
-        /* Ambient Candlelight Atmosphere Glow */
+        /* Atmosphere Glow */
         @keyframes atmosphereGlow {
           0% {
             opacity: 0.15;
             transform: scale(0.92);
           }
           50% {
-            opacity: 0.45;
+            opacity: 0.40;
             transform: scale(1.08);
           }
           100% {
@@ -285,19 +289,21 @@ export const SplashScreen: React.FC = () => {
           }
         }
 
-        .animate-ribbon-left {
-          stroke-dasharray: 1200;
-          animation: ribbonLeftDraw 3.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        .animate-monogram-g {
+          animation: monogramGFadeIn 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
-        .animate-ribbon-right {
-          stroke-dasharray: 1200;
-          animation: ribbonRightDraw 3.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        .animate-monogram-amp {
+          animation: monogramAmpFadeIn 1.0s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+
+        .animate-monogram-a {
+          animation: monogramAFadeIn 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
         .animate-heart-form {
           stroke-dasharray: 1000;
-          animation: heartFormDraw 2.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+          animation: heartFormDraw 2.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
         .animate-heartbeat {
@@ -317,8 +323,9 @@ export const SplashScreen: React.FC = () => {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .animate-ribbon-left, .animate-ribbon-right, .animate-heart-form, .animate-heartbeat, .animate-tap-float {
+          .animate-monogram-g, .animate-monogram-amp, .animate-monogram-a, .animate-heart-form, .animate-heartbeat, .animate-tap-float {
             animation: none !important;
+            opacity: 1 !important;
           }
         }
       `}</style>
@@ -330,10 +337,10 @@ export const SplashScreen: React.FC = () => {
         aria-hidden="true"
       />
 
-      {/* SCENE 6+: Subtle Warm Golden Candlelight Glow */}
+      {/* Stage 6+: Subtle Warm Golden Candlelight Glow */}
       {animStage >= 6 && (
         <div className="absolute inset-0 z-[2] pointer-events-none flex items-center justify-center">
-          <div className="animate-atmosphere w-96 h-96 rounded-full bg-[radial-gradient(circle_at_center,rgba(245,230,190,0.18)_0%,rgba(241,198,90,0.03)_50%,transparent_75%)] filter blur-3xl" />
+          <div className="animate-atmosphere w-80 h-80 rounded-full bg-[radial-gradient(circle_at_center,rgba(245,230,190,0.18)_0%,rgba(241,198,90,0.03)_50%,transparent_75%)] filter blur-3xl" />
         </div>
       )}
 
@@ -344,10 +351,10 @@ export const SplashScreen: React.FC = () => {
         </div>
       )}
 
-      {/* MAIN ANIMATION CONTAINER (SCENE 1 TO 7) */}
+      {/* MAIN ANIMATION CONTAINER (MONOGRAM G & A + INVITATION) */}
       <div className="relative z-[20] flex flex-col items-center justify-center text-center px-4 w-full max-w-xl pointer-events-none">
         
-        {/* SVG GOLDEN RIBBONS & HEART CANVAS */}
+        {/* ANIMATED MONOGRAM G & A CANVAS */}
         <div
           className={`relative flex items-center justify-center transition-all duration-700 ${
             animStage >= 5 ? 'animate-heartbeat' : ''
@@ -355,23 +362,21 @@ export const SplashScreen: React.FC = () => {
         >
           <svg
             width="320"
-            height="260"
-            viewBox="0 0 400 300"
+            height="240"
+            viewBox="0 0 320 240"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-24 h-20 sm:w-32 sm:h-28 text-[#F5E6BE] filter drop-shadow-[0_0_8px_rgba(245,230,190,0.45)]"
+            className="w-48 h-36 sm:w-60 sm:h-44 text-[#F5E6BE] filter drop-shadow-[0_0_10px_rgba(245,230,190,0.45)]"
           >
             <defs>
-              <linearGradient id="silkChampagneGrad" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#FFF9EB" stopOpacity="0.95" />
-                <stop offset="40%" stopColor="#F5E6BE" stopOpacity="0.90" />
-                <stop offset="75%" stopColor="#E2C875" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#C49E35" stopOpacity="0.80" />
+              <linearGradient id="monogramGoldGrad" x1="0" y1="0" x2="320" y2="240" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#FFF9EB" stopOpacity="0.98" />
+                <stop offset="45%" stopColor="#F5E6BE" stopOpacity="0.92" />
+                <stop offset="80%" stopColor="#E2C875" stopOpacity="0.88" />
+                <stop offset="100%" stopColor="#C49E35" stopOpacity="0.82" />
               </linearGradient>
-
-              {/* Soft Luminous Outer Edge Glow */}
               <filter id="silkGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feGaussianBlur stdDeviation="2.5" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
                   <feMergeNode in="SourceGraphic" />
@@ -379,38 +384,12 @@ export const SplashScreen: React.FC = () => {
               </filter>
             </defs>
 
-            {/* SCENE 1, 2, 3: Ribbon 1 (Left Journey Flowing Path) */}
-            {animStage < 5 && (
-              <path
-                d="M -30,180 C 70,240 130,70 190,170 C 210,205 210,130 175,110 C 145,90 130,140 160,175 C 185,205 200,240 200,265"
-                stroke="url(#silkChampagneGrad)"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                fill="none"
-                filter="url(#silkGlow)"
-                className="animate-ribbon-left"
-              />
-            )}
-
-            {/* SCENE 1, 2, 3: Ribbon 2 (Right Journey Flowing Path) */}
-            {animStage < 5 && (
-              <path
-                d="M 430,120 C 330,60 270,230 210,130 C 190,95 190,170 225,190 C 255,210 270,160 240,125 C 215,95 200,60 200,35"
-                stroke="url(#silkChampagneGrad)"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                fill="none"
-                filter="url(#silkGlow)"
-                className="animate-ribbon-right"
-              />
-            )}
-
-            {/* SCENE 4, 5, 6, 7: The Organic Fine-Line Heart Formed by the Intertwined Ribbons */}
+            {/* Stage 4+: Thin Delicate Heart Outline Drawing around Monogram */}
             {animStage >= 4 && (
               <path
-                d="M 200,265 C 200,265 80,185 80,115 C 80,60 135,50 175,85 C 190,98 200,110 200,110 C 200,110 210,98 225,85 C 265,50 320,60 320,115 C 320,185 200,265 200,265 Z"
-                stroke="url(#silkChampagneGrad)"
-                strokeWidth="2.0"
+                d="M 160,205 C 160,205 75,145 75,95 C 75,55 115,48 142,75 C 153,85 160,94 160,94 C 160,94 167,85 178,75 C 205,48 245,55 245,95 C 245,145 160,205 160,205 Z"
+                stroke="url(#monogramGoldGrad)"
+                strokeWidth="1.4"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 fill="none"
@@ -418,10 +397,56 @@ export const SplashScreen: React.FC = () => {
                 className={animStage === 4 ? 'animate-heart-form' : ''}
               />
             )}
+
+            {/* Monogram Text (G & A) */}
+            <g className="font-serif select-none">
+              {/* Letter G */}
+              <text
+                x="105"
+                y="132"
+                fontSize="54"
+                fontFamily="serif"
+                fontWeight="300"
+                fill="url(#monogramGoldGrad)"
+                textAnchor="middle"
+                className={animStage >= 1 ? 'animate-monogram-g' : 'opacity-0'}
+              >
+                G
+              </text>
+
+              {/* Symbol & */}
+              <text
+                x="160"
+                y="126"
+                fontSize="32"
+                fontFamily="serif"
+                fontStyle="italic"
+                fontWeight="300"
+                fill="#FFF7E3"
+                textAnchor="middle"
+                className={animStage >= 2 ? 'animate-monogram-amp' : 'opacity-0'}
+              >
+                &
+              </text>
+
+              {/* Letter A */}
+              <text
+                x="215"
+                y="132"
+                fontSize="54"
+                fontFamily="serif"
+                fontWeight="300"
+                fill="url(#monogramGoldGrad)"
+                textAnchor="middle"
+                className={animStage >= 3 ? 'animate-monogram-a' : 'opacity-0'}
+              >
+                A
+              </text>
+            </g>
           </svg>
         </div>
 
-        {/* SCENE 7: INVITATION MESSAGE REVEAL ("Come, let us begin." + "Tap to enter") */}
+        {/* INVITATION MESSAGE REVEAL ("Come, let us begin." + "Tap to enter") */}
         <div
           className={`mt-4 flex flex-col items-center gap-3 transition-all duration-1000 ${
             animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
