@@ -1,15 +1,31 @@
-// Centralized Single Global HTML5 Audio Engine with Mobile iOS/Android Optimization & Diagnostics
+// Centralized Single Global HTML5 Audio Engine for Wedding Website
 
-type AudioStateListener = (isPlaying: boolean, isMuted: boolean, lastError?: string) => void;
+export interface AudioDiagnosticState {
+  userAgent: string;
+  src: string;
+  currentSrc: string;
+  readyState: number;
+  networkState: number;
+  paused: boolean;
+  muted: boolean;
+  volume: number;
+  error: { code: number; message: string } | null;
+  playResult: string;
+}
+
+type AudioStateListener = (
+  isPlaying: boolean,
+  isMuted: boolean,
+  diagnostics: AudioDiagnosticState
+) => void;
 
 class GlobalAudioManager {
   private audio: HTMLAudioElement | null = null;
-  private audioCtx: AudioContext | null = null;
   private isPlaying: boolean = false;
   private isMuted: boolean = false;
-  private lastError: string | undefined = undefined;
   private listeners: Set<AudioStateListener> = new Set();
-  private targetVolume: number = 0.5; // Audible background level
+  private targetVolume: number = 0.5;
+  private playResult: string = 'NOT ATTEMPTED YET';
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -21,7 +37,7 @@ class GlobalAudioManager {
     if (this.audio) return;
 
     try {
-      // 1. Create persistent DOM audio element (DOM attachment is crucial for iOS Safari)
+      // 1. Single persistent DOM audio element attached to document body
       const audioEl = document.createElement('audio');
       audioEl.id = 'wedding-global-audio';
       audioEl.setAttribute('playsinline', 'true');
@@ -32,11 +48,9 @@ class GlobalAudioManager {
       audioEl.muted = false;
       audioEl.style.display = 'none';
 
-      // Set audio source (MP3 primary with WAV fallback)
-      const canPlayMp3 = audioEl.canPlayType('audio/mpeg');
-      audioEl.src = canPlayMp3 ? '/wedding-music.mp3' : '/wedding-music.wav';
+      // Primary source: /wedding-music.mp3
+      audioEl.src = '/wedding-music.mp3';
 
-      // Append to document body so iOS Safari treats it as an active DOM media element
       if (document.body) {
         document.body.appendChild(audioEl);
       } else {
@@ -46,98 +60,78 @@ class GlobalAudioManager {
       }
 
       this.audio = audioEl;
-      this.logDiagnostics('INIT');
     } catch (err) {
-      console.warn('Global audio init notice:', err);
+      console.warn('Audio element init notice:', err);
     }
   }
 
-  public logDiagnostics(actionName: string, error?: any) {
-    const debugData = {
-      action: actionName,
-      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'N/A',
-      readyState: this.audio?.readyState, // 0=HAVE_NOTHING, 1=HAVE_METADATA, 2=HAVE_CURRENT_DATA, 4=HAVE_ENOUGH_DATA
-      networkState: this.audio?.networkState, // 0=EMPTY, 1=IDLE, 2=LOADING, 3=NO_SOURCE
-      paused: this.audio?.paused,
-      muted: this.audio?.muted,
-      volume: this.audio?.volume,
-      currentSrc: this.audio?.currentSrc,
+  public getDiagnostics(): AudioDiagnosticState {
+    return {
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'Unknown',
+      src: this.audio?.src || '/wedding-music.mp3',
+      currentSrc: this.audio?.currentSrc || '',
+      readyState: this.audio?.readyState ?? 0,
+      networkState: this.audio?.networkState ?? 0,
+      paused: this.audio?.paused ?? true,
+      muted: this.audio?.muted ?? false,
+      volume: this.audio?.volume ?? 0.5,
       error: this.audio?.error ? { code: this.audio.error.code, message: this.audio.error.message } : null,
-      rejectionError: error ? { name: error.name, message: error.message } : null,
-      timestamp: new Date().toISOString(),
+      playResult: this.playResult,
     };
-    
-    console.log(`[AUDIO DEBUG ${actionName}]`, debugData);
-    if (typeof window !== 'undefined') {
-      (window as any).__AUDIO_DEBUG__ = debugData;
-    }
-    return debugData;
   }
 
-  public async play(): Promise<boolean> {
+  // Synchronous play call executing audio.play() on line 1 inside the user event call stack
+  public playDirect(): Promise<boolean> {
     if (!this.audio) {
       this.init();
     }
-    if (!this.audio) return false;
-
-    // A. Unlock Web Audio Context for Mobile iOS Safari & Mobile Chrome
-    if (typeof window !== 'undefined' && (window.AudioContext || (window as any).webkitAudioContext)) {
-      try {
-        if (!this.audioCtx) {
-          const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
-          this.audioCtx = new AudioCtxClass();
-        }
-        if (this.audioCtx.state === 'suspended') {
-          this.audioCtx.resume().catch(() => {});
-        }
-      } catch (err) {
-        console.warn('Web Audio Context unlock notice:', err);
-      }
+    if (!this.audio) {
+      this.playResult = 'ERROR: HTMLAudioElement not initialized';
+      this.notify();
+      return Promise.resolve(false);
     }
 
-    try {
-      this.audio.muted = false;
-      this.audio.volume = this.targetVolume;
+    // Ensure audible volume and unmuted state synchronously
+    this.audio.muted = false;
+    this.audio.volume = this.targetVolume;
 
-      // Execute synchronous HTML5 audio play directly inside user interaction handler
-      const playPromise = this.audio.play();
-      if (playPromise !== undefined) {
-        await playPromise;
-      }
+    // Call audio.play() SYNCHRONOUSLY inside user gesture event call stack
+    const playPromise = this.audio.play();
 
-      // Verify actual HTML5 audio element playback state
-      if (!this.audio.paused && this.audio.currentTime >= 0) {
-        this.isPlaying = true;
-        this.isMuted = false;
-        this.lastError = undefined;
-        this.logDiagnostics('PLAY_SUCCESS');
+    if (playPromise === undefined) {
+      this.isPlaying = !this.audio.paused;
+      this.playResult = this.isPlaying ? 'MUSIC PLAYBACK SUCCESS' : 'PLAY RETURNED UNDEFINED';
+      this.notify();
+      return Promise.resolve(this.isPlaying);
+    }
+
+    return playPromise
+      .then(() => {
+        this.isPlaying = !this.audio?.paused;
+        this.playResult = 'MUSIC PLAYBACK SUCCESS';
         this.notify();
         return true;
-      }
-
-      this.isPlaying = false;
-      this.logDiagnostics('PLAY_CHECK_FAILED');
-      this.notify();
-      return false;
-    } catch (err: any) {
-      const errorMsg = err?.name ? `${err.name}: ${err.message}` : 'Playback rejected';
-      this.lastError = errorMsg;
-      this.isPlaying = false;
-      this.logDiagnostics('PLAY_REJECTED', err);
-      this.notify();
-      return false;
-    }
+      })
+      .catch((err: any) => {
+        const errName = err?.name || 'UnknownError';
+        const errMsg = err?.message || String(err);
+        this.isPlaying = false;
+        this.playResult = `PLAY REJECTED -> ${errName}: ${errMsg}`;
+        console.error('[AUDIO PLAY REJECTED]', errName, errMsg);
+        this.notify();
+        return false;
+      });
   }
 
-  public async attemptPlay(): Promise<boolean> {
-    return await this.play();
+  public async play(): Promise<boolean> {
+    return await this.playDirect();
   }
 
   public pause() {
     if (!this.audio) return;
     this.audio.pause();
     this.isPlaying = false;
-    this.logDiagnostics('PAUSE');
+    this.playResult = 'PAUSED';
     this.notify();
   }
 
@@ -145,7 +139,7 @@ class GlobalAudioManager {
     if (this.isPlaying && this.audio && !this.audio.paused) {
       this.pause();
     } else {
-      this.play();
+      this.playDirect();
     }
   }
 
@@ -153,21 +147,20 @@ class GlobalAudioManager {
     if (!this.audio) return;
     this.isMuted = !this.isMuted;
     this.audio.muted = this.isMuted;
-    this.logDiagnostics('TOGGLE_MUTE');
     this.notify();
   }
 
   public subscribe(listener: AudioStateListener) {
     this.listeners.add(listener);
-    // Emit current state immediately to new subscriber
-    listener(this.isPlaying, this.isMuted, this.lastError);
+    listener(this.isPlaying, this.isMuted, this.getDiagnostics());
     return () => {
       this.listeners.delete(listener);
     };
   }
 
   private notify() {
-    this.listeners.forEach((listener) => listener(this.isPlaying, this.isMuted, this.lastError));
+    const diag = this.getDiagnostics();
+    this.listeners.forEach((listener) => listener(this.isPlaying, this.isMuted, diag));
   }
 
   public getIsPlaying() {
@@ -176,10 +169,6 @@ class GlobalAudioManager {
 
   public getIsMuted() {
     return this.isMuted;
-  }
-
-  public getLastError() {
-    return this.lastError;
   }
 }
 

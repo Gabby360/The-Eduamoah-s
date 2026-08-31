@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { globalAudio } from '../utils/audioManager';
+import { globalAudio, AudioDiagnosticState } from '../utils/audioManager';
 
 /* ─────────────────────────────────────────────
    ATMOSPHERIC CHAMPAGNE DUST PARTICLES
@@ -21,14 +21,24 @@ export const SplashScreen: React.FC = () => {
   // Sequence Stage:
   // 1: initial -> 2: golden-glow -> 3: merging-lights -> 4: romantic-symbol -> 5: invitation-ready -> 6: transitioning -> complete
   const [animStage, setAnimStage] = useState<number>(1);
+  const [showInstruction, setShowInstruction] = useState<boolean>(false);
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [isComplete, setIsComplete] = useState<boolean>(false);
+  const [diag, setDiag] = useState<AudioDiagnosticState>(globalAudio.getDiagnostics());
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
-  const hasTappedRef = useRef<boolean>(false);
+  const isProcessingRef = useRef<boolean>(false);
 
-  // 1. MASTER TIMELINE FOR THE 6-STAGE CINEMATIC ANIMATION
+  // Subscribe to audio state and diagnostics
+  useEffect(() => {
+    const unsubscribe = globalAudio.subscribe((_playing, _muted, diagnostics) => {
+      setDiag(diagnostics);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // 1. MASTER TIMELINE FOR CINEMATIC SEQUENCE
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.overflow = 'hidden';
@@ -36,6 +46,7 @@ export const SplashScreen: React.FC = () => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
       setAnimStage(5);
+      setShowInstruction(true);
     }
 
     // Stage 2: Golden Light Candlelight Glow (1.0s)
@@ -48,7 +59,10 @@ export const SplashScreen: React.FC = () => {
     const t4 = setTimeout(() => setAnimStage(4), 4600);
 
     // Stage 5: Invitation Message ("Come, let us begin." + "Tap to enter") (6.2s)
-    const t5 = setTimeout(() => setAnimStage(5), 6200);
+    const t5 = setTimeout(() => {
+      setAnimStage(5);
+      setShowInstruction(true);
+    }, 6200);
 
     return () => {
       clearTimeout(t2);
@@ -125,34 +139,34 @@ export const SplashScreen: React.FC = () => {
     };
   }, [isComplete]);
 
-  // 3. INTENTIONAL USER POINTER / TOUCH HANDLER
-  // SEQUENCE: USER TAPS ENTER -> DIRECTLY CALL AUDIO PLAY -> CONFIRM PLAYBACK -> START SPLASH EXIT ANIMATION -> REVEAL WEBSITE
-  const handleSplashInteraction = async (e: React.SyntheticEvent) => {
-    if (hasTappedRef.current || isComplete) return;
-    hasTappedRef.current = true;
+  // 3. SINGLE CLEAN INTERACTION PATH (onPointerDown ONLY)
+  // SEQUENCE: TAP ENTER -> DIRECTLY CALL AUDIO PLAY -> CONFIRM RESULT -> START SPLASH EXIT -> REVEAL WEBSITE
+  const handleSplashTap = async (e: React.PointerEvent) => {
+    e.preventDefault();
+    if (isProcessingRef.current || isComplete) return;
+    isProcessingRef.current = true;
 
-    // STEP 1: DIRECTLY CALL AUDIO PLAY FIRST inside this exact touch/pointer event handler
-    const playSuccess = await globalAudio.play();
+    // STEP 1: Execute playDirect() synchronously inside user pointer gesture call stack
+    const playSuccess = await globalAudio.playDirect();
+    setDiag(globalAudio.getDiagnostics());
 
-    // STEP 2: CONFIRM PLAYBACK IN CONSOLE / LOGS
-    console.log('[SPLASH INTERACTION] Mobile/Desktop Audio Play result:', playSuccess);
+    console.log('[SPLASH INTERACTION RESULT]', playSuccess ? 'SUCCESS' : 'FAILED', globalAudio.getDiagnostics());
 
-    // STEP 3: START SPLASH EXIT ANIMATION
+    // STEP 2: Start cinematic exit animation
     setIsTransitioning(true);
     document.body.style.overflow = '';
 
-    // STEP 4: REVEAL WEBSITE
+    // STEP 3: Complete transition to website after 1.2 seconds
     setTimeout(() => {
       setIsComplete(true);
-    }, 1300);
+    }, 1200);
   };
 
   if (isComplete) return null;
 
   return (
     <div
-      onPointerDown={handleSplashInteraction}
-      onClick={handleSplashInteraction}
+      onPointerDown={handleSplashTap}
       className={`fixed inset-0 z-[100] bg-[#060e0a] flex items-center justify-center overflow-hidden select-none cursor-pointer transition-opacity duration-1000 ${
         isTransitioning ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
       }`}
@@ -354,6 +368,34 @@ export const SplashScreen: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* TEMPORARY VISIBLE AUDIO DIAGNOSTICS OVERLAY PANEL */}
+      <div
+        className="absolute bottom-4 left-4 right-4 z-[40] pointer-events-none flex justify-center text-left"
+        aria-hidden="true"
+      >
+        <div className="bg-[#050c08]/90 border border-[#F5E6BE]/30 rounded-lg p-3 max-w-lg w-full text-[10px] font-mono text-[#F5E6BE]/90 shadow-2xl backdrop-blur-md space-y-1">
+          <div className="font-bold border-b border-[#F5E6BE]/20 pb-1 text-[#F5E6BE] flex justify-between">
+            <span>AUDIO DIAGNOSTICS</span>
+            <span className={diag.playResult.includes('SUCCESS') ? 'text-green-400' : 'text-yellow-400'}>
+              {diag.playResult}
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 opacity-80 pt-0.5">
+            <div><span className="text-gray-400">Src:</span> {diag.src.split('/').pop()}</div>
+            <div><span className="text-gray-400">readyState:</span> {diag.readyState} (4=ENOUGH)</div>
+            <div><span className="text-gray-400">networkState:</span> {diag.networkState} (1=IDLE)</div>
+            <div><span className="text-gray-400">paused:</span> {String(diag.paused)}</div>
+            <div><span className="text-gray-400">muted:</span> {String(diag.muted)}</div>
+            <div><span className="text-gray-400">volume:</span> {diag.volume}</div>
+          </div>
+          {diag.error && (
+            <div className="text-red-400 font-semibold pt-0.5 border-t border-red-500/20">
+              Audio Error Code {diag.error.code}: {diag.error.message}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

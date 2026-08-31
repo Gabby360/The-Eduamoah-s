@@ -9,10 +9,10 @@ export const MusicPlayer: React.FC = () => {
 
   useEffect(() => {
     // Subscribe to single global audio instance state
-    const unsubscribe = globalAudio.subscribe((playing, muted, lastError) => {
+    const unsubscribe = globalAudio.subscribe((playing, muted, diagnostics) => {
       setIsPlaying(playing);
       setIsMuted(muted);
-      setErrorMsg(lastError);
+      setErrorMsg(diagnostics.playResult.includes('REJECTED') ? diagnostics.playResult : undefined);
     });
 
     return () => {
