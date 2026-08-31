@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { Volume2, VolumeX, Music, Play, Pause } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { Music, Play, Pause, VolumeX } from 'lucide-react';
 import { globalAudio } from '../utils/audioManager';
 
 export const MusicPlayer: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Subscribe to single global audio instance state
-    const unsubscribe = globalAudio.subscribe((playing, muted, diagnostics) => {
+    const unsubscribe = globalAudio.subscribe((playing, muted) => {
       setIsPlaying(playing);
       setIsMuted(muted);
-      setErrorMsg(diagnostics.playResult.includes('REJECTED') ? diagnostics.playResult : undefined);
     });
 
     return () => {
@@ -20,74 +20,92 @@ export const MusicPlayer: React.FC = () => {
     };
   }, []);
 
-  const togglePlay = (e: React.MouseEvent) => {
+  // Click/touch outside handler to close panel smoothly without pausing music
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsPanelOpen(false);
+      }
+    };
+
+    if (isPanelOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isPanelOpen]);
+
+  const handleTogglePanel = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsPanelOpen((prev) => !prev);
+  };
+
+  const handlePlayPause = (e: React.MouseEvent) => {
     e.stopPropagation();
     globalAudio.togglePlay();
   };
 
-  const toggleMute = (e: React.MouseEvent) => {
+  const handleTurnOff = (e: React.MouseEvent) => {
     e.stopPropagation();
-    globalAudio.toggleMute();
+    globalAudio.pause();
+    setIsPanelOpen(false);
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex items-center gap-2">
-      {/* Sound Wave Equalizer + Control Pill */}
+    <div ref={containerRef} className="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+      {/* ── EXPANDED MINIMAL LUXURY CONTROL PANEL (Pop-over) ── */}
       <div
-        onClick={togglePlay}
-        className="group cursor-pointer flex items-center gap-3 bg-[#11221c] border border-[#f1c65a]/40 hover:border-[#f1c65a] text-[#FBF7EF] px-4 py-2.5 rounded-full shadow-2xl transition-all duration-300 hover:scale-105"
-        title={isPlaying ? "Pause Wedding Music" : errorMsg ? `Playback Notice: ${errorMsg}` : "Play Wedding Music"}
-        aria-label="Toggle Wedding Music"
+        className={`mb-3 flex items-center gap-1.5 p-1.5 bg-[#060e0a]/95 border border-[#F5E6BE]/30 rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.8)] backdrop-blur-md transition-all duration-300 transform origin-bottom-right ${
+          isPanelOpen
+            ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
+            : 'opacity-0 scale-90 translate-y-2 pointer-events-none'
+        }`}
       >
-        {/* Animated Music Disc Icon */}
-        <div className="relative flex items-center justify-center text-[#f1c65a]">
-          <Music
-            size={18}
-            className={isPlaying && !isMuted ? 'animate-spin' : ''}
-            style={{ animationDuration: '4s' }}
-          />
-        </div>
-
-        {/* Status & Label */}
-        <div className="hidden sm:flex flex-col text-left">
-          <span className="text-[10px] tracking-[0.2em] text-[#f1c65a] uppercase font-mono leading-none mb-0.5">
-            {isPlaying && !isMuted ? 'Now Playing' : errorMsg ? 'Tap to Play' : 'Background Music'}
-          </span>
-          <span className="text-xs font-heading tracking-wide text-[#FBF7EF] leading-none">
-            Wedding Music
-          </span>
-        </div>
-
-        {/* Animated Sound Wave Equalizer Bars when Playing */}
-        {isPlaying && !isMuted && (
-          <div className="flex items-end gap-0.5 h-3.5 px-1">
-            <span className="w-0.5 bg-[#f1c65a] rounded-full animate-[bounce_0.8s_ease-in-out_infinite]" />
-            <span className="w-0.5 bg-[#f1c65a] rounded-full animate-[bounce_1.2s_ease-in-out_infinite]" />
-            <span className="w-0.5 bg-[#f1c65a] rounded-full animate-[bounce_0.6s_ease-in-out_infinite]" />
-            <span className="w-0.5 bg-[#f1c65a] rounded-full animate-[bounce_1.0s_ease-in-out_infinite]" />
-          </div>
-        )}
-
-        {/* Play/Pause Icon Button */}
+        {/* Play / Pause Toggle Button */}
         <button
-          className="p-1 rounded-full text-[#f1c65a] hover:text-[#FFF] transition-colors focus:outline-none"
-          aria-label={isPlaying ? "Pause" : "Play"}
+          onClick={handlePlayPause}
+          className="flex items-center justify-center w-9 h-9 rounded-full bg-[#11221c] border border-[#F5E6BE]/40 hover:border-[#F5E6BE] text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none"
+          title={isPlaying && !isMuted ? 'Pause Music' : 'Play Music'}
+          aria-label={isPlaying && !isMuted ? 'Pause Music' : 'Play Music'}
         >
-          {isPlaying && !isMuted ? <Pause size={16} /> : <Play size={16} className="ml-0.5" />}
+          {isPlaying && !isMuted ? <Pause size={15} /> : <Play size={15} className="ml-0.5" />}
+        </button>
+
+        {/* Turn Music Off Button */}
+        <button
+          onClick={handleTurnOff}
+          className="flex items-center justify-center w-9 h-9 rounded-full bg-[#11221c] border border-[#F5E6BE]/40 hover:border-[#F5E6BE] text-[#F5E6BE]/80 hover:text-[#FFF] hover:scale-105 transition-all duration-200 focus:outline-none"
+          title="Turn Music Off"
+          aria-label="Turn Music Off"
+        >
+          <VolumeX size={15} />
         </button>
       </div>
 
-      {/* Mute/Unmute Quick Toggle Button */}
-      {isPlaying && (
-        <button
-          onClick={toggleMute}
-          className="p-2.5 bg-[#11221c] border border-[#f1c65a]/40 hover:border-[#f1c65a] text-[#f1c65a] hover:text-[#FFF] rounded-full shadow-2xl transition-all duration-300 hover:scale-105 focus:outline-none"
-          title={isMuted ? "Unmute Sound" : "Mute Sound"}
-          aria-label="Toggle Mute"
-        >
-          {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-        </button>
-      )}
+      {/* ── SINGLE FLOATING MINIMAL MUSIC ICON BUTTON ── */}
+      <button
+        onClick={handleTogglePanel}
+        className="relative flex items-center justify-center w-11 h-11 rounded-full bg-[#060e0a]/90 border border-[#F5E6BE]/40 hover:border-[#F5E6BE] text-[#F5E6BE] shadow-[0_8px_25px_rgba(0,0,0,0.7)] backdrop-blur-md transition-all duration-300 hover:scale-105 focus:outline-none group"
+        title="Music Controls"
+        aria-label="Music Controls"
+      >
+        {/* Subtle Animated Gold Pulse Halo when Music is Playing */}
+        {isPlaying && !isMuted && (
+          <span className="absolute inset-0 rounded-full border border-[#F5E6BE]/40 animate-ping opacity-30 pointer-events-none" />
+        )}
+
+        {/* Floating Minimal Icon */}
+        <Music
+          size={18}
+          className={`transition-all duration-500 ${
+            isPlaying && !isMuted ? 'text-[#F5E6BE] animate-spin' : 'text-[#F5E6BE]/60'
+          }`}
+          style={isPlaying && !isMuted ? { animationDuration: '6s' } : {}}
+        />
+      </button>
     </div>
   );
 };
