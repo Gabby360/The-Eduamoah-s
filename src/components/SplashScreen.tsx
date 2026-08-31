@@ -228,7 +228,7 @@ export const SplashScreen: React.FC = () => {
     <div
       onClick={handleSplashTap}
       onTouchEnd={handleSplashTap}
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-[#050c08] overflow-hidden select-none cursor-pointer transition-opacity duration-1000 ${
+      className={`fixed inset-0 z-[100] flex items-center justify-center bg-[#050c08] overflow-hidden select-none cursor-pointer transition-opacity duration-1000 ${
         isTransitioning ? 'pointer-events-none opacity-0 transition-opacity duration-1900' : 'opacity-100'
       }`}
     >
@@ -401,7 +401,7 @@ export const SplashScreen: React.FC = () => {
 
       {/* EXPANDING GOLDEN HEART REVEAL OUTLINE OVERLAY */}
       {isTransitioning && (
-        <div className="fixed inset-0 z-[60] pointer-events-none flex items-center justify-center">
+        <div className="fixed inset-0 z-[110] pointer-events-none flex items-center justify-center">
           <svg
             width="320"
             height="300"
