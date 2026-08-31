@@ -23,6 +23,7 @@ class GlobalAudioManager {
   private audio: HTMLAudioElement | null = null;
   private isPlaying: boolean = false;
   private isMuted: boolean = false;
+  private savedVolume: number = 0.5;
   private listeners: Set<AudioStateListener> = new Set();
   private targetVolume: number = 0.5;
   private playResult: string = 'NOT ATTEMPTED YET';
@@ -59,6 +60,13 @@ class GlobalAudioManager {
         });
       }
 
+      // Sync state on native HTML5 audio events
+      audioEl.addEventListener('volumechange', () => this.syncState());
+      audioEl.addEventListener('play', () => this.syncState());
+      audioEl.addEventListener('pause', () => this.syncState());
+      audioEl.addEventListener('ended', () => this.syncState());
+      audioEl.addEventListener('error', () => this.syncState());
+
       // Explicitly load buffer immediately so readyState warms up before user click
       audioEl.load();
 
@@ -66,6 +74,13 @@ class GlobalAudioManager {
     } catch (err) {
       console.warn('Audio element init notice:', err);
     }
+  }
+
+  private syncState() {
+    if (!this.audio) return;
+    this.isPlaying = !this.audio.paused && this.audio.currentTime >= 0;
+    this.isMuted = this.audio.muted || this.audio.volume === 0;
+    this.notify();
   }
 
   public getDiagnostics(): AudioDiagnosticState {
@@ -94,15 +109,15 @@ class GlobalAudioManager {
       return Promise.resolve(false);
     }
 
-    // Ensure audible volume and unmuted state synchronously
+    // Ensure audible volume and unmuted state synchronously when starting/resuming
     this.audio.muted = false;
-    this.audio.volume = this.targetVolume;
+    this.audio.volume = this.savedVolume || this.targetVolume;
 
     // Call audio.play() SYNCHRONOUSLY inside user gesture click event call stack
     const playPromise = this.audio.play();
 
     if (playPromise === undefined) {
-      this.isPlaying = !this.audio.paused;
+      this.syncState();
       this.playResult = this.isPlaying ? 'MUSIC PLAYBACK SUCCESS' : 'PLAY RETURNED UNDEFINED';
       this.notify();
       return Promise.resolve(this.isPlaying);
@@ -110,18 +125,16 @@ class GlobalAudioManager {
 
     return playPromise
       .then(() => {
-        this.isPlaying = !this.audio?.paused;
+        this.syncState();
         this.playResult = 'MUSIC PLAYBACK SUCCESS';
-        this.notify();
         return true;
       })
       .catch((err: any) => {
         const errName = err?.name || 'UnknownError';
         const errMsg = err?.message || String(err);
-        this.isPlaying = false;
+        this.syncState();
         this.playResult = `PLAY REJECTED -> ${errName}: ${errMsg}`;
         console.error('[MOBILE AUDIO PLAY REJECTED]', errName, errMsg);
-        this.notify();
         return false;
       });
   }
@@ -133,9 +146,7 @@ class GlobalAudioManager {
   public pause() {
     if (!this.audio) return;
     this.audio.pause();
-    this.isPlaying = false;
-    this.playResult = 'PAUSED';
-    this.notify();
+    this.syncState();
   }
 
   public togglePlay() {
@@ -146,11 +157,29 @@ class GlobalAudioManager {
     }
   }
 
+  // Pure Mute / Unmute Toggle — Keeps audio playing in background without resetting currentTime or pausing
   public toggleMute() {
     if (!this.audio) return;
-    this.isMuted = !this.isMuted;
-    this.audio.muted = this.isMuted;
-    this.notify();
+    if (this.audio.muted || this.audio.volume === 0) {
+      this.audio.muted = false;
+      this.audio.volume = this.savedVolume || this.targetVolume;
+    } else {
+      this.savedVolume = this.audio.volume || this.targetVolume;
+      this.audio.muted = true;
+    }
+    this.syncState();
+  }
+
+  public setMuted(muted: boolean) {
+    if (!this.audio) return;
+    if (muted) {
+      if (this.audio.volume > 0) this.savedVolume = this.audio.volume;
+      this.audio.muted = true;
+    } else {
+      this.audio.muted = false;
+      this.audio.volume = this.savedVolume || this.targetVolume;
+    }
+    this.syncState();
   }
 
   public subscribe(listener: AudioStateListener) {
