@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { globalAudio } from '../utils/audioManager';
 
 /* ─────────────────────────────────────────────
-   ATMOSPHERIC & SPARKLING DUST PARTICLES
+   ATMOSPHERIC SPARKLING DUST & DELICATE BUTTERFLIES
 ───────────────────────────────────────────── */
 const rand = (min: number, max: number) => Math.random() * (max - min) + min;
 
@@ -27,6 +27,22 @@ interface SparkleParticle {
   maxAlpha: number;
   pulseSpeed: number;
   color: string;
+}
+
+interface ButterflyParticle {
+  x: number;
+  y: number;
+  size: number;
+  vx: number;
+  vy: number;
+  angle: number;
+  wingAngle: number;
+  wingSpeed: number;
+  alpha: number;
+  maxAlpha: number;
+  color: string;
+  wobbleSpeed: number;
+  wobbleAmp: number;
 }
 
 export const SplashScreen: React.FC = () => {
@@ -80,7 +96,7 @@ export const SplashScreen: React.FC = () => {
     };
   }, []);
 
-  // 2. MAGICAL SPARKLING DUST & ATMOSPHERIC DUST PARTICLES
+  // 2. MAGICAL SPARKLING DUST & ROMANTIC FLOATING BUTTERFLIES
   useEffect(() => {
     if (isComplete) return;
 
@@ -97,41 +113,97 @@ export const SplashScreen: React.FC = () => {
     window.addEventListener('resize', resize, { passive: true });
 
     const isMobile = window.innerWidth < 768;
-    const dustCount = isMobile ? 12 : 24;
-    const sparkleCount = isMobile ? 25 : 45;
+    const dustCount = isMobile ? 30 : 65;
+    const sparkleCount = isMobile ? 45 : 90;
+    const butterflyCount = isMobile ? 3 : 6;
 
     // Ambient background dust
     const dust: DustParticle[] = Array.from({ length: dustCount }, () => ({
       x: rand(0, window.innerWidth),
       y: rand(0, window.innerHeight),
-      r: rand(0.6, 1.5),
-      vx: rand(-0.03, 0.03),
-      vy: rand(-0.07, -0.02),
-      alpha: rand(0.04, 0.16),
+      r: rand(0.6, 1.6),
+      vx: rand(-0.04, 0.04),
+      vy: rand(-0.08, -0.02),
+      alpha: rand(0.04, 0.18),
       dir: Math.random() > 0.5 ? 1 : -1,
-      speed: rand(0.001, 0.0025),
+      speed: rand(0.001, 0.003),
     }));
 
-    // Magical sparkling dust focused around & slightly above the "Tap to enter" area
-    const colors = ['#FFF9EB', '#F5E6BE', '#F1C65A', '#E2C875'];
+    // Rich sparkling dust focused around G & A monogram, rings, and open surrounding space
+    const goldColors = ['#FFF9EB', '#F5E6BE', '#F1C65A', '#E2C875', '#D4B04C'];
     const sparkles: SparkleParticle[] = Array.from({ length: sparkleCount }, () => {
       const centerX = window.innerWidth / 2;
-      const tapZoneY = window.innerHeight * 0.68;
+      const centerY = window.innerHeight / 2;
+      // 60% clustered near central monogram/rings, 40% naturally scattered across splash space
+      const isClustered = Math.random() < 0.6;
       return {
-        x: rand(centerX - 180, centerX + 180),
-        y: rand(tapZoneY - 120, tapZoneY + 60),
-        r: rand(0.5, 1.8),
-        vx: rand(-0.08, 0.08),
-        vy: rand(-0.16, -0.03),
-        alpha: rand(0.05, 0.4),
-        maxAlpha: rand(0.4, 0.85),
-        pulseSpeed: rand(0.008, 0.025),
-        color: colors[Math.floor(Math.random() * colors.length)],
+        x: isClustered ? rand(centerX - 240, centerX + 240) : rand(0, window.innerWidth),
+        y: isClustered ? rand(centerY - 220, centerY + 220) : rand(0, window.innerHeight),
+        r: rand(0.5, 2.0),
+        vx: rand(-0.1, 0.1),
+        vy: rand(-0.18, -0.03),
+        alpha: rand(0.05, 0.45),
+        maxAlpha: rand(0.45, 0.9),
+        pulseSpeed: rand(0.008, 0.028),
+        color: goldColors[Math.floor(Math.random() * goldColors.length)],
+      };
+    });
+
+    // Delicate Romantic Butterflies
+    const butterflies: ButterflyParticle[] = Array.from({ length: butterflyCount }, () => {
+      return {
+        x: rand(50, window.innerWidth - 50),
+        y: rand(window.innerHeight * 0.2, window.innerHeight * 0.85),
+        size: rand(7, 12),
+        vx: rand(-0.25, 0.25),
+        vy: rand(-0.4, -0.15),
+        angle: rand(-0.3, 0.3),
+        wingAngle: rand(0, Math.PI * 2),
+        wingSpeed: rand(0.08, 0.16),
+        alpha: rand(0.1, 0.5),
+        maxAlpha: rand(0.45, 0.75),
+        color: goldColors[Math.floor(Math.random() * goldColors.length)],
+        wobbleSpeed: rand(0.002, 0.006),
+        wobbleAmp: rand(0.3, 0.8),
       };
     });
 
     let lastFrame = 0;
     const FRAME_INTERVAL = 1000 / 30;
+
+    const drawButterfly = (c: CanvasRenderingContext2D, b: ButterflyParticle) => {
+      c.save();
+      c.translate(b.x, b.y);
+      c.rotate(b.angle);
+      c.globalAlpha = Math.max(0.02, Math.min(b.alpha, b.maxAlpha));
+      c.fillStyle = b.color;
+      c.shadowColor = '#F5E6BE';
+      c.shadowBlur = b.size * 1.4;
+
+      const wingScale = Math.sin(b.wingAngle); // Flapping wing width scale (-1 to 1)
+      const s = b.size;
+      const absWing = Math.max(0.15, Math.abs(wingScale));
+
+      // Left Wings
+      c.beginPath();
+      c.ellipse(-s * 0.45 * absWing, -s * 0.35, s * 0.65 * absWing, s * 0.45, -0.4, 0, Math.PI * 2);
+      c.ellipse(-s * 0.35 * absWing, s * 0.25, s * 0.45 * absWing, s * 0.35, 0.4, 0, Math.PI * 2);
+      c.fill();
+
+      // Right Wings
+      c.beginPath();
+      c.ellipse(s * 0.45 * absWing, -s * 0.35, s * 0.65 * absWing, s * 0.45, 0.4, 0, Math.PI * 2);
+      c.ellipse(s * 0.35 * absWing, s * 0.25, s * 0.45 * absWing, s * 0.35, -0.4, 0, Math.PI * 2);
+      c.fill();
+
+      // Thin Delicate Body Accent
+      c.beginPath();
+      c.ellipse(0, 0, s * 0.08, s * 0.45, 0, 0, Math.PI * 2);
+      c.fillStyle = '#FFF9EB';
+      c.fill();
+
+      c.restore();
+    };
 
     const tick = (now: number) => {
       rafRef.current = requestAnimationFrame(tick);
@@ -140,8 +212,6 @@ export const SplashScreen: React.FC = () => {
 
       const W = canvas.width;
       const H = canvas.height;
-      const centerX = W / 2;
-      const tapZoneY = H * 0.68;
       ctx.clearRect(0, 0, W, H);
 
       /* 1. Ambient Background Dust */
@@ -149,7 +219,7 @@ export const SplashScreen: React.FC = () => {
         p.x += p.vx;
         p.y += p.vy;
         p.alpha += p.dir * p.speed;
-        if (p.alpha > 0.16 || p.alpha < 0.03) p.dir *= -1;
+        if (p.alpha > 0.18 || p.alpha < 0.03) p.dir *= -1;
         if (p.x < 0) p.x = W;
         if (p.x > W) p.x = 0;
         if (p.y < 0) {
@@ -162,22 +232,17 @@ export const SplashScreen: React.FC = () => {
         ctx.fill();
       });
 
-      /* 2. Magical Sparkling Dust around "Tap to enter" Callout Area */
+      /* 2. Magical Sparkling Dust Particles */
       sparkles.forEach((s) => {
         s.x += s.vx;
         s.y += s.vy;
-        s.alpha += Math.sin(now * s.pulseSpeed) * 0.02;
+        s.alpha += Math.sin(now * s.pulseSpeed) * 0.025;
 
-        // Reset particle softly when floating out of the callout zone
-        if (
-          s.y < tapZoneY - 140 ||
-          s.x < centerX - 240 ||
-          s.x > centerX + 240 ||
-          s.alpha < 0.02
-        ) {
-          s.x = rand(centerX - 170, centerX + 170);
-          s.y = rand(tapZoneY + 10, tapZoneY + 60);
-          s.alpha = rand(0.05, 0.35);
+        // Reset particle softly when floating past edges
+        if (s.y < 0 || s.x < -20 || s.x > W + 20 || s.alpha < 0.02) {
+          s.x = rand(50, W - 50);
+          s.y = H + rand(10, 40);
+          s.alpha = rand(0.05, 0.4);
         }
 
         const clampedAlpha = Math.max(0.04, Math.min(s.alpha, s.maxAlpha));
@@ -191,6 +256,24 @@ export const SplashScreen: React.FC = () => {
         ctx.shadowBlur = s.r * 3;
         ctx.fill();
         ctx.restore();
+      });
+
+      /* 3. Delicate Floating Butterflies */
+      butterflies.forEach((b) => {
+        b.x += b.vx + Math.sin(now * b.wobbleSpeed) * b.wobbleAmp;
+        b.y += b.vy;
+        b.wingAngle += b.wingSpeed;
+        b.angle = Math.sin(now * b.wobbleSpeed * 0.5) * 0.2;
+        b.alpha += Math.sin(now * 0.0015) * 0.005;
+
+        // Reset butterfly when floating above top viewport
+        if (b.y < -30 || b.x < -30 || b.x > W + 30) {
+          b.x = rand(40, W - 40);
+          b.y = H + rand(20, 80);
+          b.alpha = rand(0.1, 0.4);
+        }
+
+        drawButterfly(ctx, b);
       });
     };
 
@@ -422,7 +505,7 @@ export const SplashScreen: React.FC = () => {
         </div>
       )}
 
-      {/* Sparse Atmospheric Dust & Sparkling Dust Particles */}
+      {/* Atmospheric Sparkling Dust Particles & Floating Butterflies Canvas */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 z-[1] w-full h-full pointer-events-none"
