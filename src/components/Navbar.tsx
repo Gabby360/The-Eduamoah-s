@@ -83,18 +83,13 @@ export const Navbar: React.FC = () => {
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-          {/* Monogram Logo & Beside-Logo Music Control */}
-          <div className="flex items-center gap-3 sm:gap-4 z-50 relative">
-            <a
-              href="#"
-              className="font-script text-2xl md:text-3xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent hover:opacity-90 transition-opacity tracking-wide relative z-50"
-            >
-              {weddingDetails.couple.coupleName}
-            </a>
-
-            {/* Music Control Bar Beside "THE EDUAMOAH'S" */}
-            <MusicPlayer />
-          </div>
+          {/* Monogram Logo */}
+          <a
+            href="#"
+            className="font-script text-2xl md:text-3xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent hover:opacity-90 transition-opacity tracking-wide z-50 relative"
+          >
+            {weddingDetails.couple.coupleName}
+          </a>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">

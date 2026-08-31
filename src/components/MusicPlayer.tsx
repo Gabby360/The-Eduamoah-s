@@ -68,7 +68,7 @@ export const MusicPlayer: React.FC = () => {
   };
 
   return (
-    <div ref={containerRef} className="relative select-none z-50">
+    <div ref={containerRef} className="relative inline-flex items-center select-none z-20">
       {/* SINGLE UNIFIED FLOATING LUXURY MUSIC BAR */}
       <div className="flex items-center p-1 bg-[#060e0a]/95 border border-[#F5E6BE]/40 rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.85)] backdrop-blur-md transition-all duration-300">
         

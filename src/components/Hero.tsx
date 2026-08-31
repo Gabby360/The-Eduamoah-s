@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { weddingDetails } from '../mocks/weddingData';
+import { MusicPlayer } from './MusicPlayer';
 
 /* ─────────────────────────────────────────────
    HELPERS
@@ -298,10 +299,15 @@ export const Hero: React.FC = () => {
           Becoming
         </span>
 
-        {/* Static Heading for "THE EDUAMOAH'S" — Reduced font size */}
-        <h1 className="hero-title font-heading text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl tracking-[0.06em] md:tracking-[0.1em] text-[#FBF7EF] font-normal uppercase text-shadow-hero mb-4 leading-none">
-          {weddingDetails.couple.coupleName}
-        </h1>
+        {/* Heading for "THE EDUAMOAH'S" + Beside-Text Music Icon Container */}
+        <div className="flex items-center justify-center gap-3 sm:gap-4.5 mb-4 z-10 relative flex-wrap sm:flex-nowrap">
+          <h1 className="hero-title font-heading text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl tracking-[0.06em] md:tracking-[0.1em] text-[#FBF7EF] font-normal uppercase text-shadow-hero leading-none">
+            {weddingDetails.couple.coupleName}
+          </h1>
+
+          {/* Integrated Music Control Bar Beside "THE EDUAMOAH'S" in Hero */}
+          <MusicPlayer />
+        </div>
 
         <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light mb-6 text-shadow-hero">
           {weddingDetails.hero.tagline}
