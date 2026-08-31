@@ -6,6 +6,7 @@ export const MusicPlayer: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [isScrolledPastHero, setIsScrolledPastHero] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -15,8 +16,17 @@ export const MusicPlayer: React.FC = () => {
       setIsMuted(muted);
     });
 
+    // Track scroll position to transition from beside Hero title to floating corner control
+    const handleScroll = () => {
+      setIsScrolledPastHero(window.scrollY > 380);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
     return () => {
       unsubscribe();
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -67,74 +77,108 @@ export const MusicPlayer: React.FC = () => {
     setIsPanelOpen(false);
   };
 
+  const isAudioActive = isPlaying && !isMuted;
+
   return (
-    <div ref={containerRef} className="relative inline-flex items-center select-none z-20">
-      {/* SINGLE UNIFIED FLOATING LUXURY MUSIC BAR */}
-      <div className="flex items-center p-1 bg-[#060e0a]/95 border border-[#F5E6BE]/40 rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.85)] backdrop-blur-md transition-all duration-300">
-        
-        {/* MAIN SINGLE MUSIC BUTTON (Always visible when closed) */}
+    <div
+      ref={containerRef}
+      className={`select-none transition-all duration-500 z-40 ${
+        isScrolledPastHero
+          ? 'fixed bottom-5 right-5 sm:bottom-8 sm:right-8 left-auto top-auto'
+          : 'fixed top-[calc(100vh-148px)] left-[calc(50%+115px)] sm:left-[calc(50%+150px)] md:left-[calc(50%+220px)] lg:left-[calc(50%+270px)] xl:left-[calc(50%+325px)]'
+      }`}
+    >
+      <style>{`
+        /* Smooth Gentle Vertical Floating Animation (4-8px) when music is playing */
+        @keyframes musicFloatGentle {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-6px);
+          }
+        }
+
+        .animate-music-gentle-float {
+          animation: musicFloatGentle 3.2s ease-in-out infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .animate-music-gentle-float {
+            animation: none !important;
+          }
+        }
+      `}</style>
+
+      {/* SINGLE UNIFIED COMPACT LUXURY MUSIC BAR (20-30% Smaller Size) */}
+      <div
+        className={`flex items-center p-0.5 bg-[#060e0a]/95 border border-[#F5E6BE]/40 rounded-full shadow-[0_6px_24px_rgba(0,0,0,0.85)] backdrop-blur-md transition-all duration-300 ${
+          isAudioActive ? 'animate-music-gentle-float' : ''
+        }`}
+      >
+        {/* MAIN SINGLE COMPACT MUSIC BUTTON (w-8 h-8 = 32px) */}
         <button
           onClick={handleMainButtonTap}
-          className="relative flex items-center justify-center w-10 h-10 rounded-full text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none"
+          className="relative flex items-center justify-center w-8 h-8 rounded-full text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none"
           title={isPanelOpen ? 'Close Controls' : 'Music Controls'}
           aria-label="Music Controls"
         >
           {/* Subtle Gold Pulse Ring when playing & audible & panel is closed */}
-          {isPlaying && !isMuted && !isPanelOpen && (
+          {isAudioActive && !isPanelOpen && (
             <span className="absolute inset-0 rounded-full border border-[#F5E6BE]/40 animate-ping opacity-30 pointer-events-none" />
           )}
 
           {/* Main Icon: VolumeX when muted, Spinning Music note when playing */}
           {isMuted ? (
-            <VolumeX size={18} className="text-[#F5E6BE]/60" />
+            <VolumeX size={15} className="text-[#F5E6BE]/60" />
           ) : (
             <Music
-              size={18}
+              size={15}
               className={isPlaying ? 'text-[#F5E6BE] animate-spin' : 'text-[#F5E6BE]/70'}
               style={isPlaying ? { animationDuration: '6s' } : {}}
             />
           )}
         </button>
 
-        {/* EXPANDABLE ADDITIONAL CONTROLS (Smooth horizontal reveal when open) */}
+        {/* EXPANDABLE COMPACT ADDITIONAL CONTROLS */}
         <div
           className={`flex items-center gap-1 overflow-hidden transition-all duration-300 ease-out origin-right ${
             isPanelOpen
-              ? 'max-w-[140px] opacity-100 ml-1.5 pr-1'
+              ? 'max-w-[120px] opacity-100 ml-1 pr-1'
               : 'max-w-0 opacity-0 ml-0 pr-0 pointer-events-none'
           }`}
         >
           {/* Subtle Divider */}
-          <div className="w-[1px] h-4 bg-[#F5E6BE]/20 mr-1" />
+          <div className="w-[1px] h-3.5 bg-[#F5E6BE]/20 mr-0.5" />
 
           {/* 1. Play / Pause Button */}
           <button
             onClick={handlePlayPause}
-            className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#11221c] text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none"
+            className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-[#11221c] text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none"
             title={isPlaying && !isMuted ? 'Pause' : 'Play'}
             aria-label={isPlaying && !isMuted ? 'Pause' : 'Play'}
           >
-            {isPlaying && !isMuted ? <Pause size={14} /> : <Play size={14} className="ml-0.5" />}
+            {isPlaying && !isMuted ? <Pause size={12} /> : <Play size={12} className="ml-0.5" />}
           </button>
 
           {/* 2. Mute / Unmute Button */}
           <button
             onClick={handleMuteUnmute}
-            className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#11221c] text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none"
+            className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-[#11221c] text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none"
             title={isMuted ? 'Unmute Sound' : 'Mute Sound'}
             aria-label={isMuted ? 'Unmute Sound' : 'Mute Sound'}
           >
-            {isMuted ? <VolumeX size={14} className="text-[#F5E6BE]/60" /> : <Volume2 size={14} />}
+            {isMuted ? <VolumeX size={12} className="text-[#F5E6BE]/60" /> : <Volume2 size={12} />}
           </button>
 
           {/* 3. Close / Turn Music Off Button */}
           <button
             onClick={handleTurnOff}
-            className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#11221c] text-[#F5E6BE]/70 hover:text-[#FFF] hover:scale-105 transition-all duration-200 focus:outline-none"
+            className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-[#11221c] text-[#F5E6BE]/70 hover:text-[#FFF] hover:scale-105 transition-all duration-200 focus:outline-none"
             title="Turn Music Off"
             aria-label="Turn Music Off"
           >
-            <X size={14} />
+            <X size={12} />
           </button>
         </div>
       </div>
