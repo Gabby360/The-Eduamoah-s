@@ -50,9 +50,24 @@ export const Footer: React.FC = () => {
           </button>
         </div>
 
-        {/* Copyright */}
-        <div className="pt-8 border-t border-white/10 text-[11px] text-[#A69272] font-mono tracking-wider">
-          © {new Date().getFullYear()} {weddingDetails.couple.coupleName}. All Rights Reserved.
+        {/* Copyright & Production Credit */}
+        <div className="pt-8 border-t border-white/10 text-center space-y-4">
+          <div className="text-[11px] text-[#A69272] font-mono tracking-wider">
+            © {new Date().getFullYear()} {weddingDetails.couple.coupleName}. All Rights Reserved.
+          </div>
+
+          {/* POWERED BY KEK STUDIOS CREDIT */}
+          <div className="pt-2 flex flex-col items-center justify-center text-center space-y-1">
+            <div className="text-xs tracking-[0.2em] uppercase">
+              <span className="text-[#A69272] font-mono font-light">Powered by </span>
+              <span className="text-[#f1c65a] font-serif font-semibold tracking-[0.25em]">KEK STUDIOS</span>
+            </div>
+            <div className="text-[11px] font-mono tracking-widest text-[#A69272]/80 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+              <span>055 369 6305</span>
+              <span className="text-[#f1c65a]/40">·</span>
+              <span>059 489 1338</span>
+            </div>
+          </div>
         </div>
 
       </div>
