@@ -19,7 +19,7 @@ interface DustParticle {
 
 export const SplashScreen: React.FC = () => {
   // Sequence Stage:
-  // 1: initial -> 2: golden-glow -> 3: merging-lights -> 4: romantic-symbol -> 5: invitation-ready -> 6: transitioning -> complete
+  // 1: ribbons-enter -> 2: approach -> 3: intertwine -> 4: heart-forming -> 5: heartbeat -> 6: atmosphere -> 7: invitation-ready
   const [animStage, setAnimStage] = useState<number>(1);
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [isComplete, setIsComplete] = useState<boolean>(false);
@@ -28,40 +28,47 @@ export const SplashScreen: React.FC = () => {
   const rafRef = useRef<number>(0);
   const isProcessingRef = useRef<boolean>(false);
 
-  // 1. MASTER TIMELINE FOR CINEMATIC SEQUENCE
+  // 1. MASTER TIMELINE FOR THE 8-SCENE CINEMATIC ANIMATION
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.overflow = 'hidden';
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
-      setAnimStage(5);
+      setAnimStage(7);
+      return;
     }
 
-    // Stage 2: Golden Light Candlelight Glow (1.0s)
-    const t2 = setTimeout(() => setAnimStage(2), 1000);
+    // Scene 2: Approach (1.4s)
+    const t2 = setTimeout(() => setAnimStage(2), 1400);
 
-    // Stage 3: Two Lights Merging from Left & Right (2.5s)
-    const t3 = setTimeout(() => setAnimStage(3), 2500);
+    // Scene 3: Meeting & Intertwining (3.0s)
+    const t3 = setTimeout(() => setAnimStage(3), 3000);
 
-    // Stage 4: Romantic Symbol Reveal (4.6s)
+    // Scene 4: Forming the Heart (4.6s)
     const t4 = setTimeout(() => setAnimStage(4), 4600);
 
-    // Stage 5: Invitation Message ("Come, let us begin." + "Tap to enter") (6.2s)
-    const t5 = setTimeout(() => {
-      setAnimStage(5);
-    }, 6200);
+    // Scene 5: Heartbeat Pulse (6.2s)
+    const t5 = setTimeout(() => setAnimStage(5), 6200);
+
+    // Scene 6: Golden Atmosphere & Dust (7.6s)
+    const t6 = setTimeout(() => setAnimStage(6), 7600);
+
+    // Scene 7: Invitation Message Reveal (8.4s)
+    const t7 = setTimeout(() => setAnimStage(7), 8400);
 
     return () => {
       clearTimeout(t2);
       clearTimeout(t3);
       clearTimeout(t4);
       clearTimeout(t5);
+      clearTimeout(t6);
+      clearTimeout(t7);
       document.body.style.overflow = '';
     };
   }, []);
 
-  // 2. SPARSE ATMOSPHERIC GOLD DUST CANVAS
+  // 2. SPARSE ATMOSPHERIC CANDLELIGHT DUST PARTICLES
   useEffect(() => {
     if (isComplete) return;
 
@@ -77,17 +84,17 @@ export const SplashScreen: React.FC = () => {
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    const dustCount = window.innerWidth < 768 ? 12 : 22;
+    const dustCount = window.innerWidth < 768 ? 10 : 20;
 
     const dust: DustParticle[] = Array.from({ length: dustCount }, () => ({
       x: rand(0, window.innerWidth),
       y: rand(0, window.innerHeight),
-      r: rand(0.6, 1.6),
-      vx: rand(-0.04, 0.04),
-      vy: rand(-0.08, -0.02),
-      alpha: rand(0.04, 0.18),
+      r: rand(0.6, 1.5),
+      vx: rand(-0.03, 0.03),
+      vy: rand(-0.07, -0.02),
+      alpha: rand(0.04, 0.16),
       dir: Math.random() > 0.5 ? 1 : -1,
-      speed: rand(0.001, 0.003),
+      speed: rand(0.001, 0.0025),
     }));
 
     let lastFrame = 0;
@@ -106,7 +113,7 @@ export const SplashScreen: React.FC = () => {
         p.x += p.vx;
         p.y += p.vy;
         p.alpha += p.dir * p.speed;
-        if (p.alpha > 0.18 || p.alpha < 0.03) p.dir *= -1;
+        if (p.alpha > 0.16 || p.alpha < 0.03) p.dir *= -1;
         if (p.x < 0) p.x = W;
         if (p.x > W) p.x = 0;
         if (p.y < 0) {
@@ -127,22 +134,20 @@ export const SplashScreen: React.FC = () => {
     };
   }, [isComplete]);
 
-  // 3. SINGLE CLEAN CLICK INTERACTION HANDLER (onClick recognized by Mobile iOS Safari & Mobile Chrome)
-  // SEQUENCE: CLICK ENTER -> DIRECTLY CALL AUDIO PLAY -> CONFIRM RESULT -> START SPLASH EXIT -> REVEAL WEBSITE
+  // 3. INTENTIONAL USER TAP / CLICK HANDLER (Preserving working mobile audio!)
   const handleSplashTap = async (e: React.MouseEvent) => {
     if (isProcessingRef.current || isComplete) return;
     isProcessingRef.current = true;
 
     // STEP 1: Execute playDirect() synchronously inside user click gesture event call stack
     const playSuccess = await globalAudio.playDirect();
-
-    console.log('[SPLASH CLICK RESULT]', playSuccess ? 'SUCCESS' : 'FAILED', globalAudio.getDiagnostics());
+    console.log('[SPLASH TAP RESULT]', playSuccess ? 'SUCCESS' : 'FAILED');
 
     // STEP 2: Start cinematic exit animation
     setIsTransitioning(true);
     document.body.style.overflow = '';
 
-    // STEP 3: Complete transition to website after 1.2 seconds
+    // STEP 3: Complete transition to main website after 1.2 seconds
     setTimeout(() => {
       setIsComplete(true);
     }, 1200);
@@ -153,81 +158,158 @@ export const SplashScreen: React.FC = () => {
   return (
     <div
       onClick={handleSplashTap}
-      className={`fixed inset-0 z-[100] bg-[#060e0a] flex items-center justify-center overflow-hidden select-none cursor-pointer transition-opacity duration-1000 ${
+      className={`fixed inset-0 z-[100] bg-[#050c08] flex flex-col items-center justify-center overflow-hidden select-none cursor-pointer transition-opacity duration-1000 ${
         isTransitioning ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
       }`}
-      aria-label="Tap to enter wedding celebration"
+      aria-label="Tap to enter wedding invitation"
     >
       <style>{`
-        /* Candlelight Soft Glow Pulsing */
-        @keyframes softCandleGlow {
-          0% { opacity: 0.25; transform: scale(0.95); }
-          50% { opacity: 0.55; transform: scale(1.10); }
-          100% { opacity: 0.25; transform: scale(0.95); }
+        /* Ribbon 1 Flowing Draw (Left Journey) */
+        @keyframes ribbonLeftDraw {
+          0% {
+            stroke-dashoffset: 1200;
+            opacity: 0;
+          }
+          20% {
+            opacity: 0.95;
+          }
+          100% {
+            stroke-dashoffset: 0;
+            opacity: 0.95;
+          }
         }
 
-        /* Two Lights Moving Inward from Left and Right */
-        @keyframes moveLightLeft {
-          0% { transform: translate(-38vw, 0); opacity: 0; }
-          20% { opacity: 0.9; }
-          100% { transform: translate(0, 0); opacity: 1; }
+        /* Ribbon 2 Flowing Draw (Right Journey) */
+        @keyframes ribbonRightDraw {
+          0% {
+            stroke-dashoffset: 1200;
+            opacity: 0;
+          }
+          20% {
+            opacity: 0.95;
+          }
+          100% {
+            stroke-dashoffset: 0;
+            opacity: 0.95;
+          }
         }
 
-        @keyframes moveLightRight {
-          0% { transform: translate(38vw, 0); opacity: 0; }
-          20% { opacity: 0.9; }
-          100% { transform: translate(0, 0); opacity: 1; }
+        /* Formed Golden Heart Drawing */
+        @keyframes heartFormDraw {
+          0% {
+            stroke-dashoffset: 1000;
+            opacity: 0;
+          }
+          20% {
+            opacity: 0.8;
+          }
+          100% {
+            stroke-dashoffset: 0;
+            opacity: 1.0;
+          }
         }
 
-        /* Golden Meeting Ripple */
-        @keyframes goldenPulseRipple {
-          0% { transform: scale(0.1); opacity: 0.9; }
-          100% { transform: scale(3.5); opacity: 0; }
+        /* Subtle Elegant Heartbeat Pulse (Scene 5) */
+        @keyframes heartDoublePulse {
+          0% {
+            transform: scale(1.00);
+            filter: drop-shadow(0 0 8px rgba(245,230,190,0.4));
+          }
+          18% {
+            transform: scale(1.08);
+            filter: drop-shadow(0 0 24px rgba(245,230,190,0.85));
+          }
+          34% {
+            transform: scale(0.98);
+            filter: drop-shadow(0 0 10px rgba(245,230,190,0.5));
+          }
+          48% {
+            transform: scale(1.04);
+            filter: drop-shadow(0 0 18px rgba(245,230,190,0.75));
+          }
+          65% {
+            transform: scale(1.00);
+            filter: drop-shadow(0 0 8px rgba(245,230,190,0.4));
+          }
+          100% {
+            transform: scale(1.00);
+            filter: drop-shadow(0 0 8px rgba(245,230,190,0.4));
+          }
         }
 
-        /* Symbol Quiet Heartbeat */
-        @keyframes symbolGentleBreath {
-          0% { transform: scale(0.96); filter: drop-shadow(0 0 8px rgba(245,230,190,0.4)); }
-          50% { transform: scale(1.06); filter: drop-shadow(0 0 20px rgba(245,230,190,0.85)); }
-          100% { transform: scale(0.96); filter: drop-shadow(0 0 8px rgba(245,230,190,0.4)); }
+        /* Ambient Candlelight Atmosphere Glow */
+        @keyframes atmosphereGlow {
+          0% {
+            opacity: 0.15;
+            transform: scale(0.92);
+          }
+          50% {
+            opacity: 0.45;
+            transform: scale(1.08);
+          }
+          100% {
+            opacity: 0.15;
+            transform: scale(0.92);
+          }
         }
 
-        /* Tap to Enter Subtle Breathing & Floating */
-        @keyframes tapFloatBreath {
-          0% { transform: translateY(0px); opacity: 0.75; }
-          50% { transform: translateY(-4px); opacity: 1.0; }
-          100% { transform: translateY(0px); opacity: 0.75; }
+        /* Breathing "Tap to enter" Callout */
+        @keyframes tapBreathFloat {
+          0% {
+            transform: translateY(0px);
+            opacity: 0.70;
+          }
+          50% {
+            transform: translateY(-3px);
+            opacity: 1.0;
+          }
+          100% {
+            transform: translateY(0px);
+            opacity: 0.70;
+          }
         }
 
         /* Transition Expanding Light Portal */
         @keyframes portalExpand {
-          0% { transform: scale(0.2); opacity: 0.8; }
-          50% { transform: scale(8.0); opacity: 0.9; }
-          100% { transform: scale(45.0); opacity: 0; }
+          0% {
+            transform: scale(0.2);
+            opacity: 0.8;
+          }
+          50% {
+            transform: scale(8.0);
+            opacity: 0.9;
+          }
+          100% {
+            transform: scale(45.0);
+            opacity: 0;
+          }
         }
 
-        .animate-candle-glow {
-          animation: softCandleGlow 4s ease-in-out infinite;
+        .animate-ribbon-left {
+          stroke-dasharray: 1200;
+          animation: ribbonLeftDraw 3.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
-        .animate-light-left {
-          animation: moveLightLeft 2.1s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        .animate-ribbon-right {
+          stroke-dasharray: 1200;
+          animation: ribbonRightDraw 3.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
-        .animate-light-right {
-          animation: moveLightRight 2.1s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        .animate-heart-form {
+          stroke-dasharray: 1000;
+          animation: heartFormDraw 2.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
-        .animate-golden-ripple {
-          animation: goldenPulseRipple 1.4s ease-out forwards;
+        .animate-heartbeat {
+          animation: heartDoublePulse 2.8s ease-in-out infinite;
         }
 
-        .animate-symbol-breath {
-          animation: symbolGentleBreath 3.2s ease-in-out infinite;
+        .animate-atmosphere {
+          animation: atmosphereGlow 4s ease-in-out infinite;
         }
 
-        .animate-tap-breath {
-          animation: tapFloatBreath 2.6s ease-in-out infinite;
+        .animate-tap-float {
+          animation: tapBreathFloat 2.6s ease-in-out infinite;
         }
 
         .animate-portal {
@@ -235,43 +317,23 @@ export const SplashScreen: React.FC = () => {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .animate-candle-glow, .animate-symbol-breath, .animate-tap-breath {
+          .animate-ribbon-left, .animate-ribbon-right, .animate-heart-form, .animate-heartbeat, .animate-tap-float {
             animation: none !important;
           }
         }
       `}</style>
 
-      {/* Atmospheric Champagne Dust Particles */}
+      {/* Sparse Atmospheric Dust Particles */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 z-[1] w-full h-full pointer-events-none"
         aria-hidden="true"
       />
 
-      {/* STAGE 2+: Soft Candlelight Golden Radial Glow */}
-      {animStage >= 2 && (
+      {/* SCENE 6+: Subtle Warm Golden Candlelight Glow */}
+      {animStage >= 6 && (
         <div className="absolute inset-0 z-[2] pointer-events-none flex items-center justify-center">
-          <div className="animate-candle-glow w-96 h-96 rounded-full bg-[radial-gradient(circle_at_center,rgba(245,230,190,0.18)_0%,rgba(241,198,90,0.04)_50%,transparent_75%)] filter blur-3xl" />
-        </div>
-      )}
-
-      {/* STAGE 3: Two Lights Merging from Opposite Sides */}
-      {animStage === 3 && (
-        <div className="absolute inset-0 z-[15] pointer-events-none flex items-center justify-center">
-          {/* Left Light Point */}
-          <div className="animate-light-left relative flex items-center justify-center">
-            <div className="w-3 h-3 rounded-full bg-[#F5E6BE] shadow-[0_0_15px_rgba(245,230,190,0.9)]" />
-            <div className="absolute right-0 w-24 h-[1.5px] bg-gradient-to-l from-[#F5E6BE] to-transparent opacity-60" />
-          </div>
-
-          {/* Right Light Point */}
-          <div className="animate-light-right relative flex items-center justify-center">
-            <div className="w-3 h-3 rounded-full bg-[#F5E6BE] shadow-[0_0_15px_rgba(245,230,190,0.9)]" />
-            <div className="absolute left-0 w-24 h-[1.5px] bg-gradient-to-r from-[#F5E6BE] to-transparent opacity-60" />
-          </div>
-
-          {/* Meeting Golden Pulse Ripple */}
-          <div className="absolute w-12 h-12 rounded-full border border-[#F5E6BE] animate-golden-ripple" />
+          <div className="animate-atmosphere w-96 h-96 rounded-full bg-[radial-gradient(circle_at_center,rgba(245,230,190,0.18)_0%,rgba(241,198,90,0.03)_50%,transparent_75%)] filter blur-3xl" />
         </div>
       )}
 
@@ -282,78 +344,104 @@ export const SplashScreen: React.FC = () => {
         </div>
       )}
 
-      {/* STAGE 4 & 5: Minimal Intertwined Golden Rings Symbol & Invitation Message */}
-      {animStage >= 4 && (
-        <div className="relative z-[20] flex flex-col items-center justify-center text-center px-6 pointer-events-none">
-          {/* Fine-Line Intertwined Golden Rings Symbol */}
-          <div className="animate-symbol-breath flex items-center justify-center mb-6">
-            <svg
-              width="64"
-              height="40"
-              viewBox="0 0 64 40"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-14 h-9 sm:w-16 sm:h-10 text-[#F5E6BE] drop-shadow-[0_0_14px_rgba(245,230,190,0.7)]"
-            >
-              <defs>
-                <linearGradient id="champagneGrad" x1="0" y1="0" x2="64" y2="40">
-                  <stop offset="0%" stopColor="#FFF7E3" />
-                  <stop offset="50%" stopColor="#F5E6BE" />
-                  <stop offset="100%" stopColor="#E2C875" />
-                </linearGradient>
-              </defs>
-              {/* Left Fine-Line Interlocking Ring */}
-              <ellipse
-                cx="24"
-                cy="20"
-                rx="16"
-                ry="15"
-                fill="none"
-                stroke="url(#champagneGrad)"
-                strokeWidth="1.5"
-                strokeOpacity="0.9"
-              />
-              {/* Right Fine-Line Interlocking Ring */}
-              <ellipse
-                cx="40"
-                cy="20"
-                rx="16"
-                ry="15"
-                fill="none"
-                stroke="url(#champagneGrad)"
-                strokeWidth="1.5"
-                strokeOpacity="0.9"
-              />
-              {/* Central Luminous Intertwined Intersection Accent */}
-              <path
-                d="M 32,10 Q 35,20 32,30 Q 29,20 32,10 Z"
-                fill="#FFF9E6"
-                fillOpacity="0.4"
-              />
-            </svg>
-          </div>
-
-          {/* STAGE 5: Invitation Message ("Come, let us begin." + "Tap to enter") */}
-          <div
-            className={`flex flex-col items-center gap-3 transition-all duration-1000 ${
-              animStage >= 5 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
-            }`}
+      {/* MAIN ANIMATION CONTAINER (SCENE 1 TO 7) */}
+      <div className="relative z-[20] flex flex-col items-center justify-center text-center px-4 w-full max-w-xl pointer-events-none">
+        
+        {/* SVG GOLDEN RIBBONS & HEART CANVAS */}
+        <div
+          className={`relative flex items-center justify-center transition-all duration-700 ${
+            animStage >= 5 ? 'animate-heartbeat' : ''
+          }`}
+        >
+          <svg
+            width="320"
+            height="260"
+            viewBox="0 0 400 300"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-72 h-60 sm:w-80 sm:h-64 text-[#F5E6BE] filter drop-shadow-[0_0_12px_rgba(245,230,190,0.6)]"
           >
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-serif tracking-[0.2em] text-[#F5E6BE] font-light drop-shadow-[0_0_15px_rgba(245,230,190,0.35)]">
-              Come, let us begin.
-            </h2>
+            <defs>
+              <linearGradient id="silkChampagneGrad" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#FFF9EB" stopOpacity="0.95" />
+                <stop offset="40%" stopColor="#F5E6BE" stopOpacity="0.90" />
+                <stop offset="75%" stopColor="#E2C875" stopOpacity="0.85" />
+                <stop offset="100%" stopColor="#C49E35" stopOpacity="0.80" />
+              </linearGradient>
 
-            <div className="animate-tap-breath mt-3 flex flex-col items-center gap-1">
-              <span className="text-[11px] sm:text-xs font-mono tracking-[0.35em] text-[#F5E6BE]/70 uppercase font-light">
-                Tap to enter
-              </span>
-              <span className="text-[10px] text-[#F5E6BE]/50 tracking-widest">
-                ♡
-              </span>
-            </div>
+              {/* Soft Luminous Outer Edge Glow */}
+              <filter id="silkGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* SCENE 1, 2, 3: Ribbon 1 (Left Journey Flowing Path) */}
+            {animStage < 5 && (
+              <path
+                d="M -30,180 C 70,240 130,70 190,170 C 210,205 210,130 175,110 C 145,90 130,140 160,175 C 185,205 200,240 200,265"
+                stroke="url(#silkChampagneGrad)"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                fill="none"
+                filter="url(#silkGlow)"
+                className="animate-ribbon-left"
+              />
+            )}
+
+            {/* SCENE 1, 2, 3: Ribbon 2 (Right Journey Flowing Path) */}
+            {animStage < 5 && (
+              <path
+                d="M 430,120 C 330,60 270,230 210,130 C 190,95 190,170 225,190 C 255,210 270,160 240,125 C 215,95 200,60 200,35"
+                stroke="url(#silkChampagneGrad)"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                fill="none"
+                filter="url(#silkGlow)"
+                className="animate-ribbon-right"
+              />
+            )}
+
+            {/* SCENE 4, 5, 6, 7: The Organic Fine-Line Heart Formed by the Intertwined Ribbons */}
+            {animStage >= 4 && (
+              <path
+                d="M 200,265 C 200,265 80,185 80,115 C 80,60 135,50 175,85 C 190,98 200,110 200,110 C 200,110 210,98 225,85 C 265,50 320,60 320,115 C 320,185 200,265 200,265 Z"
+                stroke="url(#silkChampagneGrad)"
+                strokeWidth="2.0"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                fill="none"
+                filter="url(#silkGlow)"
+                className={animStage === 4 ? 'animate-heart-form' : ''}
+              />
+            )}
+          </svg>
+        </div>
+
+        {/* SCENE 7: INVITATION MESSAGE REVEAL ("Come, let us begin." + "Tap to enter") */}
+        <div
+          className={`mt-4 flex flex-col items-center gap-3 transition-all duration-1000 ${
+            animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
+          }`}
+        >
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-serif tracking-[0.2em] text-[#F5E6BE] font-light drop-shadow-[0_0_15px_rgba(245,230,190,0.35)]">
+            Come, let us begin.
+          </h2>
+
+          <div className="animate-tap-float mt-2 flex flex-col items-center gap-1">
+            <span className="text-[11px] sm:text-xs font-mono tracking-[0.35em] text-[#F5E6BE]/70 uppercase font-light">
+              Tap to enter
+            </span>
+            <span className="text-[10px] text-[#F5E6BE]/50 tracking-widest">
+              ♡
+            </span>
           </div>
         </div>
-      )}
+
+      </div>
     </div>
   );
 };
