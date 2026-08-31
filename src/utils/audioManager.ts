@@ -1,4 +1,4 @@
-// Centralized Single Global HTML5 Audio Engine for Wedding Website Autoplay
+// Centralized Single Global HTML5 Audio Engine for Wedding Website
 
 type AudioStateListener = (isPlaying: boolean, isMuted: boolean) => void;
 
@@ -7,8 +7,7 @@ class GlobalAudioManager {
   private isPlaying: boolean = false;
   private isMuted: boolean = false;
   private listeners: Set<AudioStateListener> = new Set();
-  private targetVolume: number = 0.5; // Pleasant, comfortable background level
-  private userInteractionHandler: (() => void) | null = null;
+  private targetVolume: number = 0.5; // Comfortable background volume
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -20,7 +19,7 @@ class GlobalAudioManager {
     if (this.audio) return;
 
     try {
-      // 1. Single Global Audio Instance
+      // 1. Single Global Audio Instance created and preloaded immediately
       this.audio = new Audio();
       this.audio.loop = true;
       this.audio.preload = 'auto';
@@ -30,85 +29,41 @@ class GlobalAudioManager {
       // Choose format (MP3 primary with WAV fallback)
       const canPlayMp3 = this.audio.canPlayType('audio/mpeg');
       this.audio.src = canPlayMp3 ? '/wedding-music.mp3' : '/wedding-music.wav';
-
-      // 2. Controlled Autoplay Attempt 1: Immediate on creation
-      this.attemptPlay();
-
-      // 3. Controlled Autoplay Attempt 2: When audio data is ready
-      const handleCanPlay = () => {
-        if (!this.isPlaying) {
-          this.attemptPlay();
-        }
-      };
-      this.audio.addEventListener('canplaythrough', handleCanPlay, { once: true });
-      this.audio.addEventListener('loadeddata', handleCanPlay, { once: true });
-
-      // 4. Fallback listener for first legitimate user interaction (click, pointerdown, touchstart, keydown)
-      // NOTE: Scroll trigger has been completely removed per specification
-      this.setupFallbackGestureListeners();
     } catch (err) {
       console.warn('Global audio init notice:', err);
     }
   }
 
-  private setupFallbackGestureListeners() {
-    this.userInteractionHandler = async () => {
-      if (!this.isPlaying) {
-        const success = await this.attemptPlay();
-        if (success) {
-          this.removeFallbackGestureListeners();
-        }
-      } else {
-        this.removeFallbackGestureListeners();
-      }
-    };
-
-    // Legitimate user activation events ONLY (NO SCROLL)
-    const events = ['click', 'pointerdown', 'touchstart', 'keydown'];
-    events.forEach((evt) => {
-      window.addEventListener(evt, this.userInteractionHandler!, { passive: true });
-    });
-  }
-
-  private removeFallbackGestureListeners() {
-    if (!this.userInteractionHandler) return;
-    const events = ['click', 'pointerdown', 'touchstart', 'keydown'];
-    events.forEach((evt) => {
-      window.removeEventListener(evt, this.userInteractionHandler!);
-    });
-    this.userInteractionHandler = null;
-  }
-
-  public async attemptPlay(): Promise<boolean> {
+  public async play(): Promise<boolean> {
     if (!this.audio) return false;
 
     try {
       this.audio.volume = this.targetVolume;
       this.audio.muted = false;
+      
+      // Execute synchronous HTML5 audio play directly inside user interaction event handler
       const playPromise = this.audio.play();
       if (playPromise !== undefined) {
         await playPromise;
       }
 
-      // Verify actual HTML audio playback status
       if (!this.audio.paused && this.audio.currentTime >= 0) {
         this.isPlaying = true;
         this.isMuted = false;
         this.notify();
-        this.removeFallbackGestureListeners();
         return true;
       }
       return false;
-    } catch {
-      // Browser blocked unmuted autoplay - gracefully handle without throwing error
+    } catch (err) {
+      console.warn('Playback gesture notice:', err);
       this.isPlaying = false;
       this.notify();
       return false;
     }
   }
 
-  public async play() {
-    return await this.attemptPlay();
+  public async attemptPlay(): Promise<boolean> {
+    return await this.play();
   }
 
   public pause() {
@@ -122,7 +77,7 @@ class GlobalAudioManager {
     if (this.isPlaying && this.audio && !this.audio.paused) {
       this.pause();
     } else {
-      this.attemptPlay();
+      this.play();
     }
   }
 
@@ -135,7 +90,7 @@ class GlobalAudioManager {
 
   public subscribe(listener: AudioStateListener) {
     this.listeners.add(listener);
-    // Emit current state immediately to new subscriber
+    // Emit current state immediately to subscriber
     listener(this.isPlaying, this.isMuted);
     return () => {
       this.listeners.delete(listener);
