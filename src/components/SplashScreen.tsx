@@ -592,19 +592,25 @@ export const SplashScreen: React.FC = () => {
           </svg>
         </div>
 
-        {/* INVITATION MESSAGE REVEAL ("Come, let us begin." + "Tap to enter") */}
+        {/* ROMANTIC SPLASH TEXT REVEAL ("A beautiful story begins here." + "Tap gently to enter") */}
         <div
-          className={`mt-4 flex flex-col items-center gap-3 transition-all duration-1000 ${
+          className={`mt-5 flex flex-col items-center gap-3 transition-all duration-1000 ${
             animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
           }`}
         >
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-serif tracking-[0.2em] text-[#F5E6BE] font-light drop-shadow-[0_0_15px_rgba(245,230,190,0.35)]">
-            Come, let us begin.
+          {/* Main Romantic Message */}
+          <h2 className="text-lg sm:text-2xl md:text-3xl font-serif tracking-[0.16em] sm:tracking-[0.2em] text-[#F5E6BE] font-light drop-shadow-[0_0_15px_rgba(245,230,190,0.35)] leading-tight px-2">
+            A beautiful story begins here.
           </h2>
 
-          <div className="animate-tap-float mt-2 flex flex-col items-center justify-center">
-            <span className="text-[11px] sm:text-xs font-mono tracking-[0.35em] text-[#F5E6BE]/80 uppercase font-light drop-shadow-[0_0_12px_rgba(245,230,190,0.4)]">
-              Tap to enter
+          {/* Interaction Instruction with Gentle Breathing Animation */}
+          <div
+            className={`animate-tap-float mt-1 flex flex-col items-center justify-center transition-all duration-1000 delay-500 ${
+              animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-2'
+            }`}
+          >
+            <span className="text-[11px] sm:text-xs font-mono tracking-[0.3em] text-[#F5E6BE]/75 uppercase font-light italic drop-shadow-[0_0_12px_rgba(245,230,190,0.4)]">
+              Tap gently to enter
             </span>
           </div>
         </div>
