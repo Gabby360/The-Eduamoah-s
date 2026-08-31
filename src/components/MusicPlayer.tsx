@@ -16,7 +16,7 @@ export const MusicPlayer: React.FC = () => {
       setIsMuted(muted);
     });
 
-    // Track scroll position to transition from lady's shoulder area in Hero to floating corner control
+    // Track scroll position to transition from beside Hero title to floating corner control
     const handleScroll = () => {
       setIsScrolledPastHero(window.scrollY > 380);
     };
@@ -85,7 +85,7 @@ export const MusicPlayer: React.FC = () => {
       className={`select-none transition-all duration-500 z-40 ${
         isScrolledPastHero
           ? 'fixed bottom-5 right-4 sm:bottom-8 sm:right-8 left-auto top-auto'
-          : 'fixed top-[46vh] right-3 sm:right-auto sm:left-[calc(50%+160px)] md:left-[calc(50%+220px)] lg:left-[calc(50%+270px)] xl:left-[calc(50%+325px)]'
+          : 'fixed top-[calc(100vh-148px)] left-[calc(50%+115px)] sm:left-[calc(50%+150px)] md:left-[calc(50%+220px)] lg:left-[calc(50%+270px)] xl:left-[calc(50%+325px)]'
       }`}
     >
       <style>{`
@@ -110,7 +110,7 @@ export const MusicPlayer: React.FC = () => {
         }
       `}</style>
 
-      {/* SINGLE UNIFIED COMPACT LUXURY MUSIC CAPSULE (Expands Vertically Upward to Protect Hero Text) */}
+      {/* SINGLE UNIFIED COMPACT LUXURY MUSIC CAPSULE (Beside THE EDUAMOAH'S, Expands Vertically Upward) */}
       <div
         className={`flex flex-col-reverse items-center p-0.5 bg-[#060e0a]/95 border border-[#F5E6BE]/40 rounded-full shadow-[0_6px_24px_rgba(0,0,0,0.85)] backdrop-blur-md transition-all duration-300 ${
           isAudioActive ? 'animate-music-gentle-float' : ''
@@ -163,7 +163,7 @@ export const MusicPlayer: React.FC = () => {
             onClick={handleMuteUnmute}
             className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-[#11221c] text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none shrink-0"
             title={isMuted ? 'Unmute Sound' : 'Mute Sound'}
-            aria-label={isMuted ? 'Unmute Sound' : 'Mute Sound'}
+            aria-label="Mute Sound"
           >
             {isMuted ? <VolumeX size={12} className="text-[#F5E6BE]/60" /> : <Volume2 size={12} />}
           </button>
@@ -173,7 +173,7 @@ export const MusicPlayer: React.FC = () => {
             onClick={handlePlayPause}
             className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-[#11221c] text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none shrink-0"
             title={isPlaying && !isMuted ? 'Pause' : 'Play'}
-            aria-label={isPlaying && !isMuted ? 'Pause' : 'Play'}
+            aria-label="Play"
           >
             {isPlaying && !isMuted ? <Pause size={12} /> : <Play size={12} className="ml-0.5" />}
           </button>
