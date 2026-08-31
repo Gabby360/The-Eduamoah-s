@@ -155,12 +155,8 @@ export const MusicPlayer: React.FC = () => {
           <div className="w-3.5 h-[1px] bg-[#F5E6BE]/20 mb-0.5" />
         </div>
 
-        {/* MAIN SINGLE COMPACT MUSIC BUTTON — ANCHORED STRICTLY IN PLACE AT BOTTOM-RIGHT ON PC */}
-        <div
-          className={`p-0.5 bg-[#060e0a]/95 border border-[#F5E6BE]/40 rounded-full shadow-[0_6px_24px_rgba(0,0,0,0.85)] backdrop-blur-md transition-all duration-300 ${
-            isAudioActive ? 'animate-music-gentle-float' : ''
-          }`}
-        >
+        {/* MAIN SINGLE COMPACT MUSIC BUTTON — CONTINUOUSLY FLOATING GENTLY IN AIR */}
+        <div className="p-0.5 bg-[#060e0a]/95 border border-[#F5E6BE]/40 rounded-full shadow-[0_6px_24px_rgba(0,0,0,0.85)] backdrop-blur-md transition-all duration-300 animate-music-gentle-float">
           <button
             onClick={handleMainButtonTap}
             className="relative flex items-center justify-center w-8 h-8 rounded-full text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none shrink-0"
