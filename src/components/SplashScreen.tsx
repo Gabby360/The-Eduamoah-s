@@ -58,7 +58,7 @@ export const SplashScreen: React.FC = () => {
     const t3 = setTimeout(() => setAnimStage(3), 2200);
 
     // Stage 4: & appears (3.2s)
-    const t4 = setTimeout(() => setAnimStage(4), 3200);
+    const t4 = setTimeout(() => setAnimStage(4), 3400);
 
     // Stage 5: A appears (4.2s)
     const t5 = setTimeout(() => setAnimStage(5), 4200);
@@ -202,21 +202,21 @@ export const SplashScreen: React.FC = () => {
     };
   }, [isComplete]);
 
-  // NATIVE ONCLICK USER GESTURE HANDLER: Starts audio SYNCHRONOUSLY inside gesture loop
+  // NATIVE ONCLICK USER GESTURE HANDLER: Starts audio SYNCHRONOUSLY inside gesture loop & triggers cinematic heart reveal
   const handleSplashTap = () => {
     if (isProcessingRef.current || isTransitioning || isComplete) return;
     isProcessingRef.current = true;
 
-    // Execute audio.play() SYNCHRONOUSLY on line 1 inside native onClick gesture call stack
+    // Execute audio.play() SYNCHRONOUSLY inside native onClick gesture call stack
     globalAudio.playDirect();
 
-    // Trigger Golden Portal Exit Expansion
+    // Trigger Slow Cinematic Heart-Shaped Reveal Transition (1.9 seconds)
     setIsTransitioning(true);
 
     setTimeout(() => {
       setIsComplete(true);
       document.body.style.overflow = '';
-    }, 1200);
+    }, 1900);
   };
 
   if (isComplete) return null;
@@ -224,8 +224,12 @@ export const SplashScreen: React.FC = () => {
   return (
     <div
       onClick={handleSplashTap}
+      style={{
+        maskImage: isTransitioning ? 'url(#splashHeartMask)' : 'none',
+        WebkitMaskImage: isTransitioning ? 'url(#splashHeartMask)' : 'none',
+      }}
       className={`fixed inset-0 z-50 flex items-center justify-center bg-[#050c08] overflow-hidden select-none cursor-pointer transition-opacity duration-1000 ${
-        isTransitioning ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        isTransitioning ? 'pointer-events-none' : 'opacity-100'
       }`}
     >
       <style>{`
@@ -319,7 +323,7 @@ export const SplashScreen: React.FC = () => {
           }
         }
 
-        /* Breathing "Tap to enter" Callout */
+        /* Breathing "Tap gently to enter" Callout */
         @keyframes tapBreathFloat {
           0% {
             transform: translateY(0px);
@@ -335,19 +339,38 @@ export const SplashScreen: React.FC = () => {
           }
         }
 
-        /* Transition Expanding Light Portal */
-        @keyframes portalExpand {
+        /* Slow Romantic Heart Reveal Opening Expansion (1.9s) */
+        @keyframes heartMaskExpand {
           0% {
-            transform: scale(0.2);
-            opacity: 0.8;
+            transform: scale(0.01);
+            opacity: 1;
           }
-          50% {
-            transform: scale(8.0);
-            opacity: 0.9;
+          80% {
+            transform: scale(18.0);
+            opacity: 1;
           }
           100% {
-            transform: scale(45.0);
+            transform: scale(30.0);
+            opacity: 0.95;
+          }
+        }
+
+        /* Glowing Gold Heart Contour Outline Expanding along Reveal Edge */
+        @keyframes heartGlowStrokeExpand {
+          0% {
+            transform: scale(0.01);
+            opacity: 0.9;
+            stroke-width: 12px;
+          }
+          70% {
+            transform: scale(16.0);
+            opacity: 0.85;
+            stroke-width: 3px;
+          }
+          100% {
+            transform: scale(28.0);
             opacity: 0;
+            stroke-width: 1px;
           }
         }
 
@@ -379,17 +402,66 @@ export const SplashScreen: React.FC = () => {
           animation: tapBreathFloat 2.6s ease-in-out infinite;
         }
 
-        .animate-portal {
-          animation: portalExpand 1.3s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+        .animate-heart-mask-expand {
+          transform-origin: 160px 150px;
+          animation: heartMaskExpand 1.9s cubic-bezier(0.25, 1, 0.35, 1) forwards;
+        }
+
+        .animate-heart-stroke-expand {
+          transform-origin: 160px 150px;
+          animation: heartGlowStrokeExpand 1.9s cubic-bezier(0.25, 1, 0.35, 1) forwards;
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .animate-ring-left, .animate-ring-right, .animate-monogram-g, .animate-monogram-amp, .animate-monogram-a, .animate-tap-float {
+          .animate-ring-left, .animate-ring-right, .animate-monogram-g, .animate-monogram-amp, .animate-monogram-a, .animate-tap-float, .animate-heart-mask-expand, .animate-heart-stroke-expand {
             animation: none !important;
             opacity: 1 !important;
           }
         }
       `}</style>
+
+      {/* SVG MASK DEFINITION FOR HEART-SHAPED REVEAL OPENING */}
+      <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
+        <defs>
+          <mask id="splashHeartMask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+            {/* White background keeps splash screen visible */}
+            <rect x="0" y="0" width="100%" height="100%" fill="white" />
+            {/* Expanding black heart punches a growing opening through splash screen */}
+            {isTransitioning && (
+              <g transform={`translate(${typeof window !== 'undefined' ? window.innerWidth / 2 - 160 : 0}, ${typeof window !== 'undefined' ? window.innerHeight / 2 - 150 : 0})`}>
+                <path
+                  d="M 160 270 C 160 270 45 175 45 92 C 45 45 88 35 124 68 C 142 84 160 102 160 102 C 160 102 178 84 196 68 C 232 35 275 45 275 92 C 275 175 160 270 160 270 Z"
+                  fill="black"
+                  className="animate-heart-mask-expand"
+                />
+              </g>
+            )}
+          </mask>
+        </defs>
+      </svg>
+
+      {/* EXPANDING GOLDEN HEART CONTOUR CONTOUR OVERLAY */}
+      {isTransitioning && (
+        <div className="fixed inset-0 z-[60] pointer-events-none flex items-center justify-center">
+          <svg
+            width="320"
+            height="300"
+            viewBox="0 0 320 300"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-80 h-75 overflow-visible"
+          >
+            <path
+              d="M 160 270 C 160 270 45 175 45 92 C 45 45 88 35 124 68 C 142 84 160 102 160 102 C 160 102 178 84 196 68 C 232 35 275 45 275 92 C 275 175 160 270 160 270 Z"
+              stroke="url(#bandGoldGrad)"
+              strokeWidth="2.5"
+              fill="none"
+              filter="drop-shadow(0 0 15px rgba(245,230,190,0.85))"
+              className="animate-heart-stroke-expand"
+            />
+          </svg>
+        </div>
+      )}
 
       {/* Sparse Atmospheric Dust & Sparkling Dust Particles */}
       <canvas
@@ -405,15 +477,12 @@ export const SplashScreen: React.FC = () => {
         </div>
       )}
 
-      {/* TRANSITIONING: Golden Light Portal Expansion */}
-      {isTransitioning && (
-        <div className="absolute inset-0 z-[30] pointer-events-none flex items-center justify-center">
-          <div className="animate-portal w-32 h-32 rounded-full bg-[radial-gradient(circle_at_center,rgba(245,230,190,0.95)_0%,rgba(241,198,90,0.4)_40%,transparent_75%)] filter blur-xl" />
-        </div>
-      )}
-
       {/* MAIN ANIMATION CONTAINER (STYLIZED 3D INTERLOCKING BANDS + SPACIOUS MONOGRAM G & A) */}
-      <div className="relative z-[20] flex flex-col items-center justify-center text-center px-4 w-full max-w-xl pointer-events-none">
+      <div
+        className={`relative z-[20] flex flex-col items-center justify-center text-center px-4 w-full max-w-xl pointer-events-none transition-all duration-700 ${
+          isTransitioning ? 'opacity-30 scale-95' : 'opacity-100'
+        }`}
+      >
         
         {/* STYLIZED 3D INTERLOCKING GOLD WEDDING BANDS & SPACIOUS G & A MONOGRAM */}
         <div className="relative flex items-center justify-center transition-all duration-700">
