@@ -84,8 +84,8 @@ export const MusicPlayer: React.FC = () => {
       ref={containerRef}
       className={`select-none transition-all duration-500 z-40 ${
         isScrolledPastHero
-          ? 'fixed bottom-5 right-5 sm:bottom-8 sm:right-8 left-auto top-auto'
-          : 'fixed top-[calc(100vh-148px)] left-[calc(50%+115px)] sm:left-[calc(50%+150px)] md:left-[calc(50%+220px)] lg:left-[calc(50%+270px)] xl:left-[calc(50%+325px)]'
+          ? 'fixed bottom-5 right-4 sm:bottom-8 sm:right-8 left-auto top-auto'
+          : 'fixed top-[calc(100vh-148px)] right-3 sm:right-auto sm:left-[calc(50%+150px)] md:left-[calc(50%+220px)] lg:left-[calc(50%+270px)] xl:left-[calc(50%+325px)]'
       }`}
     >
       <style>{`
@@ -110,16 +110,16 @@ export const MusicPlayer: React.FC = () => {
         }
       `}</style>
 
-      {/* SINGLE UNIFIED COMPACT LUXURY MUSIC BAR (20-30% Smaller Size) */}
+      {/* SINGLE UNIFIED COMPACT LUXURY MUSIC BAR (Expands inward to Left to prevent edge clipping) */}
       <div
-        className={`flex items-center p-0.5 bg-[#060e0a]/95 border border-[#F5E6BE]/40 rounded-full shadow-[0_6px_24px_rgba(0,0,0,0.85)] backdrop-blur-md transition-all duration-300 ${
+        className={`flex items-center flex-row-reverse p-0.5 bg-[#060e0a]/95 border border-[#F5E6BE]/40 rounded-full shadow-[0_6px_24px_rgba(0,0,0,0.85)] backdrop-blur-md transition-all duration-300 ${
           isAudioActive ? 'animate-music-gentle-float' : ''
         }`}
       >
         {/* MAIN SINGLE COMPACT MUSIC BUTTON (w-8 h-8 = 32px) */}
         <button
           onClick={handleMainButtonTap}
-          className="relative flex items-center justify-center w-8 h-8 rounded-full text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none"
+          className="relative flex items-center justify-center w-8 h-8 rounded-full text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none shrink-0"
           title={isPanelOpen ? 'Close Controls' : 'Music Controls'}
           aria-label="Music Controls"
         >
@@ -140,21 +140,18 @@ export const MusicPlayer: React.FC = () => {
           )}
         </button>
 
-        {/* EXPANDABLE COMPACT ADDITIONAL CONTROLS */}
+        {/* EXPANDABLE COMPACT ADDITIONAL CONTROLS (Expands to Left) */}
         <div
           className={`flex items-center gap-1 overflow-hidden transition-all duration-300 ease-out origin-right ${
             isPanelOpen
-              ? 'max-w-[120px] opacity-100 ml-1 pr-1'
-              : 'max-w-0 opacity-0 ml-0 pr-0 pointer-events-none'
+              ? 'max-w-[130px] opacity-100 mr-1 pl-1'
+              : 'max-w-0 opacity-0 mr-0 pl-0 pointer-events-none'
           }`}
         >
-          {/* Subtle Divider */}
-          <div className="w-[1px] h-3.5 bg-[#F5E6BE]/20 mr-0.5" />
-
           {/* 1. Play / Pause Button */}
           <button
             onClick={handlePlayPause}
-            className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-[#11221c] text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none"
+            className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-[#11221c] text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none shrink-0"
             title={isPlaying && !isMuted ? 'Pause' : 'Play'}
             aria-label={isPlaying && !isMuted ? 'Pause' : 'Play'}
           >
@@ -164,7 +161,7 @@ export const MusicPlayer: React.FC = () => {
           {/* 2. Mute / Unmute Button */}
           <button
             onClick={handleMuteUnmute}
-            className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-[#11221c] text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none"
+            className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-[#11221c] text-[#F5E6BE] hover:scale-105 transition-all duration-200 focus:outline-none shrink-0"
             title={isMuted ? 'Unmute Sound' : 'Mute Sound'}
             aria-label={isMuted ? 'Unmute Sound' : 'Mute Sound'}
           >
@@ -174,12 +171,15 @@ export const MusicPlayer: React.FC = () => {
           {/* 3. Close / Turn Music Off Button */}
           <button
             onClick={handleTurnOff}
-            className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-[#11221c] text-[#F5E6BE]/70 hover:text-[#FFF] hover:scale-105 transition-all duration-200 focus:outline-none"
+            className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-[#11221c] text-[#F5E6BE]/70 hover:text-[#FFF] hover:scale-105 transition-all duration-200 focus:outline-none shrink-0"
             title="Turn Music Off"
             aria-label="Turn Music Off"
           >
             <X size={12} />
           </button>
+
+          {/* Subtle Divider */}
+          <div className="w-[1px] h-3.5 bg-[#F5E6BE]/20 ml-0.5" />
         </div>
       </div>
     </div>
