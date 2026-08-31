@@ -31,7 +31,7 @@ interface SparkleParticle {
 
 export const SplashScreen: React.FC = () => {
   // Sequence Stage:
-  // 1: 3D Rings reveal -> 2: Metallic sheen -> 3: G appears -> 4: & appears -> 5: A appears -> 6: atmosphere -> 7: invitation ready
+  // 1: Ring 1 draws -> 2: Ring 2 interlocks -> 3: G appears -> 4: & appears -> 5: A appears -> 6: atmosphere -> 7: invitation ready
   const [animStage, setAnimStage] = useState<number>(1);
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [isComplete, setIsComplete] = useState<boolean>(false);
@@ -40,7 +40,7 @@ export const SplashScreen: React.FC = () => {
   const rafRef = useRef<number>(0);
   const isProcessingRef = useRef<boolean>(false);
 
-  // 1. MASTER TIMELINE FOR REALISTIC 3D INTERLOCKING RINGS + MONOGRAM G & A
+  // 1. MASTER TIMELINE FOR INTERLOCKING RINGS + SPACIOUS G & A MONOGRAM
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.overflow = 'hidden';
@@ -51,23 +51,23 @@ export const SplashScreen: React.FC = () => {
       return;
     }
 
-    // Stage 2: Metallic Sheen Sweep (1.2s)
+    // Stage 2: Ring 2 interlocks (1.2s)
     const t2 = setTimeout(() => setAnimStage(2), 1200);
 
-    // Stage 3: G appears (2.2s)
-    const t3 = setTimeout(() => setAnimStage(3), 2200);
+    // Stage 3: G appears (2.4s)
+    const t3 = setTimeout(() => setAnimStage(3), 2400);
 
-    // Stage 4: & appears (3.2s)
-    const t4 = setTimeout(() => setAnimStage(4), 3200);
+    // Stage 4: & appears (3.4s)
+    const t4 = setTimeout(() => setAnimStage(4), 3400);
 
-    // Stage 5: A appears (4.2s)
-    const t5 = setTimeout(() => setAnimStage(5), 4200);
+    // Stage 5: A appears (4.4s)
+    const t5 = setTimeout(() => setAnimStage(5), 4400);
 
-    // Stage 6: Golden Atmosphere Glow (5.4s)
-    const t6 = setTimeout(() => setAnimStage(6), 5400);
+    // Stage 6: Golden Atmosphere Glow (5.6s)
+    const t6 = setTimeout(() => setAnimStage(6), 5600);
 
-    // Stage 7: Invitation Message Reveal (6.4s)
-    const t7 = setTimeout(() => setAnimStage(7), 6400);
+    // Stage 7: Invitation Message Reveal (6.6s)
+    const t7 = setTimeout(() => setAnimStage(7), 6600);
 
     return () => {
       clearTimeout(t2);
@@ -229,35 +229,77 @@ export const SplashScreen: React.FC = () => {
       }`}
     >
       <style>{`
-        /* Subtle Heartbeat Pulse */
-        @keyframes heartDoublePulse {
+        /* Ring 1 (Left Ring Draw) */
+        @keyframes ringLeftDraw {
           0% {
-            transform: scale(1.00);
-            filter: drop-shadow(0 0 8px rgba(245,230,190,0.4));
+            stroke-dasharray: 450;
+            stroke-dashoffset: 450;
+            opacity: 0;
           }
-          18% {
-            transform: scale(1.04);
-            filter: drop-shadow(0 0 20px rgba(245,230,190,0.8));
-          }
-          34% {
-            transform: scale(0.98);
-            filter: drop-shadow(0 0 10px rgba(245,230,190,0.45));
-          }
-          48% {
-            transform: scale(1.02);
-            filter: drop-shadow(0 0 16px rgba(245,230,190,0.7));
-          }
-          65% {
-            transform: scale(1.00);
-            filter: drop-shadow(0 0 8px rgba(245,230,190,0.4));
+          20% {
+            opacity: 0.85;
           }
           100% {
-            transform: scale(1.00);
-            filter: drop-shadow(0 0 8px rgba(245,230,190,0.4));
+            stroke-dasharray: 450;
+            stroke-dashoffset: 0;
+            opacity: 0.95;
           }
         }
 
-        /* Atmosphere Glow */
+        /* Ring 2 (Right Interlocking Ring Draw) */
+        @keyframes ringRightDraw {
+          0% {
+            stroke-dasharray: 450;
+            stroke-dashoffset: 450;
+            opacity: 0;
+          }
+          20% {
+            opacity: 0.85;
+          }
+          100% {
+            stroke-dasharray: 450;
+            stroke-dashoffset: 0;
+            opacity: 0.95;
+          }
+        }
+
+        /* Monogram Letter G Fade In from Left */
+        @keyframes monogramGFadeIn {
+          0% {
+            opacity: 0;
+            transform: translateX(-16px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        /* Monogram Symbol & Fade In */
+        @keyframes monogramAmpFadeIn {
+          0% {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        /* Monogram Letter A Fade In from Right */
+        @keyframes monogramAFadeIn {
+          0% {
+            opacity: 0;
+            transform: translateX(16px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        /* Subtle Glow Atmosphere */
         @keyframes atmosphereGlow {
           0% {
             opacity: 0.15;
@@ -305,8 +347,24 @@ export const SplashScreen: React.FC = () => {
           }
         }
 
-        .animate-heartbeat {
-          animation: heartDoublePulse 2.8s ease-in-out infinite;
+        .animate-ring-left {
+          animation: ringLeftDraw 2.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+
+        .animate-ring-right {
+          animation: ringRightDraw 2.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+
+        .animate-monogram-g {
+          animation: monogramGFadeIn 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+
+        .animate-monogram-amp {
+          animation: monogramAmpFadeIn 1.0s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+
+        .animate-monogram-a {
+          animation: monogramAFadeIn 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
         .animate-atmosphere {
@@ -319,6 +377,13 @@ export const SplashScreen: React.FC = () => {
 
         .animate-portal {
           animation: portalExpand 1.3s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .animate-ring-left, .animate-ring-right, .animate-monogram-g, .animate-monogram-amp, .animate-monogram-a, .animate-tap-float {
+            animation: none !important;
+            opacity: 1 !important;
+          }
         }
       `}</style>
 
@@ -343,69 +408,133 @@ export const SplashScreen: React.FC = () => {
         </div>
       )}
 
-      {/* MAIN ANIMATION CONTAINER (REALISTIC 3D INTERLOCKING RINGS + SPACIOUS G & A) */}
+      {/* MAIN ANIMATION CONTAINER (INTERLOCKING RINGS + SPACIOUS MONOGRAM G & A) */}
       <div className="relative z-[20] flex flex-col items-center justify-center text-center px-4 w-full max-w-xl pointer-events-none">
         
-        {/* REALISTIC 3D INTERLOCKING GOLDEN WEDDING RINGS & SPACIOUS G & A MONOGRAM */}
-        <div
-          className={`relative flex items-center justify-center transition-all duration-1000 ${
-            animStage >= 5 ? 'animate-heartbeat' : ''
-          }`}
-        >
-          <div className="relative w-64 h-64 sm:w-80 sm:h-80 flex items-center justify-center">
-            {/* 3D Photorealistic Interlocking Gold Wedding Bands Asset with Soft Feathered Edge Blend */}
-            <img
-              src="/realistic-interlocking-rings.png"
-              alt="Realistic Interlocking Gold Wedding Bands"
-              className={`w-full h-full object-contain filter drop-shadow-[0_10px_35px_rgba(245,230,190,0.35)] mix-blend-screen transition-all duration-1200 ${
-                animStage >= 1 ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-              }`}
-              style={{
-                maskImage: 'radial-gradient(circle at center, black 50%, transparent 92%)',
-                WebkitMaskImage: 'radial-gradient(circle at center, black 50%, transparent 92%)',
-              }}
-            />
+        {/* INTERLOCKING GOLDEN WEDDING RINGS & SPACIOUS G & A MONOGRAM */}
+        <div className="relative flex items-center justify-center transition-all duration-700">
+          <svg
+            width="360"
+            height="240"
+            viewBox="0 0 340 240"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-56 h-40 sm:w-72 sm:h-48 text-[#F5E6BE] filter drop-shadow-[0_0_12px_rgba(245,230,190,0.4)]"
+          >
+            <defs>
+              <linearGradient id="ringGoldGrad" x1="0" y1="0" x2="340" y2="240" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#FFF9EB" stopOpacity="0.98" />
+                <stop offset="45%" stopColor="#F5E6BE" stopOpacity="0.92" />
+                <stop offset="80%" stopColor="#E2C875" stopOpacity="0.88" />
+                <stop offset="100%" stopColor="#C49E35" stopOpacity="0.82" />
+              </linearGradient>
+              <filter id="ringGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="2" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
 
-            {/* Soft Metallic Gold Light Sheen Sweep Overlay */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(245,230,190,0.14)_0%,rgba(241,198,90,0.02)_45%,transparent_70%)] pointer-events-none mix-blend-screen" />
+            {/* RING 1: Left Golden Wedding Ring (Tilted -12deg) */}
+            {animStage >= 1 && (
+              <g transform="rotate(-12 140 120)">
+                <ellipse
+                  cx="140"
+                  cy="120"
+                  rx="62"
+                  ry="48"
+                  stroke="url(#ringGoldGrad)"
+                  strokeWidth="1.6"
+                  fill="none"
+                  filter="url(#ringGlow)"
+                  className={animStage === 1 ? 'animate-ring-left' : 'opacity-95'}
+                />
+              </g>
+            )}
 
-            {/* SPACIOUS MONOGRAM TEXT (G & A) FRAMED COMFORTABLY IN CENTER OF THE 3D RINGS */}
-            <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-              <div className="flex items-center justify-center gap-3 sm:gap-4 select-none px-4 py-2 bg-[#050c08]/60 backdrop-blur-[2px] rounded-full border border-[#F5E6BE]/25 shadow-2xl">
-                {/* Letter G */}
-                <span
-                  className={`font-serif text-3xl sm:text-4xl text-[#FBF7EF] font-light uppercase tracking-wider text-shadow-hero transition-all duration-1000 ${
-                    animStage >= 3 ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
-                  }`}
-                >
-                  G
-                </span>
+            {/* RING 2: Right Golden Wedding Ring Interlocking (Tilted +12deg) */}
+            {animStage >= 2 && (
+              <g transform="rotate(12 200 120)">
+                <ellipse
+                  cx="200"
+                  cy="120"
+                  rx="62"
+                  ry="48"
+                  stroke="url(#ringGoldGrad)"
+                  strokeWidth="1.6"
+                  fill="none"
+                  filter="url(#ringGlow)"
+                  className={animStage === 2 ? 'animate-ring-right' : 'opacity-95'}
+                />
+              </g>
+            )}
 
-                {/* Symbol & */}
-                <span
-                  className={`font-script text-2xl sm:text-3xl bg-gradient-to-r from-[#FFF7E3] via-[#F5E6BE] to-[#E2C875] bg-clip-text text-transparent font-normal transition-all duration-1000 ${
-                    animStage >= 4 ? 'opacity-100 scale-100' : 'opacity-0 scale-80'
-                  }`}
-                >
-                  &
-                </span>
+            {/* Interlocking Arch Overlap for Natural Crossing Effect */}
+            {animStage >= 2 && (
+              <path
+                d="M 160,78 A 62 48 0 0 1 185,92"
+                stroke="url(#ringGoldGrad)"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                fill="none"
+                filter="url(#ringGlow)"
+                className="opacity-95"
+              />
+            )}
 
-                {/* Letter A */}
-                <span
-                  className={`font-serif text-3xl sm:text-4xl text-[#FBF7EF] font-light uppercase tracking-wider text-shadow-hero transition-all duration-1000 ${
-                    animStage >= 5 ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
-                  }`}
-                >
-                  A
-                </span>
-              </div>
-            </div>
-          </div>
+            {/* SPACIOUS MONOGRAM TEXT (G & A - 25% Reduced Size for Breathing Room) */}
+            <g className="font-serif select-none">
+              {/* Letter G */}
+              <text
+                x="116"
+                y="128"
+                fontSize="40"
+                fontFamily="serif"
+                fontWeight="300"
+                fill="url(#ringGoldGrad)"
+                textAnchor="middle"
+                className={animStage >= 3 ? 'animate-monogram-g' : 'opacity-0'}
+              >
+                G
+              </text>
+
+              {/* Symbol & */}
+              <text
+                x="170"
+                y="124"
+                fontSize="24"
+                fontFamily="serif"
+                fontStyle="italic"
+                fontWeight="300"
+                fill="#FFF7E3"
+                textAnchor="middle"
+                className={animStage >= 4 ? 'animate-monogram-amp' : 'opacity-0'}
+              >
+                &
+              </text>
+
+              {/* Letter A */}
+              <text
+                x="224"
+                y="128"
+                fontSize="40"
+                fontFamily="serif"
+                fontWeight="300"
+                fill="url(#ringGoldGrad)"
+                textAnchor="middle"
+                className={animStage >= 5 ? 'animate-monogram-a' : 'opacity-0'}
+              >
+                A
+              </text>
+            </g>
+          </svg>
         </div>
 
         {/* INVITATION MESSAGE REVEAL ("Come, let us begin." + "Tap to enter") */}
         <div
-          className={`mt-2 flex flex-col items-center gap-3 transition-all duration-1000 ${
+          className={`mt-4 flex flex-col items-center gap-3 transition-all duration-1000 ${
             animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
           }`}
         >
@@ -413,7 +542,7 @@ export const SplashScreen: React.FC = () => {
             Come, let us begin.
           </h2>
 
-          <div className="animate-tap-float mt-1 flex flex-col items-center justify-center">
+          <div className="animate-tap-float mt-2 flex flex-col items-center justify-center">
             <span className="text-[11px] sm:text-xs font-mono tracking-[0.35em] text-[#F5E6BE]/80 uppercase font-light drop-shadow-[0_0_12px_rgba(245,230,190,0.4)]">
               Tap to enter
             </span>
