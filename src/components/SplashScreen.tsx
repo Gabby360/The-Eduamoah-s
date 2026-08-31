@@ -531,25 +531,6 @@ export const SplashScreen: React.FC = () => {
         </div>
 
       </div>
-
-      {/* VERY BOTTOM PRODUCTION CREDIT — POWERED BY KEK STUDIOS */}
-      <div
-        className={`absolute bottom-5 sm:bottom-6 inset-x-0 z-[25] flex flex-col items-center justify-center text-center px-4 pointer-events-none transition-all duration-1000 ${
-          animStage >= 7 ? 'opacity-75 transform translate-y-0' : 'opacity-0 transform translate-y-2'
-        }`}
-      >
-        <span className="text-[9px] font-mono tracking-[0.3em] text-[#F5E6BE]/50 uppercase font-light mb-0.5">
-          POWERED BY
-        </span>
-        <span className="text-[11px] font-serif tracking-[0.25em] text-[#F5E6BE] font-medium uppercase mb-1 drop-shadow-[0_0_8px_rgba(245,230,190,0.3)]">
-          KEK STUDIOS
-        </span>
-        <div className="flex items-center justify-center gap-2 text-[10px] font-mono tracking-[0.18em] text-[#F5E6BE]/60">
-          <span>055 369 6305</span>
-          <span className="text-[#F5E6BE]/30">•</span>
-          <span>059 489 1338</span>
-        </div>
-      </div>
     </div>
   );
 };
