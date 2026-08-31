@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { globalAudio, AudioDiagnosticState } from '../utils/audioManager';
+import { globalAudio } from '../utils/audioManager';
 
 /* ─────────────────────────────────────────────
    ATMOSPHERIC CHAMPAGNE DUST PARTICLES
@@ -23,19 +23,10 @@ export const SplashScreen: React.FC = () => {
   const [animStage, setAnimStage] = useState<number>(1);
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [isComplete, setIsComplete] = useState<boolean>(false);
-  const [diag, setDiag] = useState<AudioDiagnosticState>(globalAudio.getDiagnostics());
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
   const isProcessingRef = useRef<boolean>(false);
-
-  // Subscribe to audio state and diagnostics
-  useEffect(() => {
-    const unsubscribe = globalAudio.subscribe((_playing, _muted, diagnostics) => {
-      setDiag(diagnostics);
-    });
-    return () => unsubscribe();
-  }, []);
 
   // 1. MASTER TIMELINE FOR CINEMATIC SEQUENCE
   useEffect(() => {
@@ -144,7 +135,6 @@ export const SplashScreen: React.FC = () => {
 
     // STEP 1: Execute playDirect() synchronously inside user click gesture event call stack
     const playSuccess = await globalAudio.playDirect();
-    setDiag(globalAudio.getDiagnostics());
 
     console.log('[SPLASH CLICK RESULT]', playSuccess ? 'SUCCESS' : 'FAILED', globalAudio.getDiagnostics());
 
@@ -364,34 +354,6 @@ export const SplashScreen: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* TEMPORARY VISIBLE AUDIO DIAGNOSTICS OVERLAY PANEL */}
-      <div
-        className="absolute bottom-4 left-4 right-4 z-[40] pointer-events-none flex justify-center text-left"
-        aria-hidden="true"
-      >
-        <div className="bg-[#050c08]/90 border border-[#F5E6BE]/30 rounded-lg p-3 max-w-lg w-full text-[10px] font-mono text-[#F5E6BE]/90 shadow-2xl backdrop-blur-md space-y-1">
-          <div className="font-bold border-b border-[#F5E6BE]/20 pb-1 text-[#F5E6BE] flex justify-between">
-            <span>AUDIO DIAGNOSTICS</span>
-            <span className={diag.playResult.includes('SUCCESS') ? 'text-green-400' : 'text-yellow-400'}>
-              {diag.playResult}
-            </span>
-          </div>
-          <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 opacity-80 pt-0.5">
-            <div><span className="text-gray-400">Src:</span> {diag.src.split('/').pop()}</div>
-            <div><span className="text-gray-400">readyState:</span> {diag.readyState} (4=ENOUGH)</div>
-            <div><span className="text-gray-400">networkState:</span> {diag.networkState} (1=IDLE)</div>
-            <div><span className="text-gray-400">paused:</span> {String(diag.paused)}</div>
-            <div><span className="text-gray-400">muted:</span> {String(diag.muted)}</div>
-            <div><span className="text-gray-400">volume:</span> {diag.volume}</div>
-          </div>
-          {diag.error && (
-            <div className="text-red-400 font-semibold pt-0.5 border-t border-red-500/20">
-              Audio Error Code {diag.error.code}: {diag.error.message}
-            </div>
-          )}
-        </div>
-      </div>
     </div>
   );
 };
