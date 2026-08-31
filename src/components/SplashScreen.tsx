@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { globalAudio } from '../utils/audioManager';
 
 /* ─────────────────────────────────────────────
-   ATMOSPHERIC CHAMPAGNE DUST PARTICLES
+   ATMOSPHERIC & SPARKLING DUST PARTICLES
 ───────────────────────────────────────────── */
 const rand = (min: number, max: number) => Math.random() * (max - min) + min;
 
@@ -15,6 +15,18 @@ interface DustParticle {
   alpha: number;
   dir: number;
   speed: number;
+}
+
+interface SparkleParticle {
+  x: number;
+  y: number;
+  r: number;
+  vx: number;
+  vy: number;
+  alpha: number;
+  maxAlpha: number;
+  pulseSpeed: number;
+  color: string;
 }
 
 export const SplashScreen: React.FC = () => {
@@ -68,7 +80,7 @@ export const SplashScreen: React.FC = () => {
     };
   }, []);
 
-  // 2. SPARSE ATMOSPHERIC CANDLELIGHT DUST PARTICLES
+  // 2. MAGICAL SPARKLING DUST & ATMOSPHERIC DUST PARTICLES
   useEffect(() => {
     if (isComplete) return;
 
@@ -84,8 +96,11 @@ export const SplashScreen: React.FC = () => {
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    const dustCount = window.innerWidth < 768 ? 10 : 20;
+    const isMobile = window.innerWidth < 768;
+    const dustCount = isMobile ? 12 : 24;
+    const sparkleCount = isMobile ? 25 : 45;
 
+    // Ambient background dust
     const dust: DustParticle[] = Array.from({ length: dustCount }, () => ({
       x: rand(0, window.innerWidth),
       y: rand(0, window.innerHeight),
@@ -97,6 +112,24 @@ export const SplashScreen: React.FC = () => {
       speed: rand(0.001, 0.0025),
     }));
 
+    // Magical sparkling dust focused around & slightly above the "Tap to enter" area
+    const colors = ['#FFF9EB', '#F5E6BE', '#F1C65A', '#E2C875'];
+    const sparkles: SparkleParticle[] = Array.from({ length: sparkleCount }, () => {
+      const centerX = window.innerWidth / 2;
+      const tapZoneY = window.innerHeight * 0.68;
+      return {
+        x: rand(centerX - 180, centerX + 180),
+        y: rand(tapZoneY - 120, tapZoneY + 60),
+        r: rand(0.5, 1.8),
+        vx: rand(-0.08, 0.08),
+        vy: rand(-0.16, -0.03),
+        alpha: rand(0.05, 0.4),
+        maxAlpha: rand(0.4, 0.85),
+        pulseSpeed: rand(0.008, 0.025),
+        color: colors[Math.floor(Math.random() * colors.length)],
+      };
+    });
+
     let lastFrame = 0;
     const FRAME_INTERVAL = 1000 / 30;
 
@@ -107,8 +140,11 @@ export const SplashScreen: React.FC = () => {
 
       const W = canvas.width;
       const H = canvas.height;
+      const centerX = W / 2;
+      const tapZoneY = H * 0.68;
       ctx.clearRect(0, 0, W, H);
 
+      /* 1. Ambient Background Dust */
       dust.forEach((p) => {
         p.x += p.vx;
         p.y += p.vy;
@@ -124,6 +160,37 @@ export const SplashScreen: React.FC = () => {
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(245, 230, 190, ${p.alpha.toFixed(3)})`;
         ctx.fill();
+      });
+
+      /* 2. Magical Sparkling Dust around "Tap to enter" Callout Area */
+      sparkles.forEach((s) => {
+        s.x += s.vx;
+        s.y += s.vy;
+        s.alpha += Math.sin(now * s.pulseSpeed) * 0.02;
+
+        // Reset particle softly when floating out of the callout zone
+        if (
+          s.y < tapZoneY - 140 ||
+          s.x < centerX - 240 ||
+          s.x > centerX + 240 ||
+          s.alpha < 0.02
+        ) {
+          s.x = rand(centerX - 170, centerX + 170);
+          s.y = rand(tapZoneY + 10, tapZoneY + 60);
+          s.alpha = rand(0.05, 0.35);
+        }
+
+        const clampedAlpha = Math.max(0.04, Math.min(s.alpha, s.maxAlpha));
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = s.color;
+        ctx.globalAlpha = clampedAlpha;
+        ctx.shadowColor = s.color;
+        ctx.shadowBlur = s.r * 3;
+        ctx.fill();
+        ctx.restore();
       });
     };
 
@@ -261,7 +328,7 @@ export const SplashScreen: React.FC = () => {
         @keyframes tapBreathFloat {
           0% {
             transform: translateY(0px);
-            opacity: 0.70;
+            opacity: 0.75;
           }
           50% {
             transform: translateY(-3px);
@@ -269,7 +336,7 @@ export const SplashScreen: React.FC = () => {
           }
           100% {
             transform: translateY(0px);
-            opacity: 0.70;
+            opacity: 0.75;
           }
         }
 
@@ -330,7 +397,7 @@ export const SplashScreen: React.FC = () => {
         }
       `}</style>
 
-      {/* Sparse Atmospheric Dust Particles */}
+      {/* Sparse Atmospheric Dust & Sparkling Dust Particles */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 z-[1] w-full h-full pointer-events-none"
@@ -456,12 +523,9 @@ export const SplashScreen: React.FC = () => {
             Come, let us begin.
           </h2>
 
-          <div className="animate-tap-float mt-2 flex flex-col items-center gap-1">
-            <span className="text-[11px] sm:text-xs font-mono tracking-[0.35em] text-[#F5E6BE]/70 uppercase font-light">
+          <div className="animate-tap-float mt-2 flex flex-col items-center justify-center">
+            <span className="text-[11px] sm:text-xs font-mono tracking-[0.35em] text-[#F5E6BE]/80 uppercase font-light drop-shadow-[0_0_12px_rgba(245,230,190,0.4)]">
               Tap to enter
-            </span>
-            <span className="text-[10px] text-[#F5E6BE]/50 tracking-widest">
-              ♡
             </span>
           </div>
         </div>
