@@ -31,7 +31,7 @@ interface SparkleParticle {
 
 export const SplashScreen: React.FC = () => {
   // Sequence Stage:
-  // 1: Background & sparkling dust -> 2: Ring fades & slides up -> 3: G appears -> 4: & appears -> 5: A appears -> 6: atmosphere -> 7: invitation & Tap to enter ready
+  // 1: Ring 1 draws -> 2: Ring 2 interlocks -> 3: G appears -> 4: & appears -> 5: A appears -> 6: atmosphere -> 7: invitation ready
   const [animStage, setAnimStage] = useState<number>(1);
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [isComplete, setIsComplete] = useState<boolean>(false);
@@ -40,7 +40,7 @@ export const SplashScreen: React.FC = () => {
   const rafRef = useRef<number>(0);
   const isProcessingRef = useRef<boolean>(false);
 
-  // 1. MASTER TIMELINE FOR REALISTIC RING ENTRANCE + MONOGRAM G & A
+  // 1. MASTER TIMELINE FOR STYLIZED INTERLOCKING GOLD BANDS + SPACIOUS MONOGRAM G & A
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.overflow = 'hidden';
@@ -51,23 +51,23 @@ export const SplashScreen: React.FC = () => {
       return;
     }
 
-    // Stage 2: Realistic Ring gently fades & slides into position (1.0s)
-    const t2 = setTimeout(() => setAnimStage(2), 1000);
+    // Stage 2: Ring 2 interlocks diagonally (1.2s)
+    const t2 = setTimeout(() => setAnimStage(2), 1200);
 
-    // Stage 3: G appears after ring settles (2.4s)
-    const t3 = setTimeout(() => setAnimStage(3), 2400);
+    // Stage 3: G appears (2.2s)
+    const t3 = setTimeout(() => setAnimStage(3), 2200);
 
-    // Stage 4: & appears (3.4s)
-    const t4 = setTimeout(() => setAnimStage(4), 3400);
+    // Stage 4: & appears (3.2s)
+    const t4 = setTimeout(() => setAnimStage(4), 3200);
 
-    // Stage 5: A appears (4.4s)
-    const t5 = setTimeout(() => setAnimStage(5), 4400);
+    // Stage 5: A appears (4.2s)
+    const t5 = setTimeout(() => setAnimStage(5), 4200);
 
-    // Stage 6: Golden Atmosphere Glow (5.6s)
-    const t6 = setTimeout(() => setAnimStage(6), 5600);
+    // Stage 6: Golden Atmosphere Glow (5.4s)
+    const t6 = setTimeout(() => setAnimStage(6), 5400);
 
-    // Stage 7: Invitation Message & "Tap to enter" Reveal (6.6s)
-    const t7 = setTimeout(() => setAnimStage(7), 6600);
+    // Stage 7: Invitation Message Reveal (6.4s)
+    const t7 = setTimeout(() => setAnimStage(7), 6400);
 
     return () => {
       clearTimeout(t2);
@@ -229,66 +229,81 @@ export const SplashScreen: React.FC = () => {
       }`}
     >
       <style>{`
-        /* Realistic Ring Smooth Upward Entrance Animation */
-        @keyframes ringFloatEntrance {
+        /* Ring 1 (Left Gold Band Draw) */
+        @keyframes ringLeftDraw {
+          0% {
+            stroke-dasharray: 480;
+            stroke-dashoffset: 480;
+            opacity: 0;
+            transform: translateX(-12px) scale(0.96);
+          }
+          30% {
+            opacity: 0.85;
+          }
+          100% {
+            stroke-dasharray: 480;
+            stroke-dashoffset: 0;
+            opacity: 1.0;
+            transform: translateX(0) scale(1.0);
+          }
+        }
+
+        /* Ring 2 (Right Interlocking Gold Band Draw) */
+        @keyframes ringRightDraw {
+          0% {
+            stroke-dasharray: 480;
+            stroke-dashoffset: 480;
+            opacity: 0;
+            transform: translateX(12px) scale(0.96);
+          }
+          30% {
+            opacity: 0.85;
+          }
+          100% {
+            stroke-dasharray: 480;
+            stroke-dashoffset: 0;
+            opacity: 1.0;
+            transform: translateX(0) scale(1.0);
+          }
+        }
+
+        /* Monogram Letter G Fade In from Left */
+        @keyframes monogramGFadeIn {
           0% {
             opacity: 0;
-            transform: translateY(22px) scale(0.93);
-          }
-          60% {
-            opacity: 0.95;
-            transform: translateY(-2px) scale(1.02);
+            transform: translateX(-16px);
           }
           100% {
             opacity: 1;
-            transform: translateY(0px) scale(1.0);
+            transform: translateX(0);
           }
         }
 
-        /* Metallic Gold Light Sweep Across Ring Surface */
-        @keyframes metallicGoldSheen {
+        /* Monogram Symbol & Fade In */
+        @keyframes monogramAmpFadeIn {
           0% {
-            transform: translateX(-100%) rotate(25deg);
             opacity: 0;
-          }
-          40% {
-            opacity: 0.6;
+            transform: scale(0.8);
           }
           100% {
-            transform: translateX(100%) rotate(25deg);
-            opacity: 0;
+            opacity: 1;
+            transform: scale(1);
           }
         }
 
-        /* Subtle Heartbeat Pulse */
-        @keyframes heartDoublePulse {
+        /* Monogram Letter A Fade In from Right */
+        @keyframes monogramAFadeIn {
           0% {
-            transform: scale(1.00);
-            filter: drop-shadow(0 0 8px rgba(245,230,190,0.4));
-          }
-          18% {
-            transform: scale(1.04);
-            filter: drop-shadow(0 0 20px rgba(245,230,190,0.8));
-          }
-          34% {
-            transform: scale(0.98);
-            filter: drop-shadow(0 0 10px rgba(245,230,190,0.45));
-          }
-          48% {
-            transform: scale(1.02);
-            filter: drop-shadow(0 0 16px rgba(245,230,190,0.7));
-          }
-          65% {
-            transform: scale(1.00);
-            filter: drop-shadow(0 0 8px rgba(245,230,190,0.4));
+            opacity: 0;
+            transform: translateX(16px);
           }
           100% {
-            transform: scale(1.00);
-            filter: drop-shadow(0 0 8px rgba(245,230,190,0.4));
+            opacity: 1;
+            transform: translateX(0);
           }
         }
 
-        /* Atmosphere Glow */
+        /* Subtle Glow Atmosphere */
         @keyframes atmosphereGlow {
           0% {
             opacity: 0.15;
@@ -336,16 +351,24 @@ export const SplashScreen: React.FC = () => {
           }
         }
 
-        .animate-ring-entrance {
-          animation: ringFloatEntrance 2.0s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        .animate-ring-left {
+          animation: ringLeftDraw 2.0s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
-        .animate-sheen-sweep {
-          animation: metallicGoldSheen 2.2s ease-in-out infinite 2.0s;
+        .animate-ring-right {
+          animation: ringRightDraw 2.0s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
-        .animate-heartbeat {
-          animation: heartDoublePulse 2.8s ease-in-out infinite;
+        .animate-monogram-g {
+          animation: monogramGFadeIn 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+
+        .animate-monogram-amp {
+          animation: monogramAmpFadeIn 1.0s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+
+        .animate-monogram-a {
+          animation: monogramAFadeIn 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
         .animate-atmosphere {
@@ -358,6 +381,13 @@ export const SplashScreen: React.FC = () => {
 
         .animate-portal {
           animation: portalExpand 1.3s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .animate-ring-left, .animate-ring-right, .animate-monogram-g, .animate-monogram-amp, .animate-monogram-a, .animate-tap-float {
+            animation: none !important;
+            opacity: 1 !important;
+          }
         }
       `}</style>
 
@@ -382,73 +412,189 @@ export const SplashScreen: React.FC = () => {
         </div>
       )}
 
-      {/* MAIN ANIMATION CONTAINER (REALISTIC RING IMAGE + SPACIOUS G & A MONOGRAM) */}
+      {/* MAIN ANIMATION CONTAINER (STYLIZED 3D INTERLOCKING BANDS + SPACIOUS MONOGRAM G & A) */}
       <div className="relative z-[20] flex flex-col items-center justify-center text-center px-4 w-full max-w-xl pointer-events-none">
         
-        {/* REALISTIC RING IMAGE & MONOGRAM G & A */}
-        <div
-          className={`relative flex items-center justify-center transition-all duration-1000 ${
-            animStage >= 6 ? 'animate-heartbeat' : ''
-          }`}
-        >
-          <div className="relative w-64 h-64 sm:w-80 sm:h-80 flex items-center justify-center overflow-hidden rounded-full">
-            {/* REALISTIC PHOTOGRAPHED WEDDING RINGS IMAGE ASSET */}
+        {/* STYLIZED 3D INTERLOCKING GOLD WEDDING BANDS & SPACIOUS G & A MONOGRAM */}
+        <div className="relative flex items-center justify-center transition-all duration-700">
+          <svg
+            width="360"
+            height="240"
+            viewBox="0 0 340 240"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-56 h-40 sm:w-72 sm:h-48 text-[#F5E6BE] filter drop-shadow-[0_8px_25px_rgba(245,230,190,0.35)]"
+          >
+            <defs>
+              {/* Multi-Stop Luxury Gold Metallic Gradient */}
+              <linearGradient id="bandGoldGrad" x1="0" y1="0" x2="340" y2="240" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#FFF9EB" stopOpacity="1" />
+                <stop offset="25%" stopColor="#F5E6BE" stopOpacity="0.95" />
+                <stop offset="50%" stopColor="#E2C875" stopOpacity="0.95" />
+                <stop offset="75%" stopColor="#D4B04C" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#9C7722" stopOpacity="0.85" />
+              </linearGradient>
+
+              {/* Inner Metallic Bevel Gradient */}
+              <linearGradient id="bandInnerGold" x1="0" y1="0" x2="0" y2="100%">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+                <stop offset="40%" stopColor="#F5E6BE" stopOpacity="0.75" />
+                <stop offset="100%" stopColor="#8C6B1F" stopOpacity="0.85" />
+              </linearGradient>
+
+              {/* Bevelled 3D Depth & Shadow Filter */}
+              <filter id="band3DDepth" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor="#000000" floodOpacity="0.5" />
+                <feGaussianBlur stdDeviation="1.5" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* RING 1: Left Stylized Gold Wedding Band (Thick Bevelled Curved Band) */}
+            {animStage >= 1 && (
+              <g transform="rotate(-12 140 120)" className={animStage === 1 ? 'animate-ring-left' : 'opacity-100'}>
+                {/* Thick Main Gold Band */}
+                <ellipse
+                  cx="140"
+                  cy="120"
+                  rx="62"
+                  ry="46"
+                  stroke="url(#bandGoldGrad)"
+                  strokeWidth="5.5"
+                  fill="none"
+                  filter="url(#band3DDepth)"
+                />
+                {/* Inner Bevel Rim */}
+                <ellipse
+                  cx="140"
+                  cy="120"
+                  rx="58"
+                  ry="42"
+                  stroke="url(#bandInnerGold)"
+                  strokeWidth="1.2"
+                  fill="none"
+                  opacity="0.85"
+                />
+                {/* Specular Edge Highlight */}
+                <ellipse
+                  cx="140"
+                  cy="120"
+                  rx="65"
+                  ry="49"
+                  stroke="#FFF9EB"
+                  strokeWidth="0.8"
+                  fill="none"
+                  opacity="0.6"
+                />
+              </g>
+            )}
+
+            {/* RING 2: Right Stylized Gold Wedding Band Interlocking (Thick Bevelled Curved Band) */}
             {animStage >= 2 && (
-              <img
-                src="/realistic-interlocking-rings.png"
-                alt="Realistic Gold Wedding Bands"
-                className="w-full h-full object-contain filter drop-shadow-[0_12px_35px_rgba(245,230,190,0.35)] mix-blend-screen animate-ring-entrance"
-                style={{
-                  maskImage: 'radial-gradient(circle at center, black 50%, transparent 92%)',
-                  WebkitMaskImage: 'radial-gradient(circle at center, black 50%, transparent 92%)',
-                }}
+              <g transform="rotate(12 200 120)" className={animStage === 2 ? 'animate-ring-right' : 'opacity-100'}>
+                {/* Thick Main Gold Band */}
+                <ellipse
+                  cx="200"
+                  cy="120"
+                  rx="62"
+                  ry="46"
+                  stroke="url(#bandGoldGrad)"
+                  strokeWidth="5.5"
+                  fill="none"
+                  filter="url(#band3DDepth)"
+                />
+                {/* Inner Bevel Rim */}
+                <ellipse
+                  cx="200"
+                  cy="120"
+                  rx="58"
+                  ry="42"
+                  stroke="url(#bandInnerGold)"
+                  strokeWidth="1.2"
+                  fill="none"
+                  opacity="0.85"
+                />
+                {/* Specular Edge Highlight */}
+                <ellipse
+                  cx="200"
+                  cy="120"
+                  rx="65"
+                  ry="49"
+                  stroke="#FFF9EB"
+                  strokeWidth="0.8"
+                  fill="none"
+                  opacity="0.6"
+                />
+              </g>
+            )}
+
+            {/* Interlocking Arch Overlap for Natural 3D Depth Crossing Effect */}
+            {animStage >= 2 && (
+              <path
+                d="M 158,76 A 62 46 0 0 1 186,90"
+                stroke="url(#bandGoldGrad)"
+                strokeWidth="6"
+                strokeLinecap="round"
+                fill="none"
+                filter="url(#band3DDepth)"
+                className="opacity-100"
               />
             )}
 
-            {/* Soft Metallic Gold Light Sheen Sweep Overlay */}
-            {animStage >= 2 && (
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="w-1/2 h-full bg-gradient-to-r from-transparent via-[#F5E6BE]/25 to-transparent animate-sheen-sweep mix-blend-screen" />
-              </div>
-            )}
+            {/* SPACIOUS MONOGRAM TEXT (G & A - Reduced Size for Generous Breathing Room) */}
+            <g className="font-serif select-none">
+              {/* Letter G */}
+              <text
+                x="116"
+                y="128"
+                fontSize="40"
+                fontFamily="serif"
+                fontWeight="300"
+                fill="url(#bandGoldGrad)"
+                textAnchor="middle"
+                className={animStage >= 3 ? 'animate-monogram-g' : 'opacity-0'}
+              >
+                G
+              </text>
 
-            {/* SPACIOUS MONOGRAM TEXT (G & A) FRAMED COMFORTABLY IN CENTER OF THE RINGS */}
-            <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-              <div className="flex items-center justify-center gap-3 sm:gap-4 select-none px-4 py-2 bg-[#050c08]/60 backdrop-blur-[2px] rounded-full border border-[#F5E6BE]/25 shadow-2xl">
-                {/* Letter G */}
-                <span
-                  className={`font-serif text-3xl sm:text-4xl text-[#FBF7EF] font-light uppercase tracking-wider text-shadow-hero transition-all duration-1000 ${
-                    animStage >= 3 ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
-                  }`}
-                >
-                  G
-                </span>
+              {/* Symbol & */}
+              <text
+                x="170"
+                y="124"
+                fontSize="24"
+                fontFamily="serif"
+                fontStyle="italic"
+                fontWeight="300"
+                fill="#FFF7E3"
+                textAnchor="middle"
+                className={animStage >= 4 ? 'animate-monogram-amp' : 'opacity-0'}
+              >
+                &
+              </text>
 
-                {/* Symbol & */}
-                <span
-                  className={`font-script text-2xl sm:text-3xl bg-gradient-to-r from-[#FFF7E3] via-[#F5E6BE] to-[#E2C875] bg-clip-text text-transparent font-normal transition-all duration-1000 ${
-                    animStage >= 4 ? 'opacity-100 scale-100' : 'opacity-0 scale-80'
-                  }`}
-                >
-                  &
-                </span>
-
-                {/* Letter A */}
-                <span
-                  className={`font-serif text-3xl sm:text-4xl text-[#FBF7EF] font-light uppercase tracking-wider text-shadow-hero transition-all duration-1000 ${
-                    animStage >= 5 ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
-                  }`}
-                >
-                  A
-                </span>
-              </div>
-            </div>
-          </div>
+              {/* Letter A */}
+              <text
+                x="224"
+                y="128"
+                fontSize="40"
+                fontFamily="serif"
+                fontWeight="300"
+                fill="url(#bandGoldGrad)"
+                textAnchor="middle"
+                className={animStage >= 5 ? 'animate-monogram-a' : 'opacity-0'}
+              >
+                A
+              </text>
+            </g>
+          </svg>
         </div>
 
         {/* INVITATION MESSAGE REVEAL ("Come, let us begin." + "Tap to enter") */}
         <div
-          className={`mt-2 flex flex-col items-center gap-3 transition-all duration-1000 ${
+          className={`mt-4 flex flex-col items-center gap-3 transition-all duration-1000 ${
             animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
           }`}
         >
@@ -456,7 +602,7 @@ export const SplashScreen: React.FC = () => {
             Come, let us begin.
           </h2>
 
-          <div className="animate-tap-float mt-1 flex flex-col items-center justify-center">
+          <div className="animate-tap-float mt-2 flex flex-col items-center justify-center">
             <span className="text-[11px] sm:text-xs font-mono tracking-[0.35em] text-[#F5E6BE]/80 uppercase font-light drop-shadow-[0_0_12px_rgba(245,230,190,0.4)]">
               Tap to enter
             </span>
