@@ -221,9 +221,8 @@ export const SplashScreen: React.FC = () => {
     <div
       onClick={handleSplashTap}
       onTouchEnd={handleSplashTap}
-      className={`fixed inset-0 z-[100] flex items-center justify-center bg-[#050c08] overflow-hidden select-none cursor-pointer transition-opacity duration-1000 ${
-        isTransitioning ? 'pointer-events-none opacity-0 transition-opacity duration-1900' : 'opacity-100'
-      }`}
+      className={`fixed inset-0 z-[100] flex items-center justify-center bg-[#050c08] overflow-hidden select-none cursor-pointer transition-opacity duration-1000 ${isTransitioning ? 'pointer-events-none opacity-0 transition-opacity duration-1900' : 'opacity-100'
+        }`}
     >
       <style>{`
         /* Ring 1 (Left Gold Band Draw) */
@@ -431,262 +430,44 @@ export const SplashScreen: React.FC = () => {
 
       {/* MAIN ANIMATION CONTAINER (STYLIZED 3D INTERLOCKING BANDS + SPACIOUS MONOGRAM G & C) */}
       <div
-        className={`relative z-[20] flex flex-col items-center justify-center text-center px-4 w-full max-w-xl pointer-events-auto cursor-pointer transition-all duration-700 ${
-          isTransitioning ? 'opacity-20 scale-95' : 'opacity-100'
-        }`}
+        className={`relative z-[20] flex flex-col items-center justify-center text-center px-4 w-full max-w-xl pointer-events-auto cursor-pointer transition-all duration-700 ${isTransitioning ? 'opacity-20 scale-95' : 'opacity-100'
+          }`}
         onClick={handleSplashTap}
         onTouchEnd={handleSplashTap}
       >
-        
-        {/* REALISTIC 3D INTERLOCKING GOLD WEDDING BANDS & DIAMOND SOLITAIRE RING */}
-        <div className="relative flex items-center justify-center transition-all duration-700">
-          <svg
-            width="380"
-            height="260"
-            viewBox="0 0 380 260"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-64 h-44 sm:w-80 sm:h-52 text-[#F5E6BE] filter drop-shadow-[0_10px_30px_rgba(245,230,190,0.4)]"
-          >
-            <defs>
-              {/* Ultra-Realistic Multi-Angle Gold Gradient */}
-              <linearGradient id="realGoldMetallic" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="12%" stopColor="#FDE68A" stopOpacity="1" />
-                <stop offset="28%" stopColor="#D97706" stopOpacity="1" />
-                <stop offset="48%" stopColor="#FEF08A" stopOpacity="1" />
-                <stop offset="68%" stopColor="#B45309" stopOpacity="1" />
-                <stop offset="85%" stopColor="#F59E0B" stopOpacity="1" />
-                <stop offset="100%" stopColor="#78350F" stopOpacity="1" />
-              </linearGradient>
 
-              {/* Secondary Gold Highlight Gradient */}
-              <linearGradient id="goldBevelRim" x1="0%" y1="100%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#FFFDF0" stopOpacity="1" />
-                <stop offset="30%" stopColor="#FBBF24" stopOpacity="1" />
-                <stop offset="70%" stopColor="#92400E" stopOpacity="1" />
-                <stop offset="100%" stopColor="#FEF3C7" stopOpacity="1" />
-              </linearGradient>
+        {/* PHOTOREALISTIC TRANSPARENT 3D INTERLOCKING GOLD WEDDING RINGS & MONOGRAM EMBLEM */}
+        <div className="relative flex flex-col items-center justify-center transition-all duration-1000">
+          
+          {/* Floating Transparent 3D Rings Image Container */}
+          <div className="relative w-64 h-64 sm:w-80 sm:h-80 flex items-center justify-center pointer-events-none select-none">
+            {/* Photorealistic 3D Transparent Ring Image */}
+            <img
+              src="/realistic-wedding-rings-transparent.png"
+              alt="Realistic Interlocking Gold Wedding Rings with Solitaire Diamond"
+              className="w-full h-full object-contain filter drop-shadow-[0_15px_40px_rgba(241,198,90,0.45)] transition-transform duration-700"
+            />
+          </div>
 
-              {/* Deep Interior Shadow Gradient for Inner Ring Tube */}
-              <linearGradient id="goldInnerTube" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#1E1303" stopOpacity="0.95" />
-                <stop offset="40%" stopColor="#452708" stopOpacity="0.9" />
-                <stop offset="80%" stopColor="#784E10" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#100A02" stopOpacity="0.95" />
-              </linearGradient>
+          {/* Monogram G & C Floating Gold Emblem Badge */}
+          <div className="-mt-6 sm:-mt-10 relative z-10 flex items-center justify-center gap-3 px-7 py-2.5 bg-[#0a1713]/95 border border-[#f1c65a]/60 rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.8)] backdrop-blur-md">
+            <span className="font-serif text-3xl sm:text-4xl bg-gradient-to-r from-[#FFF9EB] via-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-light tracking-wide">
+              G
+            </span>
+            <span className="font-script text-2xl sm:text-3xl text-[#f1c65a] italic opacity-90">
+              &amp;
+            </span>
+            <span className="font-serif text-3xl sm:text-4xl bg-gradient-to-r from-[#FFF9EB] via-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-light tracking-wide">
+              C
+            </span>
+          </div>
 
-              {/* Diamond Solitaire Facet Gradients */}
-              <linearGradient id="diamondFacet1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="60%" stopColor="#E0F7FA" stopOpacity="1" />
-                <stop offset="100%" stopColor="#B2EBF2" stopOpacity="1" />
-              </linearGradient>
-              <linearGradient id="diamondFacet2" x1="100%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="50%" stopColor="#C5F3FF" stopOpacity="1" />
-                <stop offset="100%" stopColor="#80DEEA" stopOpacity="1" />
-              </linearGradient>
-
-              {/* Soft Drop Shadow Filter for Real 3D Ring Interlocking */}
-              <filter id="real3DDropShadow" x="-30%" y="-30%" width="160%" height="160%">
-                <feDropShadow dx="0" dy="8" stdDeviation="6" floodColor="#000000" floodOpacity="0.6" />
-              </filter>
-              <filter id="diamondGlowFilter" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="2" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            {/* RING 1: Groom's Realistic 3D Gold Comfort-Fit Band (Left, tilted -12 deg) */}
-            {animStage >= 1 && (
-              <g transform="rotate(-12 155 135)" className={animStage === 1 ? 'animate-ring-left' : 'opacity-100'}>
-                {/* Ring Ambient Drop Shadow */}
-                <ellipse cx="155" cy="140" rx="66" ry="50" fill="black" opacity="0.3" filter="blur(6px)" />
-
-                {/* Outer 3D Thick Gold Body */}
-                <ellipse
-                  cx="155"
-                  cy="135"
-                  rx="68"
-                  ry="50"
-                  fill="url(#realGoldMetallic)"
-                  filter="url(#real3DDropShadow)"
-                />
-
-                {/* Interior Tube Hole Shadow */}
-                <ellipse cx="155" cy="135" rx="54" ry="38" fill="url(#goldInnerTube)" />
-
-                {/* Polished Inner Rim Bevel */}
-                <ellipse
-                  cx="155"
-                  cy="135"
-                  rx="54"
-                  ry="38"
-                  stroke="url(#goldBevelRim)"
-                  strokeWidth="2.5"
-                  fill="none"
-                />
-
-                {/* Brushed Center Inlay Texture Line */}
-                <ellipse
-                  cx="155"
-                  cy="135"
-                  rx="61"
-                  ry="44"
-                  stroke="#FDE68A"
-                  strokeWidth="1.2"
-                  fill="none"
-                  opacity="0.75"
-                />
-
-                {/* Top Specular Glint Reflection Arc */}
-                <path
-                  d="M 102,118 A 68 50 0 0 1 208,118"
-                  stroke="#FFFFFF"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  fill="none"
-                  opacity="0.85"
-                />
-              </g>
-            )}
-
-            {/* RING 2: Bride's Realistic 3D Solitaire Diamond Ring (Right, tilted +12 deg) */}
-            {animStage >= 2 && (
-              <g transform="rotate(12 225 135)" className={animStage === 2 ? 'animate-ring-right' : 'opacity-100'}>
-                {/* Ring Ambient Drop Shadow */}
-                <ellipse cx="225" cy="140" rx="66" ry="50" fill="black" opacity="0.3" filter="blur(6px)" />
-
-                {/* Outer 3D Thick Gold Band Body */}
-                <ellipse
-                  cx="225"
-                  cy="135"
-                  rx="68"
-                  ry="50"
-                  fill="url(#realGoldMetallic)"
-                  filter="url(#real3DDropShadow)"
-                />
-
-                {/* Interior Tube Hole Shadow */}
-                <ellipse cx="225" cy="135" rx="54" ry="38" fill="url(#goldInnerTube)" />
-
-                {/* Polished Inner Rim Bevel */}
-                <ellipse
-                  cx="225"
-                  cy="135"
-                  rx="54"
-                  ry="38"
-                  stroke="url(#goldBevelRim)"
-                  strokeWidth="2.5"
-                  fill="none"
-                />
-
-                {/* Top Specular Glint Reflection Arc */}
-                <path
-                  d="M 172,118 A 68 50 0 0 1 278,118"
-                  stroke="#FFFFFF"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  fill="none"
-                  opacity="0.85"
-                />
-
-                {/* SOLITAIRE DIAMOND & CATHEDRAL PRONG SETTING ON TOP OF BRIDE'S RING */}
-                <g transform="translate(225, 83)">
-                  {/* Gold Prongs Holding Diamond */}
-                  <path d="M -12,2 L -8,-14 L -4,-14 L -8,2 Z" fill="url(#goldBevelRim)" />
-                  <path d="M 12,2 L 8,-14 L 4,-14 L 8,2 Z" fill="url(#goldBevelRim)" />
-                  <path d="M -4,2 L -2,-16 L 2,-16 L 4,2 Z" fill="url(#realGoldMetallic)" />
-
-                  {/* Faceted Solitaire Diamond Gem */}
-                  <polygon points="0,0 -14,-14 14,-14" fill="url(#diamondFacet2)" />
-                  <polygon points="-14,-14 -8,-22 8,-22 14,-14" fill="url(#diamondFacet1)" />
-                  <polygon points="-8,-22 0,-24 8,-22 0,-18" fill="#FFFFFF" />
-                  <polygon points="-14,-14 -8,-22 0,-18" fill="#E0F7FA" opacity="0.9" />
-                  <polygon points="14,-14 8,-22 0,-18" fill="#B2EBF2" opacity="0.9" />
-
-                  {/* Sparkling Lens Flare / Starburst Gleam */}
-                  <g filter="url(#diamondGlowFilter)">
-                    <path
-                      d="M 0,-28 L 3,-22 L 9,-22 L 4,-17 L 6,-11 L 0,-15 L -6,-11 L -4,-17 L -9,-22 L -3,-22 Z"
-                      fill="#FFFFFF"
-                      opacity="0.95"
-                    />
-                    <circle cx="0" cy="-20" r="4" fill="#FFFFFF" opacity="0.9" />
-                  </g>
-                </g>
-              </g>
-            )}
-
-            {/* REALISTIC 3D INTERLOCKING OVERLAP ARCH */}
-            {animStage >= 2 && (
-              <path
-                d="M 174,90 A 68 50 0 0 1 206,104"
-                stroke="url(#realGoldMetallic)"
-                strokeWidth="14"
-                strokeLinecap="round"
-                fill="none"
-                filter="url(#real3DDropShadow)"
-              />
-            )}
-
-            {/* SPACIOUS MONOGRAM TEXT (G & C) */}
-            <g className="font-serif select-none">
-              {/* Letter G */}
-              <text
-                x="130"
-                y="142"
-                fontSize="42"
-                fontFamily="serif"
-                fontWeight="300"
-                fill="url(#realGoldMetallic)"
-                textAnchor="middle"
-                className={animStage >= 3 ? 'animate-monogram-g' : 'opacity-0'}
-              >
-                G
-              </text>
-
-              {/* Symbol & */}
-              <text
-                x="190"
-                y="138"
-                fontSize="26"
-                fontFamily="serif"
-                fontStyle="italic"
-                fontWeight="300"
-                fill="#FFF7E3"
-                textAnchor="middle"
-                className={animStage >= 4 ? 'animate-monogram-amp' : 'opacity-0'}
-              >
-                &
-              </text>
-
-              {/* Letter C */}
-              <text
-                x="250"
-                y="142"
-                fontSize="42"
-                fontFamily="serif"
-                fontWeight="300"
-                fill="url(#realGoldMetallic)"
-                textAnchor="middle"
-                className={animStage >= 5 ? 'animate-monogram-c' : 'opacity-0'}
-              >
-                C
-              </text>
-            </g>
-          </svg>
         </div>
 
         {/* ROMANTIC SPLASH TEXT REVEAL ("A beautiful story begins here." + "Tap gently to enter") */}
         <div
-          className={`mt-5 flex flex-col items-center gap-3 transition-all duration-1000 ${
-            animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
-          }`}
+          className={`mt-5 flex flex-col items-center gap-3 transition-all duration-1000 ${animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
+            }`}
         >
           {/* Main Romantic Message */}
           <h2 className="text-lg sm:text-2xl md:text-3xl font-serif tracking-[0.16em] sm:tracking-[0.2em] text-[#F5E6BE] font-light drop-shadow-[0_0_15px_rgba(245,230,190,0.35)] leading-tight px-2">
@@ -697,9 +478,8 @@ export const SplashScreen: React.FC = () => {
           <div
             onClick={handleSplashTap}
             onTouchEnd={handleSplashTap}
-            className={`animate-tap-float mt-1 flex flex-col items-center justify-center p-3 sm:p-4 cursor-pointer pointer-events-auto transition-all duration-1000 delay-500 ${
-              animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-2'
-            }`}
+            className={`animate-tap-float mt-1 flex flex-col items-center justify-center p-3 sm:p-4 cursor-pointer pointer-events-auto transition-all duration-1000 delay-500 ${animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-2'
+              }`}
           >
             <span className="text-[11px] sm:text-xs font-mono tracking-[0.3em] text-[#F5E6BE]/85 hover:text-[#FFF9EB] uppercase font-light italic drop-shadow-[0_0_12px_rgba(245,230,190,0.5)] transition-colors duration-300">
               Tap gently to enter
