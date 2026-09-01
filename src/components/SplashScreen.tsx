@@ -331,26 +331,6 @@ export const SplashScreen: React.FC = () => {
           }
         }
 
-        /* Photorealistic Ring Breathing Float & Shimmer Glow */
-        @keyframes ringFloatGlow {
-          0% {
-            transform: translateY(0px) scale(1.0);
-            filter: drop-shadow(0 15px 35px rgba(241, 198, 90, 0.35));
-          }
-          50% {
-            transform: translateY(-8px) scale(1.03);
-            filter: drop-shadow(0 25px 50px rgba(241, 198, 90, 0.65));
-          }
-          100% {
-            transform: translateY(0px) scale(1.0);
-            filter: drop-shadow(0 15px 35px rgba(241, 198, 90, 0.35));
-          }
-        }
-
-        .animate-rings-float-glow {
-          animation: ringFloatGlow 5s ease-in-out infinite;
-        }
-
         /* Slow Romantic Heart Reveal Opening Expansion (1.9s) */
         @keyframes heartStrokeExpand {
           0% {
@@ -448,20 +428,18 @@ export const SplashScreen: React.FC = () => {
         </div>
       )}
 
-      {/* MAIN ANIMATION CONTAINER (STYLIZED 3D INTERLOCKING BANDS + SPACIOUS MONOGRAM G & C) */}
+      {/* MAIN ANIMATION CONTAINER */}
       <div
-        className={`relative z-[20] flex flex-col items-center justify-center text-center px-4 w-full max-w-xl pointer-events-auto cursor-pointer transition-all duration-700 ${isTransitioning ? 'opacity-20 scale-95' : 'opacity-100'
-          }`}
+        className={`relative z-[20] flex flex-col items-center justify-center text-center px-4 w-full max-w-xl pointer-events-auto cursor-pointer transition-all duration-700 ${
+          isTransitioning ? 'opacity-20 scale-95' : 'opacity-100'
+        }`}
         onClick={handleSplashTap}
         onTouchEnd={handleSplashTap}
       >
-
         {/* PHOTOREALISTIC ANIMATED 3D RINGS WITH G & C MONOGRAM INSIDE THE RINGS */}
         <div className="relative flex flex-col items-center justify-center transition-all duration-1000">
-          
           {/* Ring & Monogram Composite Stage with Floating Animation */}
           <div className="relative w-72 h-72 sm:w-96 sm:h-96 flex items-center justify-center pointer-events-none select-none animate-rings-float-glow">
-            
             {/* Realistic 3D Interlocking Gold Rings Image */}
             <img
               src="/realistic-wedding-rings-transparent.png"
@@ -471,7 +449,6 @@ export const SplashScreen: React.FC = () => {
 
             {/* MONOGRAM G & C DIRECTLY INSIDE THE RINGS */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              
               {/* Letter G - Inside Left Gold Ring Center */}
               <span
                 className={`absolute left-[31%] top-[50%] -translate-y-1/2 font-serif text-3xl sm:text-5xl font-light tracking-wide bg-gradient-to-br from-[#FFFFFF] via-[#FDE68A] to-[#D97706] bg-clip-text text-transparent drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)] transition-all duration-1000 ${
@@ -498,17 +475,15 @@ export const SplashScreen: React.FC = () => {
               >
                 C
               </span>
-
             </div>
-
           </div>
-
         </div>
 
         {/* ROMANTIC SPLASH TEXT REVEAL ("A beautiful story begins here." + "Tap gently to enter") */}
         <div
-          className={`mt-5 flex flex-col items-center gap-3 transition-all duration-1000 ${animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
-            }`}
+          className={`mt-5 flex flex-col items-center gap-3 transition-all duration-1000 ${
+            animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
+          }`}
         >
           {/* Main Romantic Message */}
           <h2 className="text-lg sm:text-2xl md:text-3xl font-serif tracking-[0.16em] sm:tracking-[0.2em] text-[#F5E6BE] font-light drop-shadow-[0_0_15px_rgba(245,230,190,0.35)] leading-tight px-2">
@@ -519,15 +494,15 @@ export const SplashScreen: React.FC = () => {
           <div
             onClick={handleSplashTap}
             onTouchEnd={handleSplashTap}
-            className={`animate-tap-float mt-1 flex flex-col items-center justify-center p-3 sm:p-4 cursor-pointer pointer-events-auto transition-all duration-1000 delay-500 ${animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-2'
-              }`}
+            className={`animate-tap-float mt-1 flex flex-col items-center justify-center p-3 sm:p-4 cursor-pointer pointer-events-auto transition-all duration-1000 delay-500 ${
+              animStage >= 7 ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-2'
+            }`}
           >
             <span className="text-[11px] sm:text-xs font-mono tracking-[0.3em] text-[#F5E6BE]/85 hover:text-[#FFF9EB] uppercase font-light italic drop-shadow-[0_0_12px_rgba(245,230,190,0.5)] transition-colors duration-300">
               Tap gently to enter
             </span>
           </div>
         </div>
-
       </div>
     </div>
   );
