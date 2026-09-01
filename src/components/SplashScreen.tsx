@@ -31,7 +31,7 @@ interface SparkleParticle {
 
 export const SplashScreen: React.FC = () => {
   // Sequence Stage:
-  // 1: Ring 1 draws -> 2: Ring 2 interlocks -> 3: G appears -> 4: & appears -> 5: A appears -> 6: atmosphere -> 7: invitation ready
+  // 1: Ring 1 draws -> 2: Ring 2 interlocks -> 3: G appears -> 4: & appears -> 5: C appears -> 6: atmosphere -> 7: invitation ready
   const [animStage, setAnimStage] = useState<number>(1);
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [isComplete, setIsComplete] = useState<boolean>(false);
@@ -40,7 +40,7 @@ export const SplashScreen: React.FC = () => {
   const rafRef = useRef<number>(0);
   const isProcessingRef = useRef<boolean>(false);
 
-  // 1. MASTER TIMELINE FOR STYLIZED INTERLOCKING GOLD BANDS + SPACIOUS MONOGRAM G & A
+  // 1. MASTER TIMELINE FOR STYLIZED INTERLOCKING GOLD BANDS + SPACIOUS MONOGRAM G & C
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.overflow = 'hidden';
@@ -60,7 +60,7 @@ export const SplashScreen: React.FC = () => {
     // Stage 4: & appears (3.4s)
     const t4 = setTimeout(() => setAnimStage(4), 3400);
 
-    // Stage 5: A appears (4.2s)
+    // Stage 5: C appears (4.2s)
     const t5 = setTimeout(() => setAnimStage(5), 4200);
 
     // Stage 6: Golden Atmosphere Glow (5.4s)
@@ -112,7 +112,7 @@ export const SplashScreen: React.FC = () => {
       speed: rand(0.001, 0.003),
     }));
 
-    // Rich sparkling dust focused around G & A monogram, rings, and open surrounding space
+    // Rich sparkling dust focused around G & C monogram, rings, and open surrounding space
     const goldColors = ['#FFF9EB', '#F5E6BE', '#F1C65A', '#E2C875', '#D4B04C'];
     const sparkles: SparkleParticle[] = Array.from({ length: sparkleCount }, () => {
       const centerX = window.innerWidth / 2;
@@ -288,8 +288,8 @@ export const SplashScreen: React.FC = () => {
           }
         }
 
-        /* Monogram Letter A Fade In from Right */
-        @keyframes monogramAFadeIn {
+        /* Monogram Letter C Fade In from Right */
+        @keyframes monogramCFadeIn {
           0% {
             opacity: 0;
             transform: translateX(16px);
@@ -367,8 +367,8 @@ export const SplashScreen: React.FC = () => {
           animation: monogramAmpFadeIn 1.0s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
-        .animate-monogram-a {
-          animation: monogramAFadeIn 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        .animate-monogram-c {
+          animation: monogramCFadeIn 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
         .animate-atmosphere {
@@ -385,7 +385,7 @@ export const SplashScreen: React.FC = () => {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .animate-ring-left, .animate-ring-right, .animate-monogram-g, .animate-monogram-amp, .animate-monogram-a, .animate-tap-float, .animate-heart-stroke-expand {
+          .animate-ring-left, .animate-ring-right, .animate-monogram-g, .animate-monogram-amp, .animate-monogram-c, .animate-tap-float, .animate-heart-stroke-expand {
             animation: none !important;
             opacity: 1 !important;
           }
@@ -429,7 +429,7 @@ export const SplashScreen: React.FC = () => {
         </div>
       )}
 
-      {/* MAIN ANIMATION CONTAINER (STYLIZED 3D INTERLOCKING BANDS + SPACIOUS MONOGRAM G & A) */}
+      {/* MAIN ANIMATION CONTAINER (STYLIZED 3D INTERLOCKING BANDS + SPACIOUS MONOGRAM G & C) */}
       <div
         className={`relative z-[20] flex flex-col items-center justify-center text-center px-4 w-full max-w-xl pointer-events-auto cursor-pointer transition-all duration-700 ${
           isTransitioning ? 'opacity-20 scale-95' : 'opacity-100'
@@ -438,7 +438,7 @@ export const SplashScreen: React.FC = () => {
         onTouchEnd={handleSplashTap}
       >
         
-        {/* STYLIZED 3D INTERLOCKING GOLD WEDDING BANDS & SPACIOUS G & A MONOGRAM */}
+        {/* STYLIZED 3D INTERLOCKING GOLD WEDDING BANDS & SPACIOUS G & C MONOGRAM */}
         <div className="relative flex items-center justify-center transition-all duration-700">
           <svg
             width="360"
@@ -567,7 +567,7 @@ export const SplashScreen: React.FC = () => {
               />
             )}
 
-            {/* SPACIOUS MONOGRAM TEXT (G & A - Reduced Size for Generous Breathing Room) */}
+            {/* SPACIOUS MONOGRAM TEXT (G & C - Reduced Size for Generous Breathing Room) */}
             <g className="font-serif select-none">
               {/* Letter G */}
               <text
@@ -598,7 +598,7 @@ export const SplashScreen: React.FC = () => {
                 &
               </text>
 
-              {/* Letter A */}
+              {/* Letter C */}
               <text
                 x="224"
                 y="128"
@@ -607,9 +607,9 @@ export const SplashScreen: React.FC = () => {
                 fontWeight="300"
                 fill="url(#bandGoldGrad)"
                 textAnchor="middle"
-                className={animStage >= 5 ? 'animate-monogram-a' : 'opacity-0'}
+                className={animStage >= 5 ? 'animate-monogram-c' : 'opacity-0'}
               >
-                A
+                C
               </text>
             </g>
           </svg>
