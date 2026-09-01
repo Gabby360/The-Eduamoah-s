@@ -331,6 +331,26 @@ export const SplashScreen: React.FC = () => {
           }
         }
 
+        /* Photorealistic Ring Breathing Float & Shimmer Glow */
+        @keyframes ringFloatGlow {
+          0% {
+            transform: translateY(0px) scale(1.0);
+            filter: drop-shadow(0 15px 35px rgba(241, 198, 90, 0.35));
+          }
+          50% {
+            transform: translateY(-8px) scale(1.03);
+            filter: drop-shadow(0 25px 50px rgba(241, 198, 90, 0.65));
+          }
+          100% {
+            transform: translateY(0px) scale(1.0);
+            filter: drop-shadow(0 15px 35px rgba(241, 198, 90, 0.35));
+          }
+        }
+
+        .animate-rings-float-glow {
+          animation: ringFloatGlow 5s ease-in-out infinite;
+        }
+
         /* Slow Romantic Heart Reveal Opening Expansion (1.9s) */
         @keyframes heartStrokeExpand {
           0% {
@@ -436,30 +456,51 @@ export const SplashScreen: React.FC = () => {
         onTouchEnd={handleSplashTap}
       >
 
-        {/* PHOTOREALISTIC TRANSPARENT 3D INTERLOCKING GOLD WEDDING RINGS & MONOGRAM EMBLEM */}
+        {/* PHOTOREALISTIC ANIMATED 3D RINGS WITH G & C MONOGRAM INSIDE THE RINGS */}
         <div className="relative flex flex-col items-center justify-center transition-all duration-1000">
           
-          {/* Floating Transparent 3D Rings Image Container */}
-          <div className="relative w-64 h-64 sm:w-80 sm:h-80 flex items-center justify-center pointer-events-none select-none">
-            {/* Photorealistic 3D Transparent Ring Image */}
+          {/* Ring & Monogram Composite Stage with Floating Animation */}
+          <div className="relative w-72 h-72 sm:w-96 sm:h-96 flex items-center justify-center pointer-events-none select-none animate-rings-float-glow">
+            
+            {/* Realistic 3D Interlocking Gold Rings Image */}
             <img
               src="/realistic-wedding-rings-transparent.png"
               alt="Realistic Interlocking Gold Wedding Rings with Solitaire Diamond"
-              className="w-full h-full object-contain filter drop-shadow-[0_15px_40px_rgba(241,198,90,0.45)] transition-transform duration-700"
+              className="w-full h-full object-contain filter drop-shadow-[0_15px_40px_rgba(241,198,90,0.45)]"
             />
-          </div>
 
-          {/* Monogram G & C Floating Gold Emblem Badge */}
-          <div className="-mt-6 sm:-mt-10 relative z-10 flex items-center justify-center gap-3 px-7 py-2.5 bg-[#0a1713]/95 border border-[#f1c65a]/60 rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.8)] backdrop-blur-md">
-            <span className="font-serif text-3xl sm:text-4xl bg-gradient-to-r from-[#FFF9EB] via-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-light tracking-wide">
-              G
-            </span>
-            <span className="font-script text-2xl sm:text-3xl text-[#f1c65a] italic opacity-90">
-              &amp;
-            </span>
-            <span className="font-serif text-3xl sm:text-4xl bg-gradient-to-r from-[#FFF9EB] via-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-light tracking-wide">
-              C
-            </span>
+            {/* MONOGRAM G & C DIRECTLY INSIDE THE RINGS */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              
+              {/* Letter G - Inside Left Gold Ring Center */}
+              <span
+                className={`absolute left-[31%] top-[50%] -translate-y-1/2 font-serif text-3xl sm:text-5xl font-light tracking-wide bg-gradient-to-br from-[#FFFFFF] via-[#FDE68A] to-[#D97706] bg-clip-text text-transparent drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)] transition-all duration-1000 ${
+                  animStage >= 3 ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
+                }`}
+              >
+                G
+              </span>
+
+              {/* Symbol & - In Center Interlocking Overlap */}
+              <span
+                className={`absolute left-[48.5%] top-[51%] -translate-x-1/2 -translate-y-1/2 font-script text-xl sm:text-3xl italic text-[#FFF7E3] drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] transition-all duration-1000 ${
+                  animStage >= 4 ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
+                }`}
+              >
+                &amp;
+              </span>
+
+              {/* Letter C - Inside Right Solitaire Diamond Ring Center */}
+              <span
+                className={`absolute left-[64%] top-[53%] -translate-y-1/2 font-serif text-3xl sm:text-5xl font-light tracking-wide bg-gradient-to-br from-[#FFFFFF] via-[#FDE68A] to-[#D97706] bg-clip-text text-transparent drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)] transition-all duration-1000 ${
+                  animStage >= 5 ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
+                }`}
+              >
+                C
+              </span>
+
+            </div>
+
           </div>
 
         </div>
