@@ -169,7 +169,7 @@ export const Story: React.FC = () => {
         {/* Closing Signature */}
         <div className="text-center mt-10 pt-6 border-t border-[#f1c65a]/20">
           <p className="font-heading italic text-[#DACFB8] text-base md:text-lg font-light max-w-lg mx-auto mb-4 leading-relaxed">
-            &ldquo;From accountability partners at PCC to forever partners in life &mdash; every step was guided by God.&rdquo;
+            &ldquo;From strangers at PCC to Accountability partners and now love partners in life &mdash; every step was guided by God.&rdquo;
           </p>
           <div className="font-script text-4xl md:text-5xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent">
             Christabell &amp; Graham
