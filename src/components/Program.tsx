@@ -54,7 +54,7 @@ export const Program: React.FC = () => {
               OFFICIAL WEDDING PROGRAM
             </span>
             <h3 className="font-heading text-2xl md:text-4xl text-[#FBF7EF] font-normal tracking-wide">
-              Dns. Christabell & Elder George Graham
+              Dns. Christabell & Elder Graham
             </h3>
             <p className="text-[#A69272] text-xs md:text-sm tracking-[0.2em] uppercase mt-2 font-mono">
               10th October 2026 • Kasoa, Ghana

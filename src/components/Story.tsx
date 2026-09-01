@@ -124,7 +124,7 @@ const ChapterBlock: React.FC<{ chapter: typeof CHAPTERS[0]; index: number }> = (
             </div>
             <div className="flex-1">
               <div className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-[11px] font-semibold tracking-[0.2em] uppercase">
-                George's Perspective
+                Graham's Perspective
               </div>
               <div className="text-[9px] text-[#A69272] tracking-widest uppercase font-mono">His Story</div>
             </div>
@@ -172,7 +172,7 @@ export const Story: React.FC = () => {
             &ldquo;From accountability partners at PCC to forever partners in life &mdash; every step was guided by God.&rdquo;
           </p>
           <div className="font-script text-4xl md:text-5xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent">
-            Christabell &amp; George
+            Christabell &amp; Graham
           </div>
         </div>
 

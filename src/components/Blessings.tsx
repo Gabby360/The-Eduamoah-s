@@ -99,7 +99,7 @@ export const Blessings: React.FC = () => {
                   required
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Write a message of love for Nadia & Kwame..."
+                  placeholder="Write a message of love for Christabell & Graham..."
                   className="w-full bg-[#0a1713] border border-[#f1c65a]/30 text-[#FBF7EF] p-4 text-sm focus:outline-none focus:border-[#f1c65a] resize-none"
                 />
               </div>

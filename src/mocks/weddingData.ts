@@ -13,8 +13,8 @@ export const weddingDetails = {
     coupleName: "The Eduamoah's",
     brideSubtitle: 'THE BRIDE',
     groomSubtitle: 'THE GROOM',
-    brideBio: 'A soul full of grace, warmth, and devotion. Christabell brings light to every room she enters and fills George\'s world with endless love and joy.',
-    groomBio: 'A man of strong faith, character, and integrity. George\'s devotion to Christabell is unwavering as they step into this sacred lifetime together.',
+    brideBio: 'A soul full of grace, warmth, and devotion. Christabell brings light to every room she enters and fills Graham\'s world with endless love and joy.',
+    groomBio: 'A man of strong faith, character, and integrity. Graham\'s devotion to Christabell is unwavering as they step into this sacred lifetime together.',
     heroImage: '/hero-custom.jpg',
     storyImage: '/story-custom.jpg',
     brideImage: '/bride-custom.jpg',
@@ -102,7 +102,7 @@ export const weddingDetails = {
     {
       time: '2:00 PM',
       title: 'CEREMONY',
-      description: 'Exchange of vows under golden floral arches. Witness the sacred union of Nadia & Kwame.',
+      description: 'Exchange of vows under golden floral arches. Witness the sacred union of Christabell & Graham.',
     },
     {
       time: '4:00 PM',
