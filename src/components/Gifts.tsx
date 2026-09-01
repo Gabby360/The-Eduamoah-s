@@ -70,11 +70,11 @@ export const Gifts: React.FC = () => {
                     NUMBER
                   </span>
                   <span className="text-lg text-[#f1c65a] font-semibold font-mono tracking-wider">
-                    0596618116
+                    0555357220
                   </span>
                 </div>
                 <button
-                  onClick={() => copyToClipboard('0596618116', 'momo-number')}
+                  onClick={() => copyToClipboard('0555357220', 'momo-number')}
                   className="p-2 rounded border border-[#f1c65a]/30 text-[#f1c65a] hover:bg-[#f1c65a] hover:text-[#0a1713] transition-all duration-300 flex items-center space-x-1.5 text-xs uppercase font-mono"
                   title="Copy MoMo Number"
                 >
@@ -98,7 +98,7 @@ export const Gifts: React.FC = () => {
                   ACCOUNT NAME
                 </span>
                 <span className="text-base text-[#FBF7EF] font-medium tracking-wide">
-                  Emmanuel Asare Appiah
+                  Christabell Odoom
                 </span>
               </div>
             </div>
@@ -138,11 +138,11 @@ export const Gifts: React.FC = () => {
                     ACCOUNT NUMBER
                   </span>
                   <span className="text-lg text-[#f1c65a] font-semibold font-mono tracking-wider">
-                    140003143181
+                    1272000164421601
                   </span>
                 </div>
                 <button
-                  onClick={() => copyToClipboard('140003143181', 'bank-acc')}
+                  onClick={() => copyToClipboard('1272000164421601', 'bank-acc')}
                   className="p-2 rounded border border-[#f1c65a]/30 text-[#f1c65a] hover:bg-[#f1c65a] hover:text-[#0a1713] transition-all duration-300 flex items-center space-x-1.5 text-xs uppercase font-mono"
                   title="Copy Account Number"
                 >
@@ -166,7 +166,7 @@ export const Gifts: React.FC = () => {
                   ACCOUNT NAME
                 </span>
                 <span className="text-base text-[#FBF7EF] font-medium tracking-wide">
-                  Grace Edutuah-Appiah
+                  Christabell Odoom
                 </span>
               </div>
             </div>
