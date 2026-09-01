@@ -438,37 +438,62 @@ export const SplashScreen: React.FC = () => {
         onTouchEnd={handleSplashTap}
       >
         
-        {/* STYLIZED 3D INTERLOCKING GOLD WEDDING BANDS & SPACIOUS G & C MONOGRAM */}
+        {/* REALISTIC 3D INTERLOCKING GOLD WEDDING BANDS & DIAMOND SOLITAIRE RING */}
         <div className="relative flex items-center justify-center transition-all duration-700">
           <svg
-            width="360"
-            height="240"
-            viewBox="0 0 340 240"
+            width="380"
+            height="260"
+            viewBox="0 0 380 260"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-56 h-40 sm:w-72 sm:h-48 text-[#F5E6BE] filter drop-shadow-[0_8px_25px_rgba(245,230,190,0.35)]"
+            className="w-64 h-44 sm:w-80 sm:h-52 text-[#F5E6BE] filter drop-shadow-[0_10px_30px_rgba(245,230,190,0.4)]"
           >
             <defs>
-              {/* Multi-Stop Luxury Gold Metallic Gradient */}
-              <linearGradient id="bandGoldGrad" x1="0" y1="0" x2="340" y2="240" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#FFF9EB" stopOpacity="1" />
-                <stop offset="25%" stopColor="#F5E6BE" stopOpacity="0.95" />
-                <stop offset="50%" stopColor="#E2C875" stopOpacity="0.95" />
-                <stop offset="75%" stopColor="#D4B04C" stopOpacity="0.9" />
-                <stop offset="100%" stopColor="#9C7722" stopOpacity="0.85" />
+              {/* Ultra-Realistic Multi-Angle Gold Gradient */}
+              <linearGradient id="realGoldMetallic" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+                <stop offset="12%" stopColor="#FDE68A" stopOpacity="1" />
+                <stop offset="28%" stopColor="#D97706" stopOpacity="1" />
+                <stop offset="48%" stopColor="#FEF08A" stopOpacity="1" />
+                <stop offset="68%" stopColor="#B45309" stopOpacity="1" />
+                <stop offset="85%" stopColor="#F59E0B" stopOpacity="1" />
+                <stop offset="100%" stopColor="#78350F" stopOpacity="1" />
               </linearGradient>
 
-              {/* Inner Metallic Bevel Gradient */}
-              <linearGradient id="bandInnerGold" x1="0" y1="0" x2="0" y2="100%">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-                <stop offset="40%" stopColor="#F5E6BE" stopOpacity="0.75" />
-                <stop offset="100%" stopColor="#8C6B1F" stopOpacity="0.85" />
+              {/* Secondary Gold Highlight Gradient */}
+              <linearGradient id="goldBevelRim" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#FFFDF0" stopOpacity="1" />
+                <stop offset="30%" stopColor="#FBBF24" stopOpacity="1" />
+                <stop offset="70%" stopColor="#92400E" stopOpacity="1" />
+                <stop offset="100%" stopColor="#FEF3C7" stopOpacity="1" />
               </linearGradient>
 
-              {/* Bevelled 3D Depth & Shadow Filter */}
-              <filter id="band3DDepth" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor="#000000" floodOpacity="0.5" />
-                <feGaussianBlur stdDeviation="1.5" result="blur" />
+              {/* Deep Interior Shadow Gradient for Inner Ring Tube */}
+              <linearGradient id="goldInnerTube" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#1E1303" stopOpacity="0.95" />
+                <stop offset="40%" stopColor="#452708" stopOpacity="0.9" />
+                <stop offset="80%" stopColor="#784E10" stopOpacity="0.85" />
+                <stop offset="100%" stopColor="#100A02" stopOpacity="0.95" />
+              </linearGradient>
+
+              {/* Diamond Solitaire Facet Gradients */}
+              <linearGradient id="diamondFacet1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+                <stop offset="60%" stopColor="#E0F7FA" stopOpacity="1" />
+                <stop offset="100%" stopColor="#B2EBF2" stopOpacity="1" />
+              </linearGradient>
+              <linearGradient id="diamondFacet2" x1="100%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+                <stop offset="50%" stopColor="#C5F3FF" stopOpacity="1" />
+                <stop offset="100%" stopColor="#80DEEA" stopOpacity="1" />
+              </linearGradient>
+
+              {/* Soft Drop Shadow Filter for Real 3D Ring Interlocking */}
+              <filter id="real3DDropShadow" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="8" stdDeviation="6" floodColor="#000000" floodOpacity="0.6" />
+              </filter>
+              <filter id="diamondGlowFilter" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="2" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
                   <feMergeNode in="SourceGraphic" />
@@ -476,107 +501,149 @@ export const SplashScreen: React.FC = () => {
               </filter>
             </defs>
 
-            {/* RING 1: Left Stylized Gold Wedding Band (Thick Bevelled Curved Band) */}
+            {/* RING 1: Groom's Realistic 3D Gold Comfort-Fit Band (Left, tilted -12 deg) */}
             {animStage >= 1 && (
-              <g transform="rotate(-12 140 120)" className={animStage === 1 ? 'animate-ring-left' : 'opacity-100'}>
-                {/* Thick Main Gold Band */}
+              <g transform="rotate(-12 155 135)" className={animStage === 1 ? 'animate-ring-left' : 'opacity-100'}>
+                {/* Ring Ambient Drop Shadow */}
+                <ellipse cx="155" cy="140" rx="66" ry="50" fill="black" opacity="0.3" filter="blur(6px)" />
+
+                {/* Outer 3D Thick Gold Body */}
                 <ellipse
-                  cx="140"
-                  cy="120"
-                  rx="62"
-                  ry="46"
-                  stroke="url(#bandGoldGrad)"
-                  strokeWidth="5.5"
-                  fill="none"
-                  filter="url(#band3DDepth)"
+                  cx="155"
+                  cy="135"
+                  rx="68"
+                  ry="50"
+                  fill="url(#realGoldMetallic)"
+                  filter="url(#real3DDropShadow)"
                 />
-                {/* Inner Bevel Rim */}
+
+                {/* Interior Tube Hole Shadow */}
+                <ellipse cx="155" cy="135" rx="54" ry="38" fill="url(#goldInnerTube)" />
+
+                {/* Polished Inner Rim Bevel */}
                 <ellipse
-                  cx="140"
-                  cy="120"
-                  rx="58"
-                  ry="42"
-                  stroke="url(#bandInnerGold)"
+                  cx="155"
+                  cy="135"
+                  rx="54"
+                  ry="38"
+                  stroke="url(#goldBevelRim)"
+                  strokeWidth="2.5"
+                  fill="none"
+                />
+
+                {/* Brushed Center Inlay Texture Line */}
+                <ellipse
+                  cx="155"
+                  cy="135"
+                  rx="61"
+                  ry="44"
+                  stroke="#FDE68A"
                   strokeWidth="1.2"
                   fill="none"
-                  opacity="0.85"
+                  opacity="0.75"
                 />
-                {/* Specular Edge Highlight */}
-                <ellipse
-                  cx="140"
-                  cy="120"
-                  rx="65"
-                  ry="49"
-                  stroke="#FFF9EB"
-                  strokeWidth="0.8"
+
+                {/* Top Specular Glint Reflection Arc */}
+                <path
+                  d="M 102,118 A 68 50 0 0 1 208,118"
+                  stroke="#FFFFFF"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
                   fill="none"
-                  opacity="0.6"
+                  opacity="0.85"
                 />
               </g>
             )}
 
-            {/* RING 2: Right Stylized Gold Wedding Band Interlocking (Thick Bevelled Curved Band) */}
+            {/* RING 2: Bride's Realistic 3D Solitaire Diamond Ring (Right, tilted +12 deg) */}
             {animStage >= 2 && (
-              <g transform="rotate(12 200 120)" className={animStage === 2 ? 'animate-ring-right' : 'opacity-100'}>
-                {/* Thick Main Gold Band */}
+              <g transform="rotate(12 225 135)" className={animStage === 2 ? 'animate-ring-right' : 'opacity-100'}>
+                {/* Ring Ambient Drop Shadow */}
+                <ellipse cx="225" cy="140" rx="66" ry="50" fill="black" opacity="0.3" filter="blur(6px)" />
+
+                {/* Outer 3D Thick Gold Band Body */}
                 <ellipse
-                  cx="200"
-                  cy="120"
-                  rx="62"
-                  ry="46"
-                  stroke="url(#bandGoldGrad)"
-                  strokeWidth="5.5"
-                  fill="none"
-                  filter="url(#band3DDepth)"
+                  cx="225"
+                  cy="135"
+                  rx="68"
+                  ry="50"
+                  fill="url(#realGoldMetallic)"
+                  filter="url(#real3DDropShadow)"
                 />
-                {/* Inner Bevel Rim */}
+
+                {/* Interior Tube Hole Shadow */}
+                <ellipse cx="225" cy="135" rx="54" ry="38" fill="url(#goldInnerTube)" />
+
+                {/* Polished Inner Rim Bevel */}
                 <ellipse
-                  cx="200"
-                  cy="120"
-                  rx="58"
-                  ry="42"
-                  stroke="url(#bandInnerGold)"
-                  strokeWidth="1.2"
+                  cx="225"
+                  cy="135"
+                  rx="54"
+                  ry="38"
+                  stroke="url(#goldBevelRim)"
+                  strokeWidth="2.5"
+                  fill="none"
+                />
+
+                {/* Top Specular Glint Reflection Arc */}
+                <path
+                  d="M 172,118 A 68 50 0 0 1 278,118"
+                  stroke="#FFFFFF"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
                   fill="none"
                   opacity="0.85"
                 />
-                {/* Specular Edge Highlight */}
-                <ellipse
-                  cx="200"
-                  cy="120"
-                  rx="65"
-                  ry="49"
-                  stroke="#FFF9EB"
-                  strokeWidth="0.8"
-                  fill="none"
-                  opacity="0.6"
-                />
+
+                {/* SOLITAIRE DIAMOND & CATHEDRAL PRONG SETTING ON TOP OF BRIDE'S RING */}
+                <g transform="translate(225, 83)">
+                  {/* Gold Prongs Holding Diamond */}
+                  <path d="M -12,2 L -8,-14 L -4,-14 L -8,2 Z" fill="url(#goldBevelRim)" />
+                  <path d="M 12,2 L 8,-14 L 4,-14 L 8,2 Z" fill="url(#goldBevelRim)" />
+                  <path d="M -4,2 L -2,-16 L 2,-16 L 4,2 Z" fill="url(#realGoldMetallic)" />
+
+                  {/* Faceted Solitaire Diamond Gem */}
+                  <polygon points="0,0 -14,-14 14,-14" fill="url(#diamondFacet2)" />
+                  <polygon points="-14,-14 -8,-22 8,-22 14,-14" fill="url(#diamondFacet1)" />
+                  <polygon points="-8,-22 0,-24 8,-22 0,-18" fill="#FFFFFF" />
+                  <polygon points="-14,-14 -8,-22 0,-18" fill="#E0F7FA" opacity="0.9" />
+                  <polygon points="14,-14 8,-22 0,-18" fill="#B2EBF2" opacity="0.9" />
+
+                  {/* Sparkling Lens Flare / Starburst Gleam */}
+                  <g filter="url(#diamondGlowFilter)">
+                    <path
+                      d="M 0,-28 L 3,-22 L 9,-22 L 4,-17 L 6,-11 L 0,-15 L -6,-11 L -4,-17 L -9,-22 L -3,-22 Z"
+                      fill="#FFFFFF"
+                      opacity="0.95"
+                    />
+                    <circle cx="0" cy="-20" r="4" fill="#FFFFFF" opacity="0.9" />
+                  </g>
+                </g>
               </g>
             )}
 
-            {/* Interlocking Arch Overlap for Natural 3D Depth Crossing Effect */}
+            {/* REALISTIC 3D INTERLOCKING OVERLAP ARCH */}
             {animStage >= 2 && (
               <path
-                d="M 158,76 A 62 46 0 0 1 186,90"
-                stroke="url(#bandGoldGrad)"
-                strokeWidth="6"
+                d="M 174,90 A 68 50 0 0 1 206,104"
+                stroke="url(#realGoldMetallic)"
+                strokeWidth="14"
                 strokeLinecap="round"
                 fill="none"
-                filter="url(#band3DDepth)"
-                className="opacity-100"
+                filter="url(#real3DDropShadow)"
               />
             )}
 
-            {/* SPACIOUS MONOGRAM TEXT (G & C - Reduced Size for Generous Breathing Room) */}
+            {/* SPACIOUS MONOGRAM TEXT (G & C) */}
             <g className="font-serif select-none">
               {/* Letter G */}
               <text
-                x="116"
-                y="128"
-                fontSize="40"
+                x="130"
+                y="142"
+                fontSize="42"
                 fontFamily="serif"
                 fontWeight="300"
-                fill="url(#bandGoldGrad)"
+                fill="url(#realGoldMetallic)"
                 textAnchor="middle"
                 className={animStage >= 3 ? 'animate-monogram-g' : 'opacity-0'}
               >
@@ -585,9 +652,9 @@ export const SplashScreen: React.FC = () => {
 
               {/* Symbol & */}
               <text
-                x="170"
-                y="124"
-                fontSize="24"
+                x="190"
+                y="138"
+                fontSize="26"
                 fontFamily="serif"
                 fontStyle="italic"
                 fontWeight="300"
@@ -600,12 +667,12 @@ export const SplashScreen: React.FC = () => {
 
               {/* Letter C */}
               <text
-                x="224"
-                y="128"
-                fontSize="40"
+                x="250"
+                y="142"
+                fontSize="42"
                 fontFamily="serif"
                 fontWeight="300"
-                fill="url(#bandGoldGrad)"
+                fill="url(#realGoldMetallic)"
                 textAnchor="middle"
                 className={animStage >= 5 ? 'animate-monogram-c' : 'opacity-0'}
               >
