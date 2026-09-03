@@ -277,7 +277,7 @@ export const Hero: React.FC = () => {
         <img
           src={weddingDetails.couple.heroImage}
           alt={weddingDetails.couple.coupleName}
-          className="hero-ken-burns w-full h-full object-cover object-[50%_25%] sm:object-[50%_28%] md:object-[50%_32%] lg:object-[50%_35%] xl:object-[50%_38%]"
+          className="hero-ken-burns w-full h-full object-cover object-[50%_25%] md:object-[50%_5%] lg:object-[50%_5%] xl:object-[50%_5%]"
         />
         {/* Top subtle shade for navbar legibility */}
         <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#0a1713]/80 via-[#0a1713]/40 to-transparent pointer-events-none" />
