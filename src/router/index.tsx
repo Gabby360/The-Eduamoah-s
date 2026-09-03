@@ -4,7 +4,6 @@ import { Navbar } from '../components/Navbar';
 import { Hero } from '../components/Hero';
 import { Story } from '../components/Story';
 import { Couple } from '../components/Couple';
-import { WeddingSchedule } from '../components/WeddingSchedule';
 import { Program } from '../components/Program';
 import { Countdown } from '../components/Countdown';
 import { Gallery } from '../components/Gallery';
@@ -24,7 +23,6 @@ const HomePage: React.FC = () => {
       <Hero />
       <Couple />
       <Story />
-      <WeddingSchedule />
       <Program />
       <Countdown />
       <Gallery />
