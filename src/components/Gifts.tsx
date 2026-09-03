@@ -127,7 +127,7 @@ export const Gifts: React.FC = () => {
                   BANK NAME
                 </span>
                 <span className="text-base text-[#FBF7EF] font-medium tracking-wide">
-                  Cal Bank
+                  Agriculture Development Bank (ADB)
                 </span>
               </div>
 
