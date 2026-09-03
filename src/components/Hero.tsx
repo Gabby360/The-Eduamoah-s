@@ -281,8 +281,8 @@ export const Hero: React.FC = () => {
         />
         {/* Top subtle shade for navbar legibility */}
         <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#0a1713]/80 via-[#0a1713]/40 to-transparent pointer-events-none" />
-        {/* Bottom Dark Gradient Overlay — Seamless full bottom coverage on mobile & desktop */}
-        <div className="absolute bottom-0 inset-x-0 h-[60%] md:h-[50%] bg-gradient-to-t from-[#0a1713] via-[#0a1713]/85 via-[#0a1713]/40 to-transparent pointer-events-none" />
+        {/* Bottom Dark Gradient Overlay — Lowered to reveal more of couple photo */}
+        <div className="absolute bottom-0 inset-x-0 h-[45%] md:h-[35%] bg-gradient-to-t from-[#0a1713] via-[#0a1713]/80 via-[#0a1713]/30 to-transparent pointer-events-none" />
       </div>
 
       {/* Canvas — particles, glowing dust/embers, petals */}
