@@ -27,24 +27,13 @@ export const Location: React.FC = () => {
             <div className="flex items-center space-x-3 mb-6">
               <MapPin size={24} className="text-[#f1c65a]" />
               <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-xs tracking-[0.25em] uppercase font-semibold">
-                KASOA, GHANA
+                KASOA
               </span>
             </div>
 
-            <h3 className="font-heading text-2xl md:text-3xl text-[#FBF7EF] font-normal uppercase mb-4 leading-tight">
+            <h3 className="font-heading text-2xl md:text-3xl text-[#FBF7EF] font-normal uppercase mb-8 leading-tight">
               {weddingDetails.wedding.venue}
             </h3>
-
-            <div className="space-y-4 pt-6 border-t border-[#f1c65a]/20 mb-8">
-              <div className="flex items-center justify-between text-xs text-[#A69272] tracking-wider uppercase">
-                <span>WEDDING CEREMONY</span>
-                <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-semibold">{weddingDetails.wedding.ceremonyTime}</span>
-              </div>
-              <div className="flex items-center justify-between text-xs text-[#A69272] tracking-wider uppercase">
-                <span>RECEPTION</span>
-                <span className="bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent font-semibold">{weddingDetails.wedding.receptionTime}</span>
-              </div>
-            </div>
 
             {/* Directions Button */}
             <a
