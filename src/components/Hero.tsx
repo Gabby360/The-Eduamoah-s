@@ -281,8 +281,8 @@ export const Hero: React.FC = () => {
         />
         {/* Top subtle shade for navbar legibility */}
         <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#0a1713]/80 via-[#0a1713]/40 to-transparent pointer-events-none" />
-        {/* Bottom Dark Gradient Overlay — Original h-[60%] on mobile, lowered to md:h-[35%] on PC */}
-        <div className="absolute bottom-0 inset-x-0 h-[60%] md:h-[35%] bg-gradient-to-t from-[#0a1713] via-[#0a1713]/85 via-[#0a1713]/40 md:via-[#0a1713]/30 to-transparent pointer-events-none" />
+        {/* Bottom Dark Gradient Overlay — Seamless full bottom coverage on mobile & desktop */}
+        <div className="absolute bottom-0 inset-x-0 h-[60%] md:h-[50%] bg-gradient-to-t from-[#0a1713] via-[#0a1713]/85 via-[#0a1713]/40 to-transparent pointer-events-none" />
       </div>
 
       {/* Canvas — particles, glowing dust/embers, petals */}
@@ -292,19 +292,19 @@ export const Hero: React.FC = () => {
         aria-hidden="true"
       />
 
-      {/* Hero Text Content — Lowered toward bottom */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-6 md:pb-8 flex flex-col items-center justify-end min-h-screen">
-        {/* Static Script "Becoming" Calligraphy */}
+      {/* Hero Text Content — Lowered slightly toward bottom */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-16 flex flex-col items-center justify-end min-h-screen">
+        {/* Static Script "Becoming" Calligraphy — Shifted 28px downward for natural balance */}
         <span className="hero-becoming font-script text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent inline-block py-2 px-4 leading-normal overflow-visible z-10 font-normal tracking-wide drop-shadow-md translate-y-7">
           Becoming
         </span>
 
-        {/* Static Heading for "THE EDUAMOAH'S" */}
-        <h1 className="hero-title font-heading text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl tracking-[0.06em] md:tracking-[0.1em] text-[#FBF7EF] font-normal uppercase text-shadow-hero mb-3 leading-none text-center z-10">
+        {/* Static Heading for "THE EDUAMOAH'S" — 100% Viewport Centered */}
+        <h1 className="hero-title font-heading text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl tracking-[0.06em] md:tracking-[0.1em] text-[#FBF7EF] font-normal uppercase text-shadow-hero mb-4 leading-none text-center z-10">
           {weddingDetails.couple.coupleName}
         </h1>
 
-        <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light mb-2 md:mb-4 text-shadow-hero">
+        <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light mb-6 text-shadow-hero">
           {weddingDetails.hero.tagline}
         </p>
       </div>
