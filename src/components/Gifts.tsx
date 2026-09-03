@@ -59,7 +59,7 @@ export const Gifts: React.FC = () => {
                   NETWORK
                 </span>
                 <span className="text-base text-[#FBF7EF] font-medium tracking-wide">
-                  MTN Mobile Money
+                  MTN
                 </span>
               </div>
 
