@@ -49,16 +49,10 @@ export const Program: React.FC = () => {
           <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-[#f1c65a]/70" />
 
           {/* Program Header Inside Card */}
-          <div className="text-center pb-8 border-b border-[#f1c65a]/20 mb-10">
-            <span className="inline-block bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-[10px] tracking-[0.3em] uppercase font-semibold border border-[#f1c65a]/30 px-4 py-1.5 bg-[#0a1713] rounded-full mb-4">
+          <div className="text-center pb-6 border-b border-[#f1c65a]/20 mb-10">
+            <span className="inline-block bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent text-[10px] tracking-[0.3em] uppercase font-semibold border border-[#f1c65a]/30 px-4 py-1.5 bg-[#0a1713] rounded-full">
               OFFICIAL WEDDING PROGRAM
             </span>
-            <h3 className="font-heading text-2xl md:text-4xl text-[#FBF7EF] font-normal tracking-wide">
-              Dns. Christabell & Elder Graham
-            </h3>
-            <p className="text-[#A69272] text-xs md:text-sm tracking-[0.2em] uppercase mt-2 font-mono">
-              10th October 2026 • Kasoa, Ghana
-            </p>
           </div>
 
           {/* Timeline Events List */}
