@@ -8,6 +8,7 @@ import { Program } from '../components/Program';
 import { Countdown } from '../components/Countdown';
 import { Gallery } from '../components/Gallery';
 import { RSVP } from '../components/RSVP';
+import { WhatsAppWishes } from '../components/WhatsAppWishes';
 import { Gifts } from '../components/Gifts';
 import { Location } from '../components/Location';
 import { Footer } from '../components/Footer';
@@ -27,6 +28,7 @@ const HomePage: React.FC = () => {
       <Countdown />
       <Gallery />
       <RSVP />
+      <WhatsAppWishes />
       <Gifts />
       <Location />
       <Footer />
