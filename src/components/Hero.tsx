@@ -280,9 +280,9 @@ export const Hero: React.FC = () => {
           className="hero-ken-burns w-full h-full object-cover object-[50%_25%] lg:object-[50%_35%]"
         />
         {/* Top subtle shade for navbar legibility */}
-        <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#0a1713]/80 via-[#0a1713]/40 to-transparent pointer-events-none" />
-        {/* Bottom Dark Gradient Overlay — Seamless full bottom coverage on mobile & desktop */}
-        <div className="absolute bottom-0 inset-x-0 h-[60%] md:h-[50%] bg-gradient-to-t from-[#0a1713] via-[#0a1713]/85 via-[#0a1713]/40 to-transparent pointer-events-none" />
+        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#0a1713]/90 via-[#0a1713]/50 to-transparent pointer-events-none" />
+        {/* Bottom Dark Gradient Overlay — Rich legibility and contrast for hero text */}
+        <div className="absolute bottom-0 inset-x-0 h-[75%] md:h-[60%] bg-gradient-to-t from-[#0a1713] via-[#0a1713]/90 via-[#0a1713]/40 to-transparent pointer-events-none" />
       </div>
 
       {/* Canvas — particles, glowing dust/embers, petals */}
@@ -292,19 +292,19 @@ export const Hero: React.FC = () => {
         aria-hidden="true"
       />
 
-      {/* Hero Text Content — Positioned further down close to the section divider */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-2 sm:pb-3 md:pb-4 lg:pb-5 flex flex-col items-center justify-end min-h-screen">
+      {/* Hero Text Content — Perfectly centered vertically at bottom with proper padding */}
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center pt-28 pb-16 sm:pb-20 md:pb-24 lg:pb-28 flex flex-col items-center justify-end min-h-[100dvh] min-h-screen">
         {/* Static Script "Becoming" Calligraphy */}
-        <span className="hero-becoming font-script text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent inline-block py-1 px-4 leading-normal overflow-visible z-10 font-normal tracking-wide drop-shadow-md">
+        <span className="hero-becoming font-script text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent inline-block py-1 px-4 leading-snug overflow-visible z-10 font-normal tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
           Becoming
         </span>
 
         {/* Static Heading for "THE EDUAMOAH'S" */}
-        <h1 className="hero-title font-heading text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl tracking-[0.06em] md:tracking-[0.1em] text-[#FBF7EF] font-normal uppercase text-shadow-hero mt-1 mb-3 leading-none text-center z-10">
+        <h1 className="hero-title font-heading text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl tracking-[0.06em] md:tracking-[0.1em] text-[#FBF7EF] font-normal uppercase text-shadow-hero mt-1 mb-2 sm:mb-3 leading-tight text-center z-10 drop-shadow-[0_4px_20px_rgba(0,0,0,0.95)]">
           {weddingDetails.couple.coupleName}
         </h1>
 
-        <p className="hero-tagline font-heading italic text-lg sm:text-xl md:text-2xl text-[#FBF7EF] font-light text-shadow-hero">
+        <p className="hero-tagline font-heading italic text-sm sm:text-base md:text-xl lg:text-2xl text-[#DACFB8] font-light text-shadow-hero z-10 max-w-sm sm:max-w-md md:max-w-xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
           {weddingDetails.hero.tagline}
         </p>
       </div>
