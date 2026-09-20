@@ -292,8 +292,8 @@ export const Hero: React.FC = () => {
         aria-hidden="true"
       />
 
-      {/* Hero Text Content — Perfectly centered vertically at bottom with proper padding */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center pt-28 pb-16 sm:pb-20 md:pb-24 lg:pb-28 flex flex-col items-center justify-end min-h-[100dvh] min-h-screen">
+      {/* Hero Text Content — Lifted comfortably above bottom on mobile */}
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center pt-28 pb-32 sm:pb-28 md:pb-24 lg:pb-28 flex flex-col items-center justify-end min-h-[100dvh] min-h-screen">
         {/* Static Script "Becoming" Calligraphy */}
         <span className="hero-becoming font-script text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl bg-gradient-to-r from-[#f1c65a] to-[#e2b324] bg-clip-text text-transparent inline-block py-1 px-4 leading-snug overflow-visible z-10 font-normal tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
           Becoming
