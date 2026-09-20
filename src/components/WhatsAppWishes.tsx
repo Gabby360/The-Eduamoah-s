@@ -9,7 +9,6 @@ export const WhatsAppWishes: React.FC = () => {
 
   // Default WhatsApp number for the Couple (Ghana format 233...)
   const whatsappNumber = weddingDetails.wishesContact?.phone || '233555357220';
-  const displayPhone = weddingDetails.wishesContact?.displayPhone || '+233 55 535 7220';
 
   const quickWishes = [
     "Wishing you both a lifetime of endless love & happiness!",
@@ -85,7 +84,7 @@ export const WhatsAppWishes: React.FC = () => {
                 {coupleTitle}
               </h3>
               <p className="text-xs text-[#BFAC90] tracking-widest uppercase mt-1">
-                THE EDUAMOAHS' WHATSAPP INBOX ({displayPhone})
+                THE EDUAMOAHS' WHATSAPP INBOX
               </p>
             </div>
 
