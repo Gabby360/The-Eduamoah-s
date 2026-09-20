@@ -38,6 +38,10 @@ export const weddingDetails = {
     { name: 'Benjamina Agyeiwaa', phone: '0246353253', displayPhone: '024 635 3253' },
     { name: 'Dn Eric Amoah', phone: '0559566117', displayPhone: '055 956 6117' },
   ],
+  wishesContact: {
+    phone: '233555357220',
+    displayPhone: '+233 55 535 7220',
+  },
   hero: {
     tagline: 'Two hearts. One beautiful journey.',
     scrollText: 'SCROLL TO DISCOVER',
